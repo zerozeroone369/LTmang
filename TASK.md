@@ -11,11 +11,11 @@
 - [ ] **Thái - Nhiệm vụ 10:** Client UI - Mảng Study & Campus (Documents, Q&A, Study Groups, Campus, Socket.io Toast) — Branch: `feature/client-study`
 
 ## ⏳ In Progress (Đang thực hiện)
-- [/] **Tú Anh - Nhiệm vụ 1:** Core System, ERD toàn hệ thống & Module Xác thực (Auth, JWT, Bcrypt, Academic APIs, Swagger/Postman) — Branch: `feature/core-auth`
-- [ ] **Tú Anh - Nhiệm vụ 2:** Admin Dashboard (AdminLogs, SystemSettings, API Quản trị + UI Admin Web React/Tailwind/Axios + Test luồng khóa SV) — Branch: `feature/admin-dashboard`
+- [/] **Tú Anh - Nhiệm vụ 2:** Admin Dashboard (AdminLogs, SystemSettings, API Quản trị + UI Admin Web React/Tailwind/Axios + Test luồng khóa SV) — Branch: `feature/admin-dashboard`
 
 ## 🔍 In Review / Testing (Chờ duyệt PR / Kiểm thử)
 - _(Chưa có PR đang chờ)_
 
 ## ✅ Completed (Hoàn thành)
 - [x] Khởi tạo Repository `LTmang`, `.gitignore`, `README.md`, PR template và `TASK.md` — Branch: `main` (Initial setup)
+- [x] **Tú Anh - Nhiệm vụ 1:** Core System, ERD toàn hệ thống & Module Xác thực (Auth, JWT, Bcrypt, Token Revocation, Academic APIs, Swagger/Postman, 12/12 tests pass) — Branch: `feature/core-auth`

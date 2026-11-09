@@ -1,0 +1,107 @@
+{
+  "info": {
+    "name": "UniConnect - Student Social Network API",
+    "_postman_id": "uniconnect-api-v1",
+    "description": "Postman Collection cho nhóm Backend & Frontend (Thái) tích hợp API UniConnect",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:4000" },
+    { "key": "token", "value": "" },
+    { "key": "adminToken", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1. Auth & Users (Tú Anh)",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/health"
+          }
+        },
+        {
+          "name": "Register Student",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/auth/register",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Sinh viên Demo\",\n  \"email\": \"demo_sv@dau.edu.vn\",\n  \"studentCode\": \"2351220100\",\n  \"password\": \"Student@123456\",\n  \"classId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Login (Email or StudentCode)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"2351220089\",\n  \"password\": \"Student@123456\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Current User (/me)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/auth/me"
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{baseUrl}}/api/users/profile",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fullName\": \"Nguyễn Ngô Tú Anh\",\n  \"bio\": \"Sinh viên CNTT K23\",\n  \"classId\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{baseUrl}}/api/auth/change-password",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"Student@123456\",\n  \"newPassword\": \"Student@654321\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/auth/logout"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Academic Hierarchy (Public)",
+      "item": [
+        { "name": "Get Schools", "request": { "method": "GET", "url": "{{baseUrl}}/api/academic/schools" } },
+        { "name": "Get Faculties", "request": { "method": "GET", "url": "{{baseUrl}}/api/academic/faculties?schoolId=1" } },
+        { "name": "Get Majors", "request": { "method": "GET", "url": "{{baseUrl}}/api/academic/majors?facultyId=1" } },
+        { "name": "Get Courses", "request": { "method": "GET", "url": "{{baseUrl}}/api/academic/courses?schoolId=1" } },
+        { "name": "Get Classes", "request": { "method": "GET", "url": "{{baseUrl}}/api/academic/classes?majorId=1&courseId=1" } }
+      ]
+    }
+  ]
+}

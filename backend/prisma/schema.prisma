@@ -1,0 +1,528 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// ==========================================
+// 1. CORE SYSTEM & AUTH (TÚ ANH)
+// ==========================================
+
+model Role {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique // ADMIN | STUDENT
+  description String?
+  createdAt   DateTime @default(now())
+
+  users User[]
+
+  @@map("roles")
+}
+
+model User {
+  id                  Int       @id @default(autoincrement())
+  studentCode         String?   @unique
+  email               String    @unique
+  passwordHash        String
+  fullName            String
+  avatarUrl           String?
+  bio                 String?
+  phone               String?
+  roleId              Int
+  schoolId            Int?
+  facultyId           Int?
+  majorId             Int?
+  courseId            Int?
+  classId             Int?
+  status              String    @default("ACTIVE") // ACTIVE | LOCKED
+  lockedReason        String?
+  lockedAt            DateTime?
+  failedLoginAttempts Int       @default(0)
+  lockUntil           DateTime?
+  lastLoginAt         DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  role    Role     @relation(fields: [roleId], references: [id])
+  school  School?  @relation(fields: [schoolId], references: [id])
+  faculty Faculty? @relation(fields: [facultyId], references: [id])
+  major   Major?   @relation(fields: [majorId], references: [id])
+  course  Course?  @relation(fields: [courseId], references: [id])
+  class   Class?   @relation(fields: [classId], references: [id])
+
+  revokedTokens   RevokedToken[]
+  adminLogs       AdminLog[]       @relation("AdminActor")
+  updatedSettings SystemSetting[]  @relation("SettingUpdater")
+  posts           Post[]
+  comments        Comment[]
+  reactions       Reaction[]
+  submittedReports PostReport[]    @relation("ReportSubmitter")
+  handledReports  PostReport[]     @relation("ReportHandler")
+  documents       Document[]
+  documentRatings DocumentRating[]
+  questions       Question[]
+  answers         Answer[]
+  votes           Vote[]
+  createdGroups   StudyGroup[]     @relation("GroupCreator")
+  groupMembers    GroupMember[]
+  joinRequests    JoinRequest[]    @relation("JoinRequester")
+  reviewedJoins   JoinRequest[]    @relation("JoinReviewer")
+  campusPosts     CampusPost[]
+  notifications   Notification[]
+
+  @@index([roleId])
+  @@index([status])
+  @@index([schoolId, facultyId, majorId, courseId, classId])
+  @@map("users")
+}
+
+model RevokedToken {
+  id        Int      @id @default(autoincrement())
+  jti       String   @unique
+  userId    Int
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("revoked_tokens")
+}
+
+// ==========================================
+// 2. ADMIN DASHBOARD (TÚ ANH)
+// ==========================================
+
+model AdminLog {
+  id         Int      @id @default(autoincrement())
+  adminId    Int
+  action     String
+  targetType String
+  targetId   String?
+  details    String?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  admin User @relation("AdminActor", fields: [adminId], references: [id])
+
+  @@index([adminId])
+  @@index([targetType])
+  @@index([createdAt])
+  @@map("admin_logs")
+}
+
+model SystemSetting {
+  id          Int      @id @default(autoincrement())
+  key         String   @unique
+  value       String
+  description String?
+  group       String   @default("GENERAL")
+  updatedById Int?
+  updatedAt   DateTime @updatedAt
+
+  updatedBy User? @relation("SettingUpdater", fields: [updatedById], references: [id])
+
+  @@map("system_settings")
+}
+
+// ==========================================
+// 3. ACADEMIC HIERARCHY / COMMUNITY (DUY + TÚ ANH)
+// ==========================================
+
+model School {
+  id        Int      @id @default(autoincrement())
+  code      String   @unique
+  name      String
+  shortName String?
+  address   String?
+  createdAt DateTime @default(now())
+
+  faculties Faculty[]
+  courses   Course[]
+  users     User[]
+  posts     Post[]
+  documents Document[]
+
+  @@map("schools")
+}
+
+model Faculty {
+  id        Int      @id @default(autoincrement())
+  schoolId  Int
+  code      String
+  name      String
+  createdAt DateTime @default(now())
+
+  school    School     @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  majors    Major[]
+  subjects  Subject[]
+  users     User[]
+  posts     Post[]
+  documents Document[]
+
+  @@unique([schoolId, code])
+  @@map("faculties")
+}
+
+model Major {
+  id        Int      @id @default(autoincrement())
+  facultyId Int
+  code      String
+  name      String
+  createdAt DateTime @default(now())
+
+  faculty Faculty @relation(fields: [facultyId], references: [id], onDelete: Cascade)
+  classes Class[]
+  users   User[]
+  posts   Post[]
+
+  @@unique([facultyId, code])
+  @@map("majors")
+}
+
+model Course {
+  id        Int      @id @default(autoincrement())
+  schoolId  Int
+  code      String
+  name      String
+  startYear Int?
+  endYear   Int?
+  createdAt DateTime @default(now())
+
+  school    School     @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  classes   Class[]
+  users     User[]
+  posts     Post[]
+  documents Document[]
+
+  @@unique([schoolId, code])
+  @@map("courses")
+}
+
+model Class {
+  id        Int      @id @default(autoincrement())
+  majorId   Int
+  courseId  Int
+  code      String
+  name      String
+  createdAt DateTime @default(now())
+
+  major     Major      @relation(fields: [majorId], references: [id], onDelete: Cascade)
+  course    Course     @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  users     User[]
+  posts     Post[]
+  documents Document[]
+
+  @@unique([majorId, courseId, code])
+  @@map("classes")
+}
+
+// ==========================================
+// 4. POSTS & MODERATION (DUY + TÚ ANH)
+// ==========================================
+
+model Post {
+  id            Int      @id @default(autoincrement())
+  authorId      Int
+  title         String?
+  content       String
+  category      String   @default("COMMUNITY") // STUDY | COMMUNITY | ACTIVITY | OPPORTUNITY
+  scope         String   @default("SCHOOL") // CLASS | COURSE | MAJOR | FACULTY | SCHOOL | PUBLIC
+  schoolId      Int?
+  facultyId     Int?
+  majorId       Int?
+  courseId      Int?
+  classId       Int?
+  mediaUrls     String?  // JSON array string
+  status        String   @default("ACTIVE") // ACTIVE | HIDDEN | DELETED
+  likesCount    Int      @default(0)
+  commentsCount Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  author   User         @relation(fields: [authorId], references: [id])
+  school   School?      @relation(fields: [schoolId], references: [id])
+  faculty  Faculty?     @relation(fields: [facultyId], references: [id])
+  major    Major?       @relation(fields: [majorId], references: [id])
+  course   Course?      @relation(fields: [courseId], references: [id])
+  class    Class?       @relation(fields: [classId], references: [id])
+  comments Comment[]
+  reactions Reaction[]
+  reports  PostReport[]
+
+  @@index([category, status])
+  @@index([classId, courseId, facultyId, schoolId])
+  @@map("posts")
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  authorId  Int
+  parentId  Int?
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  author User @relation(fields: [authorId], references: [id])
+
+  @@index([postId])
+  @@map("comments")
+}
+
+model Reaction {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  userId    Int
+  type      String   @default("LIKE") // LIKE | LOVE | HAHA | HELPFUL
+  createdAt DateTime @default(now())
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, userId])
+  @@map("reactions")
+}
+
+model PostReport {
+  id          Int       @id @default(autoincrement())
+  postId      Int
+  reporterId  Int
+  reason      String
+  description String?
+  status      String    @default("PENDING") // PENDING | RESOLVED_HIDDEN | RESOLVED_DELETED | DISMISSED
+  handledById Int?
+  handledNote String?
+  handledAt   DateTime?
+  createdAt   DateTime  @default(now())
+
+  post      Post  @relation(fields: [postId], references: [id], onDelete: Cascade)
+  reporter  User  @relation("ReportSubmitter", fields: [reporterId], references: [id])
+  handledBy User? @relation("ReportHandler", fields: [handledById], references: [id])
+
+  @@index([status])
+  @@index([postId])
+  @@map("post_reports")
+}
+
+// ==========================================
+// 5. DOCUMENTS & Q&A (HUY)
+// ==========================================
+
+model Subject {
+  id          Int      @id @default(autoincrement())
+  code        String   @unique
+  name        String
+  facultyId   Int?
+  description String?
+  createdAt   DateTime @default(now())
+
+  faculty     Faculty?     @relation(fields: [facultyId], references: [id])
+  documents   Document[]
+  questions   Question[]
+  studyGroups StudyGroup[]
+
+  @@map("subjects")
+}
+
+model Document {
+  id             Int      @id @default(autoincrement())
+  title          String
+  description    String?
+  fileUrl        String
+  fileName       String
+  fileType       String
+  fileSize       Int
+  docType        String   @default("REFERENCE") // SLIDE | EXAM | SYLLABUS | EXERCISE | REFERENCE
+  subjectId      Int
+  uploaderId     Int
+  schoolId       Int?
+  facultyId      Int?
+  courseId       Int?
+  classId        Int?
+  downloadsCount Int      @default(0)
+  avgRating      Float    @default(0)
+  status         String   @default("ACTIVE") // ACTIVE | HIDDEN | DELETED
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  subject  Subject          @relation(fields: [subjectId], references: [id])
+  uploader User             @relation(fields: [uploaderId], references: [id])
+  school   School?          @relation(fields: [schoolId], references: [id])
+  faculty  Faculty?         @relation(fields: [facultyId], references: [id])
+  course   Course?          @relation(fields: [courseId], references: [id])
+  class    Class?           @relation(fields: [classId], references: [id])
+  ratings  DocumentRating[]
+
+  @@index([subjectId, docType])
+  @@map("documents")
+}
+
+model DocumentRating {
+  id         Int      @id @default(autoincrement())
+  documentId Int
+  userId     Int
+  rating     Int
+  comment    String?
+  createdAt  DateTime @default(now())
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([documentId, userId])
+  @@map("document_ratings")
+}
+
+model Question {
+  id         Int      @id @default(autoincrement())
+  title      String
+  content    String
+  subjectId  Int
+  authorId   Int
+  tags       String?
+  isSolved   Boolean  @default(false)
+  viewsCount Int      @default(0)
+  status     String   @default("ACTIVE") // ACTIVE | HIDDEN | DELETED
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  subject Subject  @relation(fields: [subjectId], references: [id])
+  author  User     @relation(fields: [authorId], references: [id])
+  answers Answer[]
+
+  @@index([subjectId, isSolved])
+  @@map("questions")
+}
+
+model Answer {
+  id           Int      @id @default(autoincrement())
+  questionId   Int
+  authorId     Int
+  content      String
+  isCorrect    Boolean  @default(false)
+  upvotesCount Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  author   User     @relation(fields: [authorId], references: [id])
+  votes    Vote[]
+
+  @@index([questionId])
+  @@map("answers")
+}
+
+model Vote {
+  id        Int      @id @default(autoincrement())
+  answerId  Int
+  userId    Int
+  value     Int // 1 | -1
+  createdAt DateTime @default(now())
+
+  answer Answer @relation(fields: [answerId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([answerId, userId])
+  @@map("votes")
+}
+
+// ==========================================
+// 6. STUDY GROUPS, CAMPUS & REALTIME (BẢO + TÚ ANH)
+// ==========================================
+
+model StudyGroup {
+  id           Int      @id @default(autoincrement())
+  name         String
+  description  String?
+  subjectId    Int?
+  creatorId    Int
+  goal         String?
+  scheduleText String?
+  location     String?
+  maxMembers   Int      @default(10)
+  status       String   @default("OPEN") // OPEN | CLOSED
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  subject      Subject?      @relation(fields: [subjectId], references: [id])
+  creator      User          @relation("GroupCreator", fields: [creatorId], references: [id])
+  members      GroupMember[]
+  joinRequests JoinRequest[]
+
+  @@map("study_groups")
+}
+
+model GroupMember {
+  id       Int      @id @default(autoincrement())
+  groupId  Int
+  userId   Int
+  role     String   @default("MEMBER") // LEADER | MEMBER
+  joinedAt DateTime @default(now())
+
+  group StudyGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+  @@map("group_members")
+}
+
+model JoinRequest {
+  id           Int       @id @default(autoincrement())
+  groupId      Int
+  userId       Int
+  message      String?
+  status       String    @default("PENDING") // PENDING | APPROVED | REJECTED
+  reviewedById Int?
+  reviewedAt   DateTime?
+  createdAt    DateTime  @default(now())
+
+  group      StudyGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user       User       @relation("JoinRequester", fields: [userId], references: [id], onDelete: Cascade)
+  reviewedBy User?      @relation("JoinReviewer", fields: [reviewedById], references: [id])
+
+  @@index([groupId, status])
+  @@map("join_requests")
+}
+
+model CampusPost {
+  id           Int       @id @default(autoincrement())
+  authorId     Int
+  title        String
+  content      String
+  category     String    @default("ANNOUNCEMENT") // ANNOUNCEMENT | EVENT | SCHOLARSHIP | CLUB | JOB_INTERNSHIP
+  thumbnailUrl String?
+  location     String?
+  eventDate    DateTime?
+  deadline     DateTime?
+  isPinned     Boolean   @default(false)
+  status       String    @default("PUBLISHED") // PUBLISHED | HIDDEN | DRAFT
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  author User @relation(fields: [authorId], references: [id])
+
+  @@index([category, status])
+  @@map("campus_posts")
+}
+
+model Notification {
+  id            Int      @id @default(autoincrement())
+  userId        Int
+  type          String
+  title         String
+  message       String
+  referenceType String?
+  referenceId   Int?
+  isRead        Boolean  @default(false)
+  createdAt     DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@map("notifications")
+}
