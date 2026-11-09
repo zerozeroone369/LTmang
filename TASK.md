@@ -11,11 +11,13 @@
 - [ ] **Thái - Nhiệm vụ 10:** Client UI - Mảng Study & Campus (Documents, Q&A, Study Groups, Campus, Socket.io Toast) — Branch: `feature/client-study`
 
 ## ⏳ In Progress (Đang thực hiện)
-- [/] **Tú Anh - Nhiệm vụ 2:** Admin Dashboard (AdminLogs, SystemSettings, API Quản trị + UI Admin Web React/Tailwind/Axios + Test luồng khóa SV) — Branch: `feature/admin-dashboard`
+- _(Chưa có task đang thực hiện)_
 
 ## 🔍 In Review / Testing (Chờ duyệt PR / Kiểm thử)
-- _(Chưa có PR đang chờ)_
+- [ ] **PR #1 (Tú Anh - Nhiệm vụ 1):** `feature/core-auth` -> `main` (Core System, ERD toàn hệ thống, Auth JWT/Bcrypt, Academic APIs, Swagger/Postman)
+- [ ] **PR #2 (Tú Anh - Nhiệm vụ 2):** `feature/admin-dashboard` -> `feature/core-auth` (hoặc `main`) (AdminLogs, SystemSettings, Admin APIs + Campus APIs + React Admin Portal + E2E Lock/Unlock Verification)
 
-## ✅ Completed (Hoàn thành)
-- [x] Khởi tạo Repository `LTmang`, `.gitignore`, `README.md`, PR template và `TASK.md` — Branch: `main` (Initial setup)
-- [x] **Tú Anh - Nhiệm vụ 1:** Core System, ERD toàn hệ thống & Module Xác thực (Auth, JWT, Bcrypt, Token Revocation, Academic APIs, Swagger/Postman, 12/12 tests pass) — Branch: `feature/core-auth`
+## ✅ Completed (Hoàn thành code & test)
+- [x] Khởi tạo Repository `LTmang`, `.gitignore`, `README.md`, PR template và `TASK.md` — Branch: `main`
+- [x] **Tú Anh - Nhiệm vụ 1:** Core System, ERD toàn hệ thống & Module Xác thực (12/12 Vitest tests pass) — Branch: `feature/core-auth`
+- [x] **Tú Anh - Nhiệm vụ 2:** Admin Dashboard Backend APIs & React Admin Web UI (16/16 Vitest tests pass + E2E browser flow verified) — Branch: `feature/admin-dashboard`

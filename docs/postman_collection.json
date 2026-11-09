@@ -102,6 +102,105 @@
         { "name": "Get Courses", "request": { "method": "GET", "url": "{{baseUrl}}/api/academic/courses?schoolId=1" } },
         { "name": "Get Classes", "request": { "method": "GET", "url": "{{baseUrl}}/api/academic/classes?majorId=1&courseId=1" } }
       ]
+    },
+    {
+      "name": "3. Campus Public (Tú Anh & Bảo)",
+      "item": [
+        { "name": "List Published Campus Posts", "request": { "method": "GET", "url": "{{baseUrl}}/api/campus?page=1&limit=10" } },
+        { "name": "Get Campus Post Detail", "request": { "method": "GET", "url": "{{baseUrl}}/api/campus/1" } }
+      ]
+    },
+    {
+      "name": "4. Admin Dashboard API (Tú Anh)",
+      "item": [
+        {
+          "name": "Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/admin/dashboard"
+          }
+        },
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/admin/users?page=1&limit=10"
+          }
+        },
+        {
+          "name": "Lock User",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "url": "{{baseUrl}}/api/admin/users/2/lock",
+            "body": { "mode": "raw", "raw": "{\n  \"reason\": \"Vi phạm nội quy cộng đồng\"\n}" }
+          }
+        },
+        {
+          "name": "Unlock User",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/admin/users/2/unlock"
+          }
+        },
+        {
+          "name": "List Violation Reports",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/admin/reports"
+          }
+        },
+        {
+          "name": "Resolve Report",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "url": "{{baseUrl}}/api/admin/reports/1/resolve",
+            "body": { "mode": "raw", "raw": "{\n  \"action\": \"HIDE_POST\",\n  \"note\": \"Đã xử lý\"\n}" }
+          }
+        },
+        {
+          "name": "Create Campus Post",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "url": "{{baseUrl}}/api/admin/campus",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Hội thảo Lập trình mạng 2026\",\n  \"content\": \"Sự kiện giao lưu chia sẻ kiến thức lập trình mạng cho sinh viên CNTT.\",\n  \"category\": \"EVENT\",\n  \"location\": \"Hội trường A\",\n  \"isPinned\": true,\n  \"status\": \"PUBLISHED\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Admin Logs",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/admin/logs"
+          }
+        },
+        {
+          "name": "System Settings",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": "{{baseUrl}}/api/admin/settings"
+          }
+        }
+      ]
     }
   ]
 }

@@ -7,7 +7,9 @@ import { swaggerDocument } from './config/swagger';
 import { apiRateLimiter } from './middlewares/rateLimit.middleware';
 import { errorHandler, notFoundHandler } from './middlewares/error.middleware';
 import { academicRoutes } from './modules/academic/academic.routes';
+import { adminRoutes } from './modules/admin/admin.routes';
 import { authRoutes } from './modules/auth/auth.routes';
+import { campusRoutes } from './modules/campus/campus.routes';
 import { userRoutes } from './modules/users/user.routes';
 import { sendSuccess } from './utils/apiResponse';
 
@@ -43,6 +45,8 @@ export function createApp() {
   app.use('/api/auth', authRoutes);
   app.use('/api/users', userRoutes);
   app.use('/api/academic', academicRoutes);
+  app.use('/api/campus', campusRoutes);
+  app.use('/api/admin', adminRoutes);
 
   app.use(notFoundHandler);
   app.use(errorHandler);

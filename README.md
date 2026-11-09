@@ -32,7 +32,29 @@ LTmang/
 └── TASK.md           # Bảng Kanban theo dõi tiến độ toàn nhóm
 ```
 
-## 4. Quy tắc Git Flow của nhóm
+## 4. Hướng dẫn chạy nhanh (Local Dev)
+
+### Backend API (`http://localhost:4000`)
+```bash
+cd backend
+npm install
+cp .env.example .env
+npx prisma generate
+npx prisma migrate dev
+npm run prisma:seed
+npm run dev
+```
+- Swagger Docs: `http://localhost:4000/api-docs`
+
+### Admin Dashboard (`http://localhost:5173`)
+```bash
+cd admin-web
+npm install
+cp .env.example .env
+npm run dev
+```
+
+## 5. Quy tắc Git Flow của nhóm
 
 1. **Không push trực tiếp lên nhánh `main` hoặc `master`.**
 2. Khi thực hiện mỗi nhiệm vụ, rẽ nhánh riêng từ `main`:
@@ -45,8 +67,10 @@ LTmang/
 3. Viết test & chạy lint/format trước khi tạo Pull Request vào `main`.
 4. Tạo **Pull Request (PR)** vào `main` kèm mô tả, checklist test, và đợi Leader (**Tú Anh**) review & merge.
 
-## 5. Tài liệu tham khảo nhanh
+## 6. Tài liệu tham khảo nhanh
 
 - Chi tiết bảng nhiệm vụ & tiến độ: [`TASK.md`](./TASK.md)
 - Sơ đồ ERD toàn hệ thống: [`docs/ERD.md`](./docs/ERD.md)
+- Kiến trúc hệ thống & bảo mật: [`docs/API_ARCHITECTURE.md`](./docs/API_ARCHITECTURE.md)
 - Hợp đồng DTO cho Frontend & Backend: [`docs/DTO_CONTRACTS.md`](./docs/DTO_CONTRACTS.md)
+- Postman Collection: [`docs/postman_collection.json`](./docs/postman_collection.json)

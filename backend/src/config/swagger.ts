@@ -184,5 +184,96 @@ export const swaggerDocument = {
         responses: { '200': { description: 'OK' } },
       },
     },
+    '/api/campus': {
+      get: {
+        tags: ['Campus'],
+        summary: 'Danh sách tin tức Campus đã xuất bản (dùng cho Client)',
+        responses: { '200': { description: 'OK' } },
+      },
+    },
+    '/api/admin/dashboard': {
+      get: {
+        tags: ['Admin'],
+        summary: 'Thống kê tổng quan Admin Dashboard',
+        security: [{ bearerAuth: [] }],
+        responses: { '200': { description: 'OK' }, '403': { description: 'Không phải Admin' } },
+      },
+    },
+    '/api/admin/users': {
+      get: {
+        tags: ['Admin'],
+        summary: 'Danh sách người dùng (tìm kiếm, lọc trạng thái/vai trò)',
+        security: [{ bearerAuth: [] }],
+        responses: { '200': { description: 'OK' } },
+      },
+    },
+    '/api/admin/users/{id}/lock': {
+      patch: {
+        tags: ['Admin'],
+        summary: 'Khóa tài khoản người dùng kèm lý do',
+        security: [{ bearerAuth: [] }],
+        responses: { '200': { description: 'Đã khóa' } },
+      },
+    },
+    '/api/admin/users/{id}/unlock': {
+      patch: {
+        tags: ['Admin'],
+        summary: 'Mở khóa tài khoản người dùng',
+        security: [{ bearerAuth: [] }],
+        responses: { '200': { description: 'Đã mở khóa' } },
+      },
+    },
+    '/api/admin/reports': {
+      get: {
+        tags: ['Admin'],
+        summary: 'Danh sách báo cáo bài viết vi phạm',
+        security: [{ bearerAuth: [] }],
+        responses: { '200': { description: 'OK' } },
+      },
+    },
+    '/api/admin/reports/{id}/resolve': {
+      patch: {
+        tags: ['Admin'],
+        summary: 'Xử lý báo cáo vi phạm (HIDE_POST | DELETE_POST | DISMISS)',
+        security: [{ bearerAuth: [] }],
+        responses: { '200': { description: 'OK' } },
+      },
+    },
+    '/api/admin/campus': {
+      get: {
+        tags: ['Admin'],
+        summary: 'Quản lý danh sách tin Campus',
+        security: [{ bearerAuth: [] }],
+        responses: { '200': { description: 'OK' } },
+      },
+      post: {
+        tags: ['Admin'],
+        summary: 'Đăng tin Campus mới',
+        security: [{ bearerAuth: [] }],
+        responses: { '201': { description: 'Created' } },
+      },
+    },
+    '/api/admin/logs': {
+      get: {
+        tags: ['Admin'],
+        summary: 'Lịch sử thao tác quản trị (AdminLogs)',
+        security: [{ bearerAuth: [] }],
+        responses: { '200': { description: 'OK' } },
+      },
+    },
+    '/api/admin/settings': {
+      get: {
+        tags: ['Admin'],
+        summary: 'Xem cấu hình hệ thống (SystemSettings)',
+        security: [{ bearerAuth: [] }],
+        responses: { '200': { description: 'OK' } },
+      },
+      put: {
+        tags: ['Admin'],
+        summary: 'Cập nhật cấu hình hệ thống',
+        security: [{ bearerAuth: [] }],
+        responses: { '200': { description: 'OK' } },
+      },
+    },
   },
 };
