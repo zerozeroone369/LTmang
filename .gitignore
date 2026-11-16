@@ -8,6 +8,7 @@ dist/
 build/
 out/
 .vite/
+*.tsbuildinfo
 
 # Environment variables (NEVER commit secrets)
 .env
@@ -36,3 +37,4 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 .idea/
+
