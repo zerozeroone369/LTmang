@@ -184,6 +184,192 @@ export const swaggerDocument = {
         responses: { '200': { description: 'OK' } },
       },
     },
+    '/api/communities/overview': {
+      get: {
+        tags: ['Communities'],
+        summary: 'Tổng quan cây phân cấp đào tạo toàn trường',
+        responses: { '200': { description: 'Danh sách trường và cây phân cấp' } },
+      },
+    },
+    '/api/communities/me': {
+      get: {
+        tags: ['Communities'],
+        summary: 'Thông tin cộng đồng của sinh viên đang đăng nhập và bạn cùng lớp',
+        security: [{ bearerAuth: [] }],
+        responses: { '200': { description: 'Cây phân cấp học tập, sĩ số và bạn cùng lớp' } },
+      },
+    },
+    '/api/communities/classes/{id}/members': {
+      get: {
+        tags: ['Communities'],
+        summary: 'Danh sách thành viên của một lớp học',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: 'id', in: 'path', required: true, schema: { type: 'integer' } },
+          { name: 'page', in: 'query', schema: { type: 'integer', default: 1 } },
+          { name: 'limit', in: 'query', schema: { type: 'integer', default: 20 } },
+          { name: 'search', in: 'query', schema: { type: 'string' } },
+        ],
+        responses: { '200': { description: 'Danh sách thành viên lớp học' } },
+      },
+    },
+    '/api/communities/faculties/{id}/members': {
+      get: {
+        tags: ['Communities'],
+        summary: 'Danh sách sinh viên trực thuộc một khoa',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { name: 'id', in: 'path', required: true, schema: { type: 'integer' } },
+          { name: 'page', in: 'query', schema: { type: 'integer', default: 1 } },
+          { name: 'limit', in: 'query', schema: { type: 'integer', default: 20 } },
+          { name: 'search', in: 'query', schema: { type: 'string' } },
+        ],
+        responses: { '200': { description: 'Danh sách sinh viên trong khoa' } },
+      },
+    },
+    '/api/posts': {
+      get: {
+        tags: ['Posts'],
+        summary: 'Danh sách bài viết (phân trang, lọc theo category, scope, classId...)',
+        parameters: [
+          { name: 'page', in: 'query', schema: { type: 'integer', default: 1 } },
+          { name: 'limit', in: 'query', schema: { type: 'integer', default: 10 } },
+          { name: 'category', in: 'query', schema: { type: 'string', enum: ['STUDY', 'COMMUNITY', 'ACTIVITY', 'OPPORTUNITY'] } },
+          { name: 'scope', in: 'query', schema: { type: 'string', enum: ['CLASS', 'COURSE', 'MAJOR', 'FACULTY', 'SCHOOL', 'PUBLIC'] } },
+          { name: 'search', in: 'query', schema: { type: 'string' } },
+        ],
+        responses: { '200': { description: 'Danh sách bài viết' } },
+      },
+      post: {
+        tags: ['Posts'],
+        summary: 'Đăng bài viết mới',
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['content'],
+                properties: {
+                  title: { type: 'string', example: 'Đề cương ôn tập Lập trình mạng' },
+                  content: { type: 'string', example: 'Tài liệu chi tiết Socket TCP và REST API...' },
+                  category: { type: 'string', enum: ['STUDY', 'COMMUNITY', 'ACTIVITY', 'OPPORTUNITY'], default: 'COMMUNITY' },
+                  scope: { type: 'string', enum: ['CLASS', 'COURSE', 'MAJOR', 'FACULTY', 'SCHOOL', 'PUBLIC'], default: 'SCHOOL' },
+                  mediaUrls: { type: 'array', items: { type: 'string' } },
+                },
+              },
+            },
+          },
+        },
+        responses: { '201': { description: 'Tạo bài viết thành công' } },
+      },
+    },
+    '/api/posts/{id}': {
+      get: {
+        tags: ['Posts'],
+        summary: 'Xem chi tiết bài viết',
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+        responses: { '200': { description: 'Chi tiết bài viết' }, '404': { description: 'Không tìm thấy' } },
+      },
+      put: {
+        tags: ['Posts'],
+        summary: 'Chỉnh sửa bài viết (chỉ chủ bài viết)',
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  title: { type: 'string' },
+                  content: { type: 'string' },
+                  category: { type: 'string' },
+                  scope: { type: 'string' },
+                },
+              },
+            },
+          },
+        },
+        responses: { '200': { description: 'Cập nhật thành công' }, '403': { description: 'Không có quyền' } },
+      },
+      delete: {
+        tags: ['Posts'],
+        summary: 'Xóa bài viết (chủ bài viết hoặc Admin)',
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+        responses: { '200': { description: 'Đã xóa bài viết' }, '403': { description: 'Không có quyền' } },
+      },
+    },
+    '/api/posts/{id}/like': {
+      post: {
+        tags: ['Posts'],
+        summary: 'Thả tim / Bỏ thích bài viết (Toggle Like)',
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+        responses: { '200': { description: 'Kết quả thích/bỏ thích' } },
+      },
+    },
+    '/api/posts/{id}/comments': {
+      get: {
+        tags: ['Posts'],
+        summary: 'Danh sách bình luận của bài viết',
+        parameters: [
+          { name: 'id', in: 'path', required: true, schema: { type: 'integer' } },
+          { name: 'page', in: 'query', schema: { type: 'integer', default: 1 } },
+          { name: 'limit', in: 'query', schema: { type: 'integer', default: 20 } },
+        ],
+        responses: { '200': { description: 'Danh sách bình luận' } },
+      },
+      post: {
+        tags: ['Posts'],
+        summary: 'Thêm bình luận cho bài viết (hỗ trợ parentId)',
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['content'],
+                properties: {
+                  content: { type: 'string', example: 'Bài viết rất hữu ích!' },
+                  parentId: { type: 'integer' },
+                },
+              },
+            },
+          },
+        },
+        responses: { '201': { description: 'Bình luận thành công' } },
+      },
+    },
+    '/api/posts/{id}/report': {
+      post: {
+        tags: ['Posts'],
+        summary: 'Báo cáo bài viết vi phạm lên Admin',
+        security: [{ bearerAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'integer' } }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['reason'],
+                properties: {
+                  reason: { type: 'string', example: 'Nội dung spam / quảng cáo' },
+                  description: { type: 'string' },
+                },
+              },
+            },
+          },
+        },
+        responses: { '201': { description: 'Báo cáo thành công' }, '400': { description: 'Không thể báo cáo bài của mình' } },
+      },
+    },
     '/api/campus': {
       get: {
         tags: ['Campus'],

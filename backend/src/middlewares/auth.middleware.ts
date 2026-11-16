@@ -83,3 +83,40 @@ export function requireRole(...allowedRoles: string[]) {
     next();
   };
 }
+
+export async function optionalAuthenticate(req: Request, _res: Response, next: NextFunction) {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return next();
+    }
+
+    const token = authHeader.slice(7).trim();
+    if (!token) return next();
+
+    const payload = verifyAccessToken(token);
+    const userId = Number(payload.sub);
+    if (!Number.isInteger(userId) || !payload.jti) return next();
+
+    const revoked = await prisma.revokedToken.findUnique({
+      where: { jti: payload.jti },
+    });
+    if (revoked) return next();
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: { role: true },
+    });
+    if (!user || user.status === UserStatus.LOCKED) return next();
+
+    req.auth = {
+      userId: user.id,
+      role: user.role.name,
+      jti: payload.jti,
+      exp: payload.exp,
+    };
+    return next();
+  } catch {
+    return next();
+  }
+}
