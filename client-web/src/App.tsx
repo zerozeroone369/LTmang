@@ -1,9 +1,12 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { Toaster } from 'sonner';
 import { ClientLayout } from './components/ClientLayout';
 import { AuthProvider } from './context/AuthContext';
+import { CommunitiesPage } from './pages/CommunitiesPage';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { PlaceholderModulePage } from './pages/PlaceholderModulePage';
+import { PostsPage } from './pages/PostsPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { RegisterPage } from './pages/RegisterPage';
 
@@ -11,32 +14,15 @@ export function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <Toaster position="top-right" richColors closeButton />
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/" element={<ClientLayout />}>
             <Route index element={<HomePage />} />
             <Route path="profile" element={<ProfilePage />} />
-            <Route
-              path="communities"
-              element={
-                <PlaceholderModulePage
-                  moduleName="Module 2: Cộng đồng (Cấu trúc trường)"
-                  moduleOwner="Duy (Full-stack Module)"
-                  description="Xem cộng đồng Trường, Khoa, Ngành, Khóa, Lớp của bạn và chuyển đổi không gian học tập."
-                />
-              }
-            />
-            <Route
-              path="posts"
-              element={
-                <PlaceholderModulePage
-                  moduleName="Module 3: Bài viết & Tương tác"
-                  moduleOwner="Duy (Full-stack Module)"
-                  description="Đăng bài theo phạm vi lớp/trường, bình luận, thả tim like và báo cáo nội dung vi phạm."
-                />
-              }
-            />
+            <Route path="communities" element={<CommunitiesPage />} />
+            <Route path="posts" element={<PostsPage />} />
             <Route
               path="documents"
               element={

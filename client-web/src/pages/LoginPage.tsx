@@ -94,6 +94,55 @@ export function LoginPage() {
           </button>
         </form>
 
+        {/* Nút đăng nhập nhanh để Demo */}
+        <div className="mt-5 border-t border-slate-100 pt-4 space-y-2">
+          <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider text-center">
+            Tài khoản mẫu để Test & Demo:
+          </div>
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            <button
+              type="button"
+              onClick={() => {
+                setIdentifier('duy_2351220091@dau.edu.vn');
+                setPassword('Student@123456');
+              }}
+              className="p-2 bg-indigo-50 text-indigo-700 font-semibold rounded-xl hover:bg-indigo-100 text-left transition-colors"
+            >
+              Duy (23CT1)
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setIdentifier('anh_2351220089@dau.edu.vn');
+                setPassword('Student@123456');
+              }}
+              className="p-2 bg-violet-50 text-violet-700 font-semibold rounded-xl hover:bg-violet-100 text-left transition-colors"
+            >
+              Tú Anh (23CT1)
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setIdentifier('bao_2351220093@dau.edu.vn');
+                setPassword('Student@123456');
+              }}
+              className="p-2 bg-slate-100 text-slate-700 font-semibold rounded-xl hover:bg-slate-200 text-left transition-colors"
+            >
+              Bảo (23CT2)
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setIdentifier('admin@uniconnect.edu.vn');
+                setPassword('Admin@123456');
+              }}
+              className="p-2 bg-rose-50 text-rose-700 font-semibold rounded-xl hover:bg-rose-100 text-left transition-colors"
+            >
+              Admin (Quản trị)
+            </button>
+          </div>
+        </div>
+
         <div className="mt-6 text-center text-xs text-slate-500">
           Chưa có tài khoản sinh viên?{' '}
           <Link to="/register" className="font-semibold text-blue-600 hover:text-blue-700">

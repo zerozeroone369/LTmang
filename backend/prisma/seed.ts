@@ -35,7 +35,8 @@ async function main() {
     },
   });
 
-  const faculty = await prisma.faculty.upsert({
+  // 1. Khoa CNTT
+  const facultyCNTT = await prisma.faculty.upsert({
     where: { schoolId_code: { schoolId: school.id, code: 'CNTT' } },
     update: {},
     create: {
@@ -45,16 +46,64 @@ async function main() {
     },
   });
 
-  const major = await prisma.major.upsert({
-    where: { facultyId_code: { facultyId: faculty.id, code: 'CNTT' } },
+  // 2. Khoa Kiến trúc
+  const facultyKT = await prisma.faculty.upsert({
+    where: { schoolId_code: { schoolId: school.id, code: 'KT' } },
     update: {},
     create: {
-      facultyId: faculty.id,
+      schoolId: school.id,
+      code: 'KT',
+      name: 'Khoa Kiến trúc',
+    },
+  });
+
+  // Ngành CNTT thuộc Khoa CNTT
+  const majorCNTT = await prisma.major.upsert({
+    where: { facultyId_code: { facultyId: facultyCNTT.id, code: 'CNTT' } },
+    update: {},
+    create: {
+      facultyId: facultyCNTT.id,
       code: 'CNTT',
       name: 'Công nghệ thông tin',
     },
   });
 
+  // Ngành Kỹ thuật Phần mềm thuộc Khoa CNTT
+  const majorKTPM = await prisma.major.upsert({
+    where: { facultyId_code: { facultyId: facultyCNTT.id, code: 'KTPM' } },
+    update: {},
+    create: {
+      facultyId: facultyCNTT.id,
+      code: 'KTPM',
+      name: 'Kỹ thuật phần mềm',
+    },
+  });
+
+  // Ngành Kiến trúc công trình thuộc Khoa Kiến trúc
+  const majorKTCTR = await prisma.major.upsert({
+    where: { facultyId_code: { facultyId: facultyKT.id, code: 'KTCTR' } },
+    update: {},
+    create: {
+      facultyId: facultyKT.id,
+      code: 'KTCTR',
+      name: 'Kiến trúc công trình',
+    },
+  });
+
+  // Khóa K22
+  const course22 = await prisma.course.upsert({
+    where: { schoolId_code: { schoolId: school.id, code: 'K22' } },
+    update: {},
+    create: {
+      schoolId: school.id,
+      code: 'K22',
+      name: 'Khóa 2022',
+      startYear: 2022,
+      endYear: 2026,
+    },
+  });
+
+  // Khóa K23
   const course23 = await prisma.course.upsert({
     where: { schoolId_code: { schoolId: school.id, code: 'K23' } },
     update: {},
@@ -67,20 +116,93 @@ async function main() {
     },
   });
 
+  // Lớp 23CT1 (Ngành CNTT, Khóa K23)
   const class23CT1 = await prisma.class.upsert({
     where: {
       majorId_courseId_code: {
-        majorId: major.id,
+        majorId: majorCNTT.id,
         courseId: course23.id,
         code: '23CT1',
       },
     },
     update: {},
     create: {
-      majorId: major.id,
+      majorId: majorCNTT.id,
       courseId: course23.id,
       code: '23CT1',
-      name: 'Lớp 23CT1 - CNTT',
+      name: 'Lớp 23CT1 - CNTT K23',
+    },
+  });
+
+  // Lớp 23CT2 (Ngành CNTT, Khóa K23)
+  const class23CT2 = await prisma.class.upsert({
+    where: {
+      majorId_courseId_code: {
+        majorId: majorCNTT.id,
+        courseId: course23.id,
+        code: '23CT2',
+      },
+    },
+    update: {},
+    create: {
+      majorId: majorCNTT.id,
+      courseId: course23.id,
+      code: '23CT2',
+      name: 'Lớp 23CT2 - CNTT K23',
+    },
+  });
+
+  // Lớp 23PM1 (Ngành KTPM, Khóa K23)
+  const class23PM1 = await prisma.class.upsert({
+    where: {
+      majorId_courseId_code: {
+        majorId: majorKTPM.id,
+        courseId: course23.id,
+        code: '23PM1',
+      },
+    },
+    update: {},
+    create: {
+      majorId: majorKTPM.id,
+      courseId: course23.id,
+      code: '23PM1',
+      name: 'Lớp 23PM1 - Phần mềm K23',
+    },
+  });
+
+  // Lớp 22CT1 (Ngành CNTT, Khóa K22)
+  const class22CT1 = await prisma.class.upsert({
+    where: {
+      majorId_courseId_code: {
+        majorId: majorCNTT.id,
+        courseId: course22.id,
+        code: '22CT1',
+      },
+    },
+    update: {},
+    create: {
+      majorId: majorCNTT.id,
+      courseId: course22.id,
+      code: '22CT1',
+      name: 'Lớp 22CT1 - CNTT K22',
+    },
+  });
+
+  // Lớp 23KT1 (Ngành Kiến trúc công trình, Khóa K23)
+  const class23KT1 = await prisma.class.upsert({
+    where: {
+      majorId_courseId_code: {
+        majorId: majorKTCTR.id,
+        courseId: course23.id,
+        code: '23KT1',
+      },
+    },
+    update: {},
+    create: {
+      majorId: majorKTCTR.id,
+      courseId: course23.id,
+      code: '23KT1',
+      name: 'Lớp 23KT1 - Kiến trúc K23',
     },
   });
 
@@ -100,13 +222,13 @@ async function main() {
       passwordHash: adminPasswordHash,
       roleId: adminRole.id,
       schoolId: school.id,
-      facultyId: faculty.id,
+      facultyId: facultyCNTT.id,
       status: 'ACTIVE',
       bio: 'Leader & Quản trị viên hệ thống UniConnect',
     },
   });
 
-  const student1 = await prisma.user.upsert({
+  const studentTuAnh = await prisma.user.upsert({
     where: { email: 'anh_2351220089@dau.edu.vn' },
     update: {},
     create: {
@@ -116,16 +238,16 @@ async function main() {
       passwordHash: studentPasswordHash,
       roleId: studentRole.id,
       schoolId: school.id,
-      facultyId: faculty.id,
-      majorId: major.id,
+      facultyId: facultyCNTT.id,
+      majorId: majorCNTT.id,
       courseId: course23.id,
       classId: class23CT1.id,
       status: 'ACTIVE',
-      bio: 'Sinh viên lớp 23CT1 - Yêu thích Lập trình mạng',
+      bio: 'Leader - Lớp 23CT1',
     },
   });
 
-  const student2 = await prisma.user.upsert({
+  const studentThai = await prisma.user.upsert({
     where: { email: 'thai_2351220090@dau.edu.vn' },
     update: {},
     create: {
@@ -135,12 +257,88 @@ async function main() {
       passwordHash: studentPasswordHash,
       roleId: studentRole.id,
       schoolId: school.id,
-      facultyId: faculty.id,
-      majorId: major.id,
+      facultyId: facultyCNTT.id,
+      majorId: majorCNTT.id,
       courseId: course23.id,
       classId: class23CT1.id,
       status: 'ACTIVE',
       bio: 'Frontend Developer - Lớp 23CT1',
+    },
+  });
+
+  const studentDuy = await prisma.user.upsert({
+    where: { email: 'duy_2351220091@dau.edu.vn' },
+    update: {},
+    create: {
+      email: 'duy_2351220091@dau.edu.vn',
+      studentCode: '2351220091',
+      fullName: 'Nguyễn Duy',
+      passwordHash: studentPasswordHash,
+      roleId: studentRole.id,
+      schoolId: school.id,
+      facultyId: facultyCNTT.id,
+      majorId: majorCNTT.id,
+      courseId: course23.id,
+      classId: class23CT1.id,
+      status: 'ACTIVE',
+      bio: 'Module Cộng đồng & Bài viết - Lớp 23CT1',
+    },
+  });
+
+  const studentHuy = await prisma.user.upsert({
+    where: { email: 'huy_2351220092@dau.edu.vn' },
+    update: {},
+    create: {
+      email: 'huy_2351220092@dau.edu.vn',
+      studentCode: '2351220092',
+      fullName: 'Lê Quang Huy',
+      passwordHash: studentPasswordHash,
+      roleId: studentRole.id,
+      schoolId: school.id,
+      facultyId: facultyCNTT.id,
+      majorId: majorCNTT.id,
+      courseId: course23.id,
+      classId: class23CT1.id,
+      status: 'ACTIVE',
+      bio: 'Module Tài liệu & Hỏi đáp - Lớp 23CT1',
+    },
+  });
+
+  const studentBao = await prisma.user.upsert({
+    where: { email: 'bao_2351220093@dau.edu.vn' },
+    update: {},
+    create: {
+      email: 'bao_2351220093@dau.edu.vn',
+      studentCode: '2351220093',
+      fullName: 'Trần Quốc Bảo',
+      passwordHash: studentPasswordHash,
+      roleId: studentRole.id,
+      schoolId: school.id,
+      facultyId: facultyCNTT.id,
+      majorId: majorCNTT.id,
+      courseId: course23.id,
+      classId: class23CT2.id,
+      status: 'ACTIVE',
+      bio: 'Module Nhóm học & Campus - Lớp 23CT2',
+    },
+  });
+
+  const studentHoa = await prisma.user.upsert({
+    where: { email: 'hoa_2351220095@dau.edu.vn' },
+    update: {},
+    create: {
+      email: 'hoa_2351220095@dau.edu.vn',
+      studentCode: '2351220095',
+      fullName: 'Phạm Thị Hoa',
+      passwordHash: studentPasswordHash,
+      roleId: studentRole.id,
+      schoolId: school.id,
+      facultyId: facultyKT.id,
+      majorId: majorKTCTR.id,
+      courseId: course23.id,
+      classId: class23KT1.id,
+      status: 'ACTIVE',
+      bio: 'Sinh viên Khoa Kiến trúc - Lớp 23KT1',
     },
   });
 
@@ -150,7 +348,7 @@ async function main() {
     create: {
       code: 'NET101',
       name: 'Lập trình mạng',
-      facultyId: faculty.id,
+      facultyId: facultyCNTT.id,
       description: 'Socket TCP/UDP, HTTP, REST API, WebSocket và hệ thống phân tán',
     },
   });
@@ -241,24 +439,78 @@ async function main() {
   if (existingPostsCount === 0) {
     const samplePost = await prisma.post.create({
       data: {
-        authorId: student1.id,
+        authorId: studentTuAnh.id,
         title: 'Chia sẻ đề cương ôn tập Lập trình mạng K23',
         content:
           'Mình vừa tổng hợp xong phần Socket TCP, HTTP/HTTPS và REST API cho lớp 23CT1. Các bạn vào xem nhé!',
         category: 'STUDY',
         scope: 'CLASS',
         schoolId: school.id,
-        facultyId: faculty.id,
-        majorId: major.id,
+        facultyId: facultyCNTT.id,
+        majorId: majorCNTT.id,
         courseId: course23.id,
         classId: class23CT1.id,
         status: 'ACTIVE',
       },
     });
 
+    const duyPost = await prisma.post.create({
+      data: {
+        authorId: studentDuy.id,
+        title: 'Chào mừng các bạn đến với mạng xã hội sinh viên UniConnect!',
+        content:
+          'Dự án UniConnect được xây dựng cho môn Lập trình mạng. Rất mong nhận được đóng góp ý kiến từ thầy cô và các bạn sinh viên!',
+        category: 'COMMUNITY',
+        scope: 'SCHOOL',
+        schoolId: school.id,
+        facultyId: facultyCNTT.id,
+        status: 'ACTIVE',
+      },
+    });
+
+    // Thêm bình luận mẫu từ bạn bè vào bài viết của Duy
+    await prisma.comment.create({
+      data: {
+        postId: duyPost.id,
+        authorId: studentThai.id,
+        content: 'Dự án xịn quá Duy ơi! Giao diện client mình đang hoàn thiện nhé!',
+      },
+    });
+
+    await prisma.comment.create({
+      data: {
+        postId: duyPost.id,
+        authorId: studentTuAnh.id,
+        content: 'Hệ thống auth và bảo mật đã sẵn sàng cho cả nhóm kết nối.',
+      },
+    });
+
+    // Thêm reaction like mẫu
+    await prisma.reaction.create({
+      data: {
+        postId: duyPost.id,
+        userId: studentThai.id,
+        type: 'LIKE',
+      },
+    });
+
+    await prisma.reaction.create({
+      data: {
+        postId: duyPost.id,
+        userId: studentTuAnh.id,
+        type: 'LIKE',
+      },
+    });
+
+    // Cập nhật số like và comment
+    await prisma.post.update({
+      where: { id: duyPost.id },
+      data: { likesCount: 2, commentsCount: 2 },
+    });
+
     const spamPost = await prisma.post.create({
       data: {
-        authorId: student2.id,
+        authorId: studentThai.id,
         title: 'Quảng cáo dịch vụ làm bài hộ (Nội dung mẫu chờ kiểm duyệt)',
         content: 'Bài viết vi phạm quy định học thuật dùng để test luồng kiểm duyệt của Admin.',
         category: 'COMMUNITY',
@@ -271,14 +523,14 @@ async function main() {
     await prisma.postReport.create({
       data: {
         postId: spamPost.id,
-        reporterId: student1.id,
+        reporterId: studentDuy.id,
         reason: 'Vi phạm quy chế học thuật / Spam',
         description: 'Nội dung quảng cáo làm bài hộ không phù hợp với cộng đồng sinh viên.',
         status: 'PENDING',
       },
     });
 
-    console.log('Created sample posts:', samplePost.id, spamPost.id);
+    console.log('Created sample posts:', samplePost.id, duyPost.id, spamPost.id);
   }
 
   console.log('Seed completed successfully.');

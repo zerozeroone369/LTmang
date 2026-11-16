@@ -9,7 +9,7 @@
 | STT | Thành viên & Vai trò | Module sở hữu | Trách nhiệm cốt lõi, Bảng DB & Phối hợp | Tiến độ | Trạng thái |
 |---|---|---|---|---|---|
 | **1** | **Nguyễn Ngô Tú Anh**<br>*(Leader & Full-stack)* | • **Module 1:** Tài khoản & Core Auth<br>• **Module 10:** Quản trị hệ thống (Admin) | • Base project, ERD toàn hệ thống, JWT Auth Middleware, Client Auth UI (Login/Register/Profile), Admin Portal UI, AdminLogs, SystemSettings.<br>• Phối hợp: Duyệt PR, tích hợp trang quản trị của Duy & Bảo vào Admin Dashboard. | **100%**<br>*(M1: 100%, M10: 100%)* | **Hoàn thành** (Sẵn sàng demo) |
-| **2** | **Duy**<br>*(Full-stack Module)* | • **Module 2:** Cộng đồng (Cấu trúc trường)<br>• **Module 3:** Bài viết & Tương tác | • Cấu trúc Trường → Khoa → Ngành → Khóa → Lớp, CRUD bài viết, like, comment, báo cáo vi phạm.<br>• Bảng DB: Schools, Faculties, Majors, Courses, Classes, Posts, Comments, Reactions, PostReports. | M2: 25%<br>M3: 25% | Đang thực hiện |
+| **2** | **Duy**<br>*(Full-stack Module)* | • **Module 2:** Cộng đồng (Cấu trúc trường)<br>• **Module 3:** Bài viết & Tương tác | • Cấu trúc Trường → Khoa → Ngành → Khóa → Lớp, CRUD bài viết, like, comment, báo cáo vi phạm, giao diện Desktop/Mobile.<br>• Bảng DB: Schools, Faculties, Majors, Courses, Classes, Posts, Comments, Reactions, PostReports. | **100%**<br>*(M2: 100%, M3: 100%)* | **Hoàn thành** (Đã duyệt PR) |
 | **3** | **Huy**<br>*(Full-stack Module)* | • **Module 4:** Tài liệu học tập<br>• **Module 5:** Hỏi đáp học thuật (Q&A) | • Upload/download tài liệu &lt;20MB, đánh giá sao, Q&A theo môn học, upvote, chốt câu trả lời đúng.<br>• Bảng DB: Subjects, Documents, DocumentRatings, Questions, Answers, Votes. | M4: 25%<br>M5: 25% | Đang thực hiện |
 | **4** | **Bảo**<br>*(Full-stack Module)* | • **Module 6:** Nhóm học (Study Groups)<br>• **Module 7:** Campus (Tin tức, Việc làm) | • Tạo nhóm học, xin gia nhập, duyệt thành viên; đăng/lọc tin tức Campus, sự kiện, học bổng.<br>• Bảng DB: StudyGroups, GroupMembers, JoinRequests, CampusPosts. | M6: 25%<br>M7: 25% | Đang thực hiện |
 | **5** | **Thái**<br>*(Full-stack & UI Lead)* | • **Module 8:** Bảng tin thông minh (News Feed)<br>• **Module 9:** Thông báo Realtime (Socket.io) | • Bảng tin thông minh lọc 4 nhóm & ưu tiên theo lớp, Socket.io Server & chuông thông báo realtime.<br>• Bảng DB: UserFeedPreferences, Notifications. Cung cấp hàm sendNotification(). | M8: 25%<br>M9: 0% | Đang thực hiện |
@@ -19,8 +19,8 @@
 ## 📋 CHI TIẾT THEO DÕI TASK (KANBAN)
 
 ### ⏳ Chờ triển khai / Đang chạy của các thành viên khác
-- [ ] **Duy - Module 2:** Cộng đồng (Cấu trúc trường học: Schools → Classes) — Branch: `feature/community`
-- [ ] **Duy - Module 3:** Bài viết & Tương tác (CRUD Posts, Comments, Reactions, PostReports) — Branch: `feature/posts`
+- [x] **Duy - Module 2:** Cộng đồng (Cấu trúc trường học: Schools → Classes) — Branch: `feature/community` (Đã duyệt PR #1 & tích hợp)
+- [x] **Duy - Module 3:** Bài viết & Tương tác (CRUD Posts, Comments, Reactions, PostReports) — Branch: `feature/community` (Đã duyệt PR #1 & tích hợp)
 - [ ] **Huy - Module 4:** Tài liệu học tập (Upload &lt;20MB, Download, Rating sao, Filter môn học) — Branch: `feature/documents`
 - [ ] **Huy - Module 5:** Hỏi đáp học thuật Q&A (Questions, Answers, Upvote, Chốt câu đúng) — Branch: `feature/qa`
 - [ ] **Bảo - Module 6:** Nhóm học Study Groups (StudyGroups, GroupMembers, JoinRequests) — Branch: `feature/study-groups`
@@ -29,8 +29,9 @@
 - [ ] **Thái - Module 9:** Thông báo Realtime Socket.io (Socket Handshake JWT, new_comment, new_answer, popup Toast) — Branch: `feature/notifications`
 
 ### 🔍 In Review / Pull Requests của Tú Anh (Leader)
-- [x] **PR #1 (Tú Anh - Module 1 Core):** `feature/core-auth` → `main` (ERD toàn hệ thống, Base Backend, JWT/Bcrypt, Academic APIs, Swagger, Postman, Vitest tests)
-- [x] **PR #2 (Tú Anh - Module 10 Admin & Module 1 Client UI):** `feature/admin-dashboard` → `main` (Admin Dashboard API & UI, Client Web Login/Register/Profile UI, Lock/Unlock Student E2E verification)
+- [x] **PR #1 (Duy - Module 2 & 3):** `feature/community` → `main` (Cấu trúc trường, Cộng đồng, Đăng bài, Like/Comment/Report, Desktop/Mobile UI) — **Đã kiểm tra & gộp thành công**
+- [x] **PR #2 (Tú Anh - Module 1 Core & Client UI):** `feature/auth` → `main` (ERD 24 bảng, Base Backend, JWT/Bcrypt, Academic cascading, Đăng ký/Đăng nhập/Profile)
+- [x] **PR #3 (Tú Anh - Module 10 Admin):** `feature/admin-dashboard` → `main` (Admin Dashboard API & UI, Quản lý User, Khóa/Mở khóa SV, Kiểm duyệt vi phạm)
 
 ### ✅ Hoàn thành trọn gói của Tú Anh (Leader & Full-stack)
 - [x] **B1 (ERD & Base):**
