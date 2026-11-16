@@ -1,7 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { MobileLayout } from './components/MobileLayout';
+import { DesktopAppLayout } from './components/DesktopAppLayout';
 import { LoginPage } from './pages/LoginPage';
 import { CommunitiesPage } from './pages/CommunitiesPage';
 import { PostsPage } from './pages/PostsPage';
@@ -18,8 +18,8 @@ export function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Toaster position="top-center" richColors closeButton />
-        <MobileLayout>
+        <Toaster position="top-right" richColors closeButton />
+        <DesktopAppLayout>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
             <Route
@@ -48,7 +48,7 @@ export function App() {
             />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
-        </MobileLayout>
+        </DesktopAppLayout>
       </BrowserRouter>
     </AuthProvider>
   );
