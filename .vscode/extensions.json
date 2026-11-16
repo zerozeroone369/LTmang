@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "bradlc.vscode-tailwindcss",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "formulahendry.auto-rename-tag",
+    "usernamehw.errorlens",
+    "naumovs.color-highlight",
+    "dsznajder.es7-react-js-snippets"
+  ]
+}
