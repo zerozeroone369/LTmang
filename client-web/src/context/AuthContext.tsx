@@ -1,80 +1,78 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { apiClient } from '../api/client';
+import React, { useEffect, useState } from 'react';
+import { authApi } from '../api/authApi';
+import { TOKEN_STORAGE_KEY } from '../api/client';
+import { UserDTO } from '../types/auth';
+import { AuthContext } from './auth-context';
 
-export interface UserProfile {
-  id: number;
-  fullName: string;
-  studentCode: string | null;
-  email: string;
-  avatarUrl: string | null;
-  role: string;
-  school?: { id: number; code: string; name: string } | null;
-  faculty?: { id: number; code: string; name: string } | null;
-  major?: { id: number; code: string; name: string } | null;
-  course?: { id: number; code: string; name: string } | null;
-  classInfo?: { id: number; code: string; name: string } | null;
-}
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<UserDTO | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-interface AuthContextType {
-  user: UserProfile | null;
-  token: string | null;
-  login: (token: string, user: UserProfile) => void;
-  logout: () => void;
-  refreshProfile: () => Promise<void>;
-}
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<UserProfile | null>(() => {
-    const saved = localStorage.getItem('uniconnect_user');
-    return saved ? JSON.parse(saved) : null;
-  });
-  const [token, setToken] = useState<string | null>(() => {
-    return localStorage.getItem('uniconnect_token');
-  });
-
-  const login = (newToken: string, newUser: UserProfile) => {
-    localStorage.setItem('uniconnect_token', newToken);
-    localStorage.setItem('uniconnect_user', JSON.stringify(newUser));
-    setToken(newToken);
-    setUser(newUser);
-  };
-
-  const logout = () => {
-    localStorage.removeItem('uniconnect_token');
-    localStorage.removeItem('uniconnect_user');
-    setToken(null);
-    setUser(null);
-  };
-
-  const refreshProfile = async () => {
+  const fetchProfile = async () => {
     try {
-      const res = await apiClient.get('/users/profile');
-      if (res.data?.success && res.data.data) {
-        setUser(res.data.data);
-        localStorage.setItem('uniconnect_user', JSON.stringify(res.data.data));
-      }
+      const me = await authApi.me();
+      setUser(me);
     } catch {
-      // Ignore
+      localStorage.removeItem(TOKEN_STORAGE_KEY);
+      setUser(null);
     }
   };
 
   useEffect(() => {
-    if (token) {
-      refreshProfile();
+    const token = localStorage.getItem(TOKEN_STORAGE_KEY);
+    if (!token) {
+      setIsLoading(false);
+      return;
     }
-  }, [token]);
+    fetchProfile().finally(() => setIsLoading(false));
+  }, []);
+
+  const login = async (identifier: string, password: string) => {
+    const data = await authApi.login(identifier, password);
+    localStorage.setItem(TOKEN_STORAGE_KEY, data.accessToken);
+    setUser(data.user);
+  };
+
+  const register = async (payload: {
+    fullName: string;
+    email: string;
+    studentCode?: string;
+    password: string;
+    phone?: string;
+    schoolId?: number;
+    facultyId?: number;
+    majorId?: number;
+    courseId?: number;
+    classId?: number;
+  }) => {
+    const data = await authApi.register(payload);
+    localStorage.setItem(TOKEN_STORAGE_KEY, data.accessToken);
+    setUser(data.user);
+  };
+
+  const logout = async () => {
+    try {
+      await authApi.logout();
+    } catch {
+      // ignore
+    } finally {
+      localStorage.removeItem(TOKEN_STORAGE_KEY);
+      setUser(null);
+    }
+  };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, refreshProfile }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        isLoading,
+        login,
+        register,
+        logout,
+        refreshProfile: fetchProfile,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within an AuthProvider');
-  return context;
-};
+}

@@ -1,14 +1,19 @@
 import axios from 'axios';
 
-export const API_BASE_URL = 'http://localhost:4000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
+
+export const TOKEN_STORAGE_KEY = 'uniconnect_token';
 
 export const apiClient = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 10000,
+  baseURL: API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  timeout: 15000,
 });
 
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('uniconnect_token');
+  const token = localStorage.getItem(TOKEN_STORAGE_KEY);
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -19,24 +24,24 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      localStorage.removeItem('uniconnect_token');
-      localStorage.removeItem('uniconnect_user');
+      localStorage.removeItem(TOKEN_STORAGE_KEY);
+      if (
+        !window.location.pathname.includes('/login') &&
+        !window.location.pathname.includes('/register')
+      ) {
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   },
 );
 
-export function getErrorMessage(error: unknown): string {
+export function getErrorMessage(error: unknown, fallback = 'Đã xảy ra lỗi, vui lòng thử lại') {
   if (axios.isAxiosError(error)) {
-    return (
-      error.response?.data?.error?.message ||
-      error.response?.data?.message ||
-      error.message ||
-      'Đã xảy ra lỗi máy chủ'
-    );
+    const apiErr = error.response?.data?.error;
+    if (apiErr?.message) return String(apiErr.message);
+    if (error.message) return error.message;
   }
-  if (error instanceof Error) {
-    return error.message;
-  }
-  return 'Đã xảy ra lỗi không xác định';
+  if (error instanceof Error) return error.message;
+  return fallback;
 }

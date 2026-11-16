@@ -18,3 +18,4 @@ backend/src/modules/<module-name>/
 - **Bảo (Backend & Realtime):** `study-groups/` (nhiệm vụ 7), `campus/` & `notifications/` & Socket.io (`src/socket/`) (nhiệm vụ 8)
 
 Sau khi code module, đăng ký router vào `backend/src/app.ts` và bổ sung endpoints vào `backend/src/config/swagger.ts` + `docs/postman_collection.json`.
+

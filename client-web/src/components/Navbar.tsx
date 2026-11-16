@@ -1,6 +1,6 @@
 import React from 'react';
-import { useAuth } from '../context/AuthContext';
-import { LogOut, MessageSquare, Users2, Shield } from 'lucide-react';
+import { useAuth } from '../context/auth-context';
+import { LogOut, MessageSquare, Users2 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
 export const Navbar: React.FC = () => {

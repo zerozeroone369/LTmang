@@ -103,3 +103,4 @@ export interface CampusPostDTO {
 - `PostReportDTO`: `{ id, reason, description, status, createdAt, handledAt, handledNote, post: { id, title, content, status, author }, reporter: { id, fullName, email } }`
 - `AdminLogDTO`: `{ id, action, targetType, targetId, details, ipAddress, createdAt, admin: { id, fullName, email } }`
 - `SystemSettingDTO`: `{ id, key, value, description, group, updatedAt }`
+

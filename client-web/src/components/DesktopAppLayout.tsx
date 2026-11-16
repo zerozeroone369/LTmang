@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/auth-context';
 import {
   MessageSquare,
   Users2,
@@ -9,22 +9,29 @@ import {
   Users,
   Compass,
   LogOut,
-  AppWindow,
-  Search,
   Radio,
+  User,
 } from 'lucide-react';
 
 export const DesktopAppLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, logout } = useAuth();
   const location = useLocation();
 
-  const isLoginPage = location.pathname === '/login';
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
 
-  if (isLoginPage) {
+  if (isAuthPage) {
     return <div className="min-h-screen bg-slate-900 flex items-center justify-center p-4">{children}</div>;
   }
 
   const navItems = [
+    {
+      to: '/profile',
+      active: location.pathname === '/profile',
+      icon: User,
+      label: '1. Hồ sơ & Thẻ SV ảo',
+      badge: 'Tú Anh',
+      badgeColor: 'bg-violet-500/20 text-violet-300 border-violet-500/30',
+    },
     {
       to: '/posts',
       active: location.pathname === '/posts' || location.pathname === '/',
@@ -188,9 +195,11 @@ export const DesktopAppLayout: React.FC<{ children: React.ReactNode }> = ({ chil
         <header className="h-12 bg-white border-b border-slate-200 px-6 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-3 text-xs text-slate-600">
             <span className="font-bold text-slate-900">
-              {location.pathname === '/communities'
-                ? 'Module 2: Cấu Trúc Đào Tạo & Cộng Đồng'
-                : 'Module 3: Bảng Tin Bài Viết & Tương Tác'}
+              {location.pathname === '/profile'
+                ? 'Module 1: Hồ Sơ Cá Nhân & Thẻ Sinh Viên Ảo'
+                : location.pathname === '/communities'
+                ? 'Module 2: Cấu Trúc Đào Tạo & Không Gian Cộng Đồng'
+                : 'Module 3: Bảng Tin Bài Viết & Tương Tác Sinh Viên'}
             </span>
             <span className="text-slate-300">|</span>
             <span className="flex items-center gap-1.5 text-emerald-600 font-medium">

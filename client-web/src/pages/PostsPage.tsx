@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { apiClient, getErrorMessage } from '../api/client';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/auth-context';
 import { ConfirmModal } from '../components/ConfirmModal';
 import { SkeletonPost } from '../components/SkeletonPost';
 import { EmptyState } from '../components/EmptyState';

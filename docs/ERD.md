@@ -103,3 +103,4 @@ erDiagram
 
 ### 3.5. `system_settings`
 - Cấu hình động cho hệ thống dưới dạng key-value (`MAX_FILE_UPLOAD_MB`, `MAX_LOGIN_ATTEMPTS`, `LOGIN_LOCK_MINUTES`, `MAINTENANCE_MODE`, `SITE_NAME`...).
+

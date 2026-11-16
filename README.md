@@ -1,156 +1,267 @@
-# UniConnect — Phân Hệ Cộng Đồng & Bài Viết (Module 2 & 3)
+# UniConnect — Mạng Xã Hội Phục Vụ Đời Sống Sinh Viên
 
 > **Môn học:** Lập trình mạng (Network Programming)  
-> **Sinh viên phụ trách:** **Nguyễn Duy**  
-> **Nhánh phát triển:** `feature/community`  
-> **Phạm vi sở hữu:** **Module 2: Cộng đồng** & **Module 3: Bài viết** (Full-stack từ CSDL → API → Desktop App → Demo & Vấn đáp)
+> **Repository:** `https://github.com/zerozeroone369/LTmang.git`  
+> **Mô hình vận hành:** Sở hữu trọn gói theo Module (**End-to-End: CSDL → API → UI → Demo & Vấn đáp**)  
+> **Quy mô:** 5 Thành viên — 10 Module — 40 Bước triển khai  
+> **Tiến độ tích hợp hiện tại:** **4/10 Module hoàn thành 100%** (Module 1, 2, 3, 10 — Vượt qua 28/28 Unit & Integration Tests)
 
 ---
 
-## 1. Tổng quan nhiệm vụ của Duy
+## 1. Bảng Phân Công Nhiệm Vụ 10 Module (5 Thành Viên)
 
-Theo quy chế phân công trọn gói theo chiều dọc (Vertical Slice Full-stack), thành viên **Nguyễn Duy** sở hữu và chịu trách nhiệm độc lập từ đầu đến cuối về 2 module cốt lõi của mạng xã hội sinh viên:
+Mỗi thành viên làm chủ trọn vẹn 02 module từ thiết kế bảng CSDL, viết REST API, dựng giao diện UI đến tự tin demo và trả lời vấn đáp:
 
-```mermaid
-flowchart TD
-    subgraph M2["MODULE 2: CỘNG ĐỒNG (DUY)"]
-        direction TB
-        DB2["1. CƠ SỞ DỮ LIỆU<br/>Schools · Faculties · Majors · Courses · Classes"]
-        API2["2. API BACKEND<br/>GET /academic/* · GET /communities/me"]
-        UI2["3. GIAO DIỆN DESKTOP APP<br/>Bộ chọn liên hoàn CascadeSelect · Trang Cộng đồng 5 cấp"]
-        QA2["4. VẤN ĐÁP THẦY<br/>Quan hệ 1-N, phụ thuộc hàm từ Lớp sinh hoạt"]
-        DB2 --> API2 --> UI2 --> QA2
-    end
+| STT | Thành viên & Vai trò | Module sở hữu (2 Module/người) | Trách nhiệm cốt lõi & Bảng CSDL | Tiến độ | Trạng thái |
+|:---:|---|---|---|:---:|:---:|
+| **1** | **Nguyễn Ngô Tú Anh**<br>*(Leader & Full-stack)* | • **Module 1:** Tài khoản & Core Auth<br>• **Module 10:** Quản trị hệ thống (Admin Dashboard) | • Base project, ERD toàn hệ thống 24 bảng, JWT Auth & Middleware, UI Đăng ký cascading / Đăng nhập / Profile thẻ SV ảo, Admin Web Portal, Duyệt PR.<br>• Bảng DB: `Users`, `Roles`, `AdminLogs`, `SystemSettings`. | **100%** | **Hoàn thành** (Đã sẵn sàng bảo vệ) |
+| **2** | **Nguyễn Lê Bảo Duy**<br>*(Full-stack Module)* | • **Module 2:** Cộng đồng (Cấu trúc trường)<br>• **Module 3:** Bài viết & Tương tác | • Cấu trúc Trường → Khoa → Ngành → Khóa → Lớp, CRUD bài viết theo phạm vi, Like/Comment/Report, Giao diện Desktop/Mobile.<br>• Bảng DB: `Schools`, `Faculties`, `Majors`, `Courses`, `Classes`, `Posts`, `Comments`, `Reactions`, `PostReports`. | **100%** | **Hoàn thành** (Đã duyệt PR #1) |
+| **3** | **Huy**<br>*(Full-stack Module)* | • **Module 4:** Tài liệu học tập<br>• **Module 5:** Hỏi đáp học thuật (Q&A) | • Kho tài liệu môn học (<20MB, PDF/DOCX), chấm điểm sao, Q&A theo môn học, upvote/downvote, chốt câu trả lời đúng.<br>• Bảng DB: `Subjects`, `Documents`, `DocumentRatings`, `Questions`, `Answers`, `Votes`. | 25% | Đang thực hiện |
+| **4** | **Bảo**<br>*(Full-stack Module)* | • **Module 6:** Nhóm học (Study Groups)<br>• **Module 7:** Campus (Tin tức, Sự kiện, Việc làm) | • Tạo & quản lý nhóm học, xin gia nhập, duyệt thành viên; đăng/lọc tin tức Campus, sự kiện, học bổng, việc làm IT.<br>• Bảng DB: `StudyGroups`, `GroupMembers`, `JoinRequests`, `CampusPosts`. | 25% | Đang thực hiện |
+| **5** | **Thái**<br>*(Full-stack & UI Lead)* | • **Module 8:** Bảng tin thông minh (News Feed)<br>• **Module 9:** Thông báo Realtime (Socket.io) | • Bảng tin thông minh ưu tiên Lớp → Trường, WebSocket Socket.io đẩy thông báo realtime (hàm dùng chung `sendNotification`).<br>• Bảng DB: `UserFeedPreferences`, `Notifications`. | 12.5% | Đang thực hiện |
 
-    subgraph M3["MODULE 3: BÀI VIẾT (DUY)"]
-        direction TB
-        DB3["1. CƠ SỞ DỮ LIỆU<br/>Posts (scope: CLASS/COURSE/FACULTY/SCHOOL)<br/>Comments · Reactions · PostReports"]
-        API3["2. API BACKEND<br/>CRUD /posts · Toggle /like · Comments · Report"]
-        UI3["3. GIAO DIỆN DESKTOP APP<br/>Form đăng bài · Bảng tin chia lưới · Thả tim & Bình luận"]
-        QA3["4. VẤN ĐÁP THẦY<br/>Kiểm tra quyền ở Backend (403) · Chống spam like"]
-        DB3 --> API3 --> UI3 --> QA3
-    end
+---
+
+## 2. Phần Chi Tiết Của Leader Nguyễn Ngô Tú Anh (Module 1 & 10)
+
+Nguyễn Ngô Tú Anh đảm nhận vai trò **Trưởng nhóm (Leader)** kiêm **Kỹ sư Full-stack**, phụ trách toàn bộ nền tảng cốt lõi và 2 module quan trọng nhất của hệ sinh thái:
+
+### 2.1. Nền tảng cốt lõi & Kiến trúc hệ thống chung (Base Architecture)
+- **Kiến trúc phân tầng Clean Architecture:** Tách biệt rõ ràng tầng Routing (`routes`), Kiểm soát request (`controllers`), Nghiệp vụ logic (`services`), Truy vấn CSDL (`repositories`), Xác thực schema (`validators` bằng Zod) và Xử lý trung gian (`middlewares`).
+- **Lược đồ CSDL 24 bảng:** Thiết kế toàn diện và nạp sẵn trong [`backend/prisma/schema.prisma`](./backend/prisma/schema.prisma), phục vụ trọn vẹn cho cả 10 module của 5 thành viên.
+- **Bảo mật mạng & CSDL:**
+  - Mã hóa mật khẩu một chiều bằng thuật toán **Bcrypt (12 rounds)** kèm chuỗi salt ngẫu nhiên chống tấn công Rainbow Table.
+  - Cơ chế xác thực **JWT chuẩn kép:** Cấp **Access Token (15 phút)** truyền qua HTTP Header `Authorization: Bearer <token>` và **Refresh Token (7 ngày)**.
+  - Cơ chế thu hồi token ngay lập tức (**Token Revocation**) lưu bảng `RevokedTokens` khi người dùng Đăng xuất hoặc Đổi mật khẩu.
+  - Phòng chống tấn công SQL Injection thông qua ORM Prisma với Parametrized Queries.
+  - Middleware bảo vệ: `authenticate`, `requireRole`, `apiRateLimiter` (chống brute-force / DDoS), `validateBody`.
+
+### 2.2. Module 1: Tài khoản & Core Auth (End-to-End)
+- **CSDL:** Bảng `Users`, `Roles`, `RevokedTokens`.
+- **Backend API:**
+  - `POST /api/auth/register`: Đăng ký tài khoản với email trường (`@*.edu.vn`) và MSSV độc nhất.
+  - `POST /api/auth/login`: Đăng nhập linh hoạt bằng Email hoặc MSSV, trả về JWT và thông tin người dùng.
+  - `POST /api/auth/logout`: Đăng xuất và thu hồi Access Token tức thì.
+  - `GET /api/auth/me`: Lấy thông tin cá nhân của phiên đăng nhập hiện tại.
+  - `PUT /api/auth/change-password`: Xác thực mật khẩu cũ và cập nhật hash mật khẩu mới.
+  - `PUT /api/users/profile`: Cập nhật bio, số điện thoại, avatar và thông tin học vụ.
+  - `GET /api/academic/schools`, `faculties`, `majors`, `courses`, `classes`: API danh mục học vụ phục vụ lựa chọn phân cấp.
+- **Client Web UI ([`client-web/`](./client-web)):**
+  - **Màn hình Đăng nhập ([`LoginPage.tsx`](./client-web/src/pages/LoginPage.tsx)):** Đăng nhập nhanh bằng Email/MSSV, hỗ trợ nút chọn 1-click tài khoản mẫu (Tú Anh, Duy, Bảo, Admin) giúp thầy cô test nhanh khi chấm thi.
+  - **Màn hình Đăng ký ([`RegisterPage.tsx`](./client-web/src/pages/RegisterPage.tsx)):** Dropdown liên hoàn cascading (Chọn Trường → tự động load Khoa/Khóa → Ngành → Lớp thật từ API CSDL); thanh đo độ mạnh mật khẩu realtime.
+  - **Màn hình Hồ sơ cá nhân ([`ProfilePage.tsx`](./client-web/src/pages/ProfilePage.tsx)):** **Thẻ sinh viên ảo (Virtual Student ID Card)** hiển thị mã vạch, trường khoa, lớp học; form sửa thông tin và form đổi mật khẩu.
+  - **Khung giao diện mạng xã hội ([`ClientLayout.tsx`](./client-web/src/components/ClientLayout.tsx)):** Header, tìm kiếm, chuông thông báo, menu điều hướng 10 module.
+
+### 2.3. Module 10: Quản trị hệ thống — Admin Dashboard (End-to-End)
+- **CSDL:** Bảng `AdminLogs` (ghi vết hành vi), `SystemSettings` (cấu hình hệ thống).
+- **Backend API:**
+  - `GET /api/admin/dashboard/stats`: Thống kê KPI tổng thể (tổng user, sinh viên active, bài viết, báo cáo vi phạm chờ duyệt).
+  - `GET /api/admin/users`: Danh sách người dùng toàn trường, lọc theo vai trò, tìm kiếm MSSV/tên.
+  - `PUT /api/admin/users/:id/lock`: Khóa tài khoản sinh viên vi phạm kèm lý do; tài khoản bị khóa sẽ bị chặn đăng nhập và thu hồi phiên ngay lập tức (mã HTTP `403 ACCOUNT_LOCKED`).
+  - `PUT /api/admin/users/:id/unlock`: Mở khóa tài khoản sinh viên.
+  - `PUT /api/admin/users/:id/role`: Cấp/hạ quyền Quản trị viên, Giảng viên, Sinh viên.
+  - `GET /api/admin/reports` & `PUT /api/admin/posts/:id/moderation`: Xử lý báo cáo vi phạm từ sinh viên (Ẩn bài viết, Xóa bài viết, Giữ nguyên).
+  - `POST/PUT/DELETE /api/admin/campus`: Đăng tin tức, thông báo, sự kiện toàn trường và ghim bài viết lên đầu trang.
+  - `CRUD /api/admin/academic/*`: Quản lý danh mục Trường, Khoa, Ngành, Khóa, Lớp (điểm nối bàn giao cho Duy Module 2).
+  - `GET /api/admin/logs` & `GET/PUT /api/admin/settings`: Xem nhật ký thao tác và điều chỉnh tham số hệ thống.
+- **Admin Web Portal ([`admin-web/`](./admin-web)):**
+  - **Màn hình Đăng nhập Admin ([`LoginPage.tsx`](./admin-web/src/pages/LoginPage.tsx)):** Chặn tài khoản sinh viên thường truy cập.
+  - **Tổng quan KPI ([`DashboardPage.tsx`](./admin-web/src/pages/DashboardPage.tsx)):** Thống kê số liệu, danh sách báo cáo khẩn cấp, dòng thời gian thao tác.
+  - **Quản lý người dùng ([`UsersPage.tsx`](./admin-web/src/pages/UsersPage.tsx)):** Bảng danh sách sinh viên, Modal khóa tài khoản nhập lý do vi phạm, nút mở khóa tức thì.
+  - **Kiểm duyệt nội dung ([`ModerationPage.tsx`](./admin-web/src/pages/ModerationPage.tsx)):** Xử lý bài viết phản cảm/vi phạm quy chế.
+  - **Tin tức Campus ([`CampusPage.tsx`](./admin-web/src/pages/CampusPage.tsx)):** Đăng tin học vụ, ghim tin tức quan trọng.
+  - **Cơ cấu đào tạo ([`AcademicPage.tsx`](./admin-web/src/pages/AcademicPage.tsx)):** Quản trị danh mục trường lớp.
+  - **Nhật ký & Cài đặt ([`LogsSettingsPage.tsx`](./admin-web/src/pages/LogsSettingsPage.tsx)):** Truy vết lịch sử thao tác của các Admin.
+
+### 2.4. Bộ tài liệu vấn đáp & Kịch bản Demo dành cho Tú Anh
+- **Tài liệu câu hỏi & trả lời vấn đáp ([`docs/ORAL_EXAM_PREPARATION.md`](./docs/ORAL_EXAM_PREPARATION.md)):** 12 câu hỏi chuyên sâu về kiến trúc mạng, cơ chế băm Bcrypt kèm salt, cấu trúc 3 phần của JWT, Middleware RBAC, chống SQL Injection, và kịch bản demo 2 phút đạt điểm tối đa.
+
+---
+
+## 3. Phần Tích Hợp Hiện Tại Của Nhóm (Module 2 & 3 của Duy)
+
+Toàn bộ mã nguồn từ Pull Request #1 của Duy (`baonin0610`) đã được kiểm tra, gộp và tích hợp hoàn chỉnh:
+
+### 3.1. Module 2: Cộng đồng sinh viên (Cấu trúc trường)
+- **Backend API:** `GET /api/communities/overview`, `GET /api/communities/me`, `GET /api/communities/classes/:id/members`, `GET /api/communities/faculties/:id/members`.
+- **Client UI ([`CommunitiesPage.tsx`](./client-web/src/pages/CommunitiesPage.tsx)):** Hiển thị không gian cộng đồng phân cấp (Trường → Khoa → Ngành → Khóa → Lớp), tự động ánh xạ sinh viên vào đúng lớp, hiển thị danh sách bạn bè cùng lớp/khoa.
+
+### 3.2. Module 3: Bài viết & Tương tác
+- **Backend API:** `GET/POST /api/posts`, `GET/PUT/DELETE /api/posts/:id`, `POST /api/posts/:id/like` (toggle like chống trùng lặp), `POST/GET/DELETE /api/posts/:id/comments`, `POST /api/posts/:id/report` (báo cáo vi phạm gửi về Admin Module 10).
+- **Client UI ([`PostsPage.tsx`](./client-web/src/pages/PostsPage.tsx)):** Soạn thảo bài viết kèm chọn phạm vi (Lớp/Khóa/Khoa/Trường), thả tim realtime, bình luận trao đổi, nút báo cáo vi phạm.
+
+### 3.3. Trải nghiệm nâng cao & Desktop App
+- **Giao diện đa nền tảng:** Hỗ trợ khung Desktop App chuẩn doanh nghiệp ([`DesktopAppLayout.tsx`](./client-web/src/components/DesktopAppLayout.tsx)) và khung giả lập Mobile App ([`MobileLayout.tsx`](./client-web/src/components/MobileLayout.tsx)).
+- **Khởi chạy ứng dụng máy tính với Electron:** Chạy ứng dụng desktop nguyên bản cho Windows/macOS qua cấu hình [`client-web/electron/main.cjs`](./client-web/electron/main.cjs).
+- **Thành phần UI nâng cao:** Thông báo toast nổi với `sonner`, hộp thoại xác nhận `ConfirmModal`, hiệu ứng tải trang `SkeletonPost`, trạng thái trống `EmptyState`.
+
+---
+
+## 4. Cấu Trúc Mã Nguồn (Monorepo)
+
+```text
+LTmang/
+├── backend/                  # REST API Server (Node.js + Express + TypeScript + Prisma)
+│   ├── prisma/
+│   │   ├── schema.prisma     # Lược đồ CSDL 24 bảng cho cả 10 module
+│   │   └── seed.ts           # Dữ liệu mẫu (Trường, Khoa, Ngành, Lớp, Môn, Posts, Reports, Users)
+│   ├── src/
+│   │   ├── config/           # Cấu hình database, env, swagger
+│   │   ├── middlewares/      # auth (JWT), rateLimit, validate (Zod), error
+│   │   ├── modules/
+│   │   │   ├── auth/         # [Module 1 - Tú Anh] Đăng ký, Đăng nhập, Logout, Me
+│   │   │   ├── users/        # [Module 1 - Tú Anh] Profile, Đổi mật khẩu
+│   │   │   ├── academic/     # [Module 1 - Tú Anh] Cascading dropdown học vụ
+│   │   │   ├── admin/        # [Module 10 - Tú Anh] Dashboard KPI, User Lock/Unlock, Moderation, Logs
+│   │   │   ├── campus/       # [Module 10 - Tú Anh] CRUD tin tức & sự kiện trường
+│   │   │   ├── communities/  # [Module 2 - Duy] Cấu trúc cộng đồng & danh sách thành viên
+│   │   │   └── posts/        # [Module 3 - Duy] CRUD bài viết, Like, Comment, Report
+│   │   └── utils/            # apiResponse, jwt, password (Bcrypt), errors
+│   └── tests/                # 28 Tests Vitest (Auth, Security, Admin, Community, Post)
+│
+├── client-web/               # Mạng Xã Hội Sinh Viên (React 19 + Vite + Tailwind CSS v4)
+│   ├── electron/             # File runner Electron desktop app
+│   ├── src/
+│   │   ├── api/              # Axios client & Auth/Posts/Community APIs
+│   │   ├── components/       # ClientLayout, DesktopAppLayout, MobileLayout, CascadeSelect, ConfirmModal
+│   │   ├── context/          # AuthContext (quản lý token JWT và phiên làm việc)
+│   │   └── pages/
+│   │       ├── LoginPage.tsx        # [Module 1] Đăng nhập Email/MSSV & Nút chọn nhanh Demo
+│   │       ├── RegisterPage.tsx     # [Module 1] Đăng ký cascading dropdowns Trường → Lớp
+│   │       ├── ProfilePage.tsx      # [Module 1] Thẻ sinh viên ảo & Đổi mật khẩu
+│   │       ├── CommunitiesPage.tsx  # [Module 2] Xem cộng đồng Lớp/Khoa/Trường
+│   │       └── PostsPage.tsx        # [Module 3] Bảng tin bài viết, Like, Bình luận
+│
+├── admin-web/                # Cổng Quản Trị Hệ Thống (React 19 + Vite + Tailwind CSS v4)
+│   └── src/pages/
+│       ├── LoginPage.tsx            # [Module 10] Đăng nhập Admin
+│       ├── DashboardPage.tsx        # [Module 10] KPI Stats, Báo cáo vi phạm khẩn cấp
+│       ├── UsersPage.tsx            # [Module 10] Quản lý sinh viên, Khóa/Mở khóa tài khoản
+│       ├── ModerationPage.tsx       # [Module 10] Kiểm duyệt nội dung vi phạm
+│       ├── CampusPage.tsx           # [Module 10] Đăng và ghim thông báo toàn trường
+│       ├── AcademicPage.tsx         # [Module 10] Quản lý Trường, Khoa, Ngành, Lớp
+│       └── LogsSettingsPage.tsx     # [Module 10] Nhật ký AdminLogs và Tham số hệ thống
+│
+├── docs/                     # Tài liệu kỹ thuật chi tiết
+│   ├── ERD.md                       # Lược đồ CSDL chi tiết kèm sơ đồ Mermaid
+│   ├── API_ARCHITECTURE.md          # Kiến trúc phân tầng & bảo mật Bcrypt/JWT
+│   ├── DTO_CONTRACTS.md             # Hợp đồng dữ liệu API cho 5 thành viên
+│   ├── ORAL_EXAM_PREPARATION.md     # Bộ câu hỏi & trả lời vấn đáp môn Lập trình mạng
+│   └── postman_collection.json      # Bộ sưu tập 28+ Postman requests test sẵn
+└── TASK.md                   # Bảng Kanban phân công tiến độ 10 Module
 ```
 
 ---
 
-## 2. Chi tiết Module 2: Cộng Đồng (Community)
+## 5. Hướng Dẫn Cài Đặt & Khởi Chạy Dự Án
 
-### 2.1. Nghiệp vụ & Dữ liệu mẫu (Giai đoạn 1)
-- **Cấu trúc phân cấp đào tạo:** Xây dựng mô hình cây quan hệ: `Trường (DAU) → Khoa (CNTT, Kiến trúc) → Ngành (CNTT, KTPM, Kiến trúc CT) → Khóa (K22, K23) → Lớp (23CT1, 23CT2, 23KT1)`.
-- **Dữ liệu mẫu (`seed.ts`):** Tạo sẵn cơ sở dữ liệu thực tế tại ĐH Kiến trúc Đà Nẵng cùng tài khoản sinh viên mẫu đại diện cho các lớp khác nhau để phục vụ toàn nhóm kiểm thử.
-- **Nguyên lý phân luồng:** Sinh viên chỉ cần chọn Lớp (`class_id`), hệ thống tự động suy ra toàn bộ cây phân cấp học tập tương ứng (tính chất bắc cầu trong chuẩn hoá CSDL).
+### Yêu cầu môi trường
+- **Node.js:** `>= 18.x` (khuyên dùng Node 20+ hoặc Node 24)
+- **NPM:** `>= 9.x`
+- **Git**
 
-### 2.2. Danh sách Endpoint API
-| Phương thức | Đường dẫn Endpoint | Mô tả chức năng | Xác thực |
-|---|---|---|:---:|
-| `GET` | `/api/academic/schools` | Lấy danh sách toàn bộ trường học | Không |
-| `GET` | `/api/academic/faculties?schoolId=` | Lọc danh sách khoa trực thuộc trường | Không |
-| `GET` | `/api/academic/majors?facultyId=` | Lọc danh sách ngành trực thuộc khoa | Không |
-| `GET` | `/api/academic/courses?schoolId=` | Lọc danh sách khóa sinh viên theo trường | Không |
-| `GET` | `/api/academic/classes?majorId=&courseId=` | Lọc lớp sinh hoạt theo ngành và khóa | Không |
-| `GET` | `/api/communities/me` | Lấy cây 5 cấp đào tạo, sĩ số từng cấp và danh sách bạn cùng lớp của sinh viên đang đăng nhập | Bearer JWT |
-| `GET` | `/api/communities/classes/:id/members` | Danh sách thành viên lớp học (hỗ trợ phân trang và tìm kiếm) | Bearer JWT |
-| `GET` | `/api/communities/overview` | Tổng quan toàn bộ cây phân cấp đào tạo toàn trường | Không |
-
-### 2.3. Màn hình Desktop App
-- **Bộ chọn liên hoàn (`CascadeSelect.tsx`):** Dropdown phụ thuộc nhau theo chuỗi logic: Chọn Trường → mới mở ô Khoa → chọn Khoa mới mở ô Ngành → chọn Khóa → hiển thị danh sách Lớp.
-- **Trang Cộng đồng (`CommunitiesPage.tsx`):** Hiển thị 5 thẻ ngang trực quan cho 5 cấp đào tạo kèm sĩ số thực tế, danh sách bạn cùng lớp có avatar, MSSV và ô tìm kiếm nhanh bạn học.
-
----
-
-## 3. Chi tiết Module 3: Bài Viết & Tương Tác (Posts)
-
-### 3.1. Nghiệp vụ & Cơ chế bảo mật
-- **Phạm vi bài viết (`scope`):** Cho phép giới hạn đối tượng xem bài viết: `CLASS` (Chỉ lớp xem), `COURSE` (Cùng khóa), `MAJOR` (Cùng ngành), `FACULTY` (Cùng khoa), `SCHOOL` (Toàn trường), `PUBLIC` (Công khai).
-- **Phân loại danh mục (`category`):** `STUDY` (Học tập), `COMMUNITY` (Cộng đồng), `ACTIVITY` (Hoạt động), `OPPORTUNITY` (Cơ hội).
-- **Bảo mật quyền sở hữu (Strict Backend Auth):**
-  - Chỉ chính tác giả bài viết mới có quyền sửa bài (`PUT /posts/:id`).
-  - Chỉ tác giả bài viết hoặc người dùng có quyền `ADMIN` mới được xóa bài (`DELETE /posts/:id`).
-  - Nếu người dùng khác cố tình gọi API xóa bài bằng Postman, server lập tức trả về mã lỗi **`403 Forbidden`**.
-- **Cơ chế Toggle Like chống trùng lặp:**
-  - Tầng CSDL: Ràng buộc duy nhất `@@unique([postId, userId])` trong bảng `reactions`.
-  - Tầng Backend: Xử lý dạng Toggle — nếu chưa like thì thêm và `likesCount + 1`, nếu đã like thì hủy và `likesCount - 1`.
-- **Bình luận & Báo cáo vi phạm:** Bình luận hỗ trợ `parentId` đa tầng; Báo cáo vi phạm gửi trực tiếp sang bảng `post_reports` để Admin kiểm duyệt.
-
-### 3.2. Danh sách Endpoint API
-| Phương thức | Đường dẫn Endpoint | Mô tả chức năng | Xác thực |
-|---|---|---|:---:|
-| `POST` | `/api/posts` | Đăng bài viết mới kèm scope, category, ảnh | Bearer JWT |
-| `GET` | `/api/posts` | Lấy danh sách bài viết (phân trang, lọc theo scope/category/search) | Tùy chọn |
-| `GET` | `/api/posts/:id` | Xem chi tiết 1 bài viết kèm trạng thái `isLikedByMe` | Tùy chọn |
-| `PUT` | `/api/posts/:id` | Chỉnh sửa bài viết (chỉ tác giả, người khác bị chặn 403) | Bearer JWT |
-| `DELETE` | `/api/posts/:id` | Xóa bài viết (tác giả hoặc Admin, người khác bị chặn 403) | Bearer JWT |
-| `POST` | `/api/posts/:id/like` | Thả tim / Hủy thích bài viết (Cơ chế Toggle Like) | Bearer JWT |
-| `POST` | `/api/posts/:id/comments` | Gửi bình luận mới vào bài viết | Bearer JWT |
-| `GET` | `/api/posts/:id/comments` | Lấy danh sách bình luận của bài viết | Không |
-| `POST` | `/api/posts/:id/report` | Báo cáo bài viết vi phạm lên Admin Dashboard | Bearer JWT |
-
-### 3.3. Màn hình Desktop App
-- **Trang Bài viết (`PostsPage.tsx`):**
-  - Form đăng bài nhanh tích hợp chọn phạm vi và danh mục.
-  - Bộ lọc bài viết nhanh theo phạm vi (Tất cả / Trong Lớp / Trong Khoa / Toàn Trường).
-  - Tương tác thả tim nảy animation (`active:scale-125`), đổi màu tim hồng phấn và cập nhật số like tức thì.
-  - Khu vực bình luận trực tiếp bên dưới bài viết.
-  - Hộp thoại xác nhận xóa bài viết chuyên nghiệp (`ConfirmModal.tsx`), không dùng `confirm()` thô sơ của trình duyệt.
-  - Popup gửi báo cáo vi phạm kèm chọn lý do rõ ràng.
-
----
-
-## 4. Hướng dẫn chạy thử nghiệm Desktop App
-
-Ứng dụng của Duy là **phần mềm Desktop Native** chạy độc lập trên **macOS** và **Windows** thông qua **Electron**.
-
-### Bước 1: Khởi động Backend API Server (Terminal 1)
+### 5.1. Khởi chạy Backend API Server (Port `4000`)
 ```bash
 cd backend
 npm install
+cp .env.example .env
+npx prisma generate
+npx prisma db push
+npm run prisma:seed
 npm run dev
-# Server lắng nghe tại: http://localhost:4000
-# Tài liệu Swagger UI: http://localhost:4000/api-docs
 ```
+- **Base URL:** `http://localhost:4000/api`
+- **Tài liệu Swagger UI:** `http://localhost:4000/api-docs`
+- **Kiểm tra trạng thái:** `http://localhost:4000/api/health`
 
-### Bước 2: Khởi động Frontend Client (Terminal 2)
+### 5.2. Khởi chạy Cổng Quản Trị Admin Web (Port `5173`)
+```bash
+cd admin-web
+npm install
+npm run dev
+```
+- **Truy cập:** `http://localhost:5173`
+
+### 5.3. Khởi chạy Mạng Xã Hội Sinh Viên Client Web (Port `5174`)
 ```bash
 cd client-web
 npm install
 npm run dev
-# Vite dev server lắng nghe tại: http://localhost:5174
 ```
+- **Truy cập:** `http://localhost:5174`
 
-### Bước 3: Khởi chạy Cửa sổ Desktop App Native (Terminal 3)
+### 5.4. (Tùy chọn) Chạy ứng dụng Desktop App bằng Electron
 ```bash
 cd client-web
 npm run electron
-# Cửa sổ ứng dụng UniConnect Desktop App sẽ tự động bật lên trên màn hình!
 ```
 
 ---
 
-## 5. Kết quả kiểm thử tự động (Unit & Integration Tests)
+## 6. Danh Sách Tài Khoản Mẫu Để Demo & Chấm Thi
 
-Toàn bộ chức năng của Duy được kiểm thử nghiêm ngặt bằng **Vitest**:
-- `tests/integration/community.test.ts`: **5/5 tests PASS** (Cây phân cấp đào tạo, kiểm tra JWT, trả về bạn cùng lớp, thành viên khoa).
-- `tests/integration/post.test.ts`: **7/7 tests PASS** (CRUD bài viết, kiểm tra bảo mật 403 Forbidden khi người khác xóa/sửa, cơ chế Toggle Like, bình luận, chặn tự báo cáo bài của mình).
-- Tổng kiểm thử toàn hệ thống: **28/28 tests PASS 100%**.
+Hệ thống đã nạp sẵn dữ liệu mẫu thực tế, có thể đăng nhập bằng **Email** hoặc **MSSV**, hoặc bấm trực tiếp vào **Nút tài khoản mẫu** trên màn hình Đăng nhập:
+
+| Vai trò / Người dùng | Email | MSSV | Mật khẩu | Chức năng nổi bật |
+|---|---|---|---|---|
+| **Quản trị viên (Admin)** | `admin@uniconnect.edu.vn` | `ADMIN01` | `Admin@123456` | Khóa/mở khóa SV, duyệt báo cáo vi phạm, đăng tin Campus |
+| **Tú Anh (Leader)** | `anh_2351220089@dau.edu.vn` | `2351220089` | `Student@123456` | Lớp 23CT1 — Thẻ SV ảo, đổi mật khẩu, đăng bài |
+| **Duy (Module 2 & 3)** | `duy_2351220091@dau.edu.vn` | `2351220091` | `Student@123456` | Lớp 23CT1 — Xem cộng đồng lớp/khoa, viết bài, thả like |
+| **Bảo (Module 6 & 7)** | `bao_2351220093@dau.edu.vn` | `2351220093` | `Student@123456` | Lớp 23CT2 — Test tương tác chéo khác lớp học |
+| **Thái (Module 8 & 9)** | `thai_2351220092@dau.edu.vn` | `2351220092` | `Student@123456` | Lớp 23CT1 — Test bình luận và thông báo |
+
+---
+
+## 7. Kịch Bản Demo 2 Phút Ghi Điểm Với Giảng Viên
+
+1. **Bước 1 (Đăng ký cascading — Module 1 Tú Anh):**
+   - Mở `http://localhost:5174/register`. Chọn trường *Đại học Kiến trúc Đà Nẵng* → chọn khoa *Khoa CNTT* & khóa *K23* → chọn ngành *Công nghệ thông tin* → chọn lớp *23CT1*.
+   - Điền email sinh viên mới, kiểm tra thanh đo độ mạnh mật khẩu realtime → Bấm **Đăng ký**.
+2. **Bước 2 (Thẻ sinh viên ảo & Hồ sơ — Module 1 Tú Anh):**
+   - Đăng nhập tài khoản vừa tạo → Vào mục **Hồ sơ cá nhân** (`/profile`).
+   - Giảng viên thấy ngay **Thẻ sinh viên ảo (Virtual Student ID Card)** hiển thị mã vạch, trường khoa, lớp học chuẩn chỉ.
+3. **Bước 3 (Cộng đồng & Bài viết — Module 2 & 3 Duy):**
+   - Vào mục **Cộng đồng** (`/communities`): Xem danh sách thành viên cùng lớp `23CT1`.
+   - Vào mục **Bài viết** (`/posts`): Đăng bài mới với phạm vi *Chỉ trong Lớp*, thử bấm nút Thả tim và viết bình luận.
+   - Bấm nút **Báo cáo vi phạm** trên bài viết quảng cáo spam.
+4. **Bước 4 (Admin Dashboard kiểm duyệt — Module 10 Tú Anh):**
+   - Mở tab ẩn danh vào `http://localhost:5173`, đăng nhập Admin (`admin@uniconnect.edu.vn` / `Admin@123456`).
+   - Vào mục **Kiểm duyệt**: Thấy ngay bài viết bị sinh viên báo cáo ở Bước 3 → Bấm **Ẩn bài viết vi phạm**.
+5. **Bước 5 (Khóa tài khoản realtime — Bảo mật Module 1 & 10 Tú Anh):**
+   - Vào trang **Người dùng** trong Admin Web, tìm sinh viên vừa tạo, bấm **Khóa tài khoản**, nhập lý do: *"Vi phạm nội quy học tập"*.
+   - Quay lại Client Web (`:5174`), đăng xuất và thử đăng nhập lại bằng sinh viên đó: Hệ thống báo lỗi đỏ **"Tài khoản đã bị tạm khóa: Vi phạm nội quy học tập"** (HTTP `403 ACCOUNT_LOCKED`).
+   - Sang Admin bấm **Mở khóa** → Sinh viên đăng nhập lại bình thường.
+   - Vào mục **Nhật ký hệ thống** xem lại toàn bộ vết thao tác đã được lưu vào bảng `AdminLogs` kèm thời gian và IP chi tiết.
+
+---
+
+## 8. Kết Quả Kiểm Thử Tự Động (Quality Assurance)
 
 ```bash
-cd backend
-npm test
+# Kiểm tra bộ 28 bài test tự động của Backend
+cd backend && npm test
+```
+```text
+✓ tests/integration/auth.test.ts (9 tests) - Passed (Module 1 Auth, Bcrypt, Token Revocation)
+✓ tests/integration/post.test.ts (7 tests) - Passed (Module 3 Posts, Toggle Like, Comments, Reports)
+✓ tests/integration/admin.test.ts (4 tests) - Passed (Module 10 Admin RBAC, Lock/Unlock Flow)
+✓ tests/integration/community.test.ts (5 tests) - Passed (Module 2 Schools, Faculties, Classes)
+✓ tests/unit/security.test.ts (3 tests) - Passed (Bcrypt salt rounds, JWT sign/verify)
+
+Test Files:  5 passed (5)
+Tests:       28 passed (28)
+Time:        ~25s
+```
+
+```bash
+# Kiểm tra build production
+cd ../client-web && npm run build    # Vite build dist thành công trong ~4s (0 errors)
+cd ../admin-web && npm run build     # Vite build dist thành công trong ~4s (0 errors)
 ```
 
 ---
 
-## 6. Bộ câu hỏi vấn đáp với Thầy giáo (Chuẩn bị sẵn cho Duy)
+## 9. Quy Tắc Git Flow Nhóm
 
-- ❓ **Thầy hỏi:** *"Sinh viên được tự động đưa vào các cộng đồng nào, dựa vào dữ liệu nào?"*
-  - 🗣️ **Duy trả lời:** *"Dạ thưa thầy, sinh viên chỉ cần chọn Lớp (`class_id`). Từ Lớp, hệ thống tự động xác định được Ngành (`major_id`), Khóa (`course_id`), Khoa (`faculty_id`) và Trường (`school_id`). Khi sinh viên vào hệ thống, API `GET /api/communities/me` tự động phân luồng sinh viên vào 4 cấp cộng đồng: Cộng đồng Lớp, Cộng đồng Khóa, Cộng đồng Khoa và Cộng đồng Trường."*
-
-- ❓ **Thầy hỏi:** *"Vì sao chọn Trường rồi mới hiện Khoa? API xử lý thế nào?"*
-  - 🗣️ **Duy trả lời:** *"Dạ ở giao diện Desktop App, dropdown Khoa lắng nghe sự kiện thay đổi của Trường. Khi chọn trường, giao diện gọi API `GET /api/academic/faculties?schoolId=...`. Ở Backend, câu truy vấn Prisma thực hiện `WHERE schoolId = :id` để lọc chính xác các khoa trực thuộc trường đó."*
-
-- ❓ **Thầy hỏi:** *"Nếu người khác cố tình dùng Postman gọi API DELETE `/api/posts/:id` để xóa bài của em thì sao?"*
-  - 🗣️ **Duy trả lời:** *"Dạ ở Backend trong file `post.service.ts`, trước khi xóa, em luôn kiểm tra `post.authorId !== currentUserId` và vai trò không phải `ADMIN`. Nếu không phải chủ bài viết, server lập tức ném ra lỗi `403 Forbidden` từ chối thao tác. Hệ thống bảo mật tại tầng Backend chứ không phụ thuộc vào việc ẩn nút ở giao diện."*
-
-- ❓ **Thầy hỏi:** *"Làm sao chống một người bấm like nhiều lần để gian lận số like?"*
-  - 🗣️ **Duy trả lời:** *"Dạ em chặn ở cả 2 tầng: Tầng CSDL có chỉ mục duy nhất `@@unique([postId, userId])` trong bảng `reactions`. Tầng Backend xử lý dạng Toggle: nếu đã có bản ghi thì xóa và giảm `likesCount - 1`, nếu chưa có thì tạo mới và tăng `likesCount + 1`."*
+- **Quy tắc phân nhánh:** Tuyệt đối không push trực tiếp lên nhánh `main`. Mọi tính năng phải rẽ nhánh riêng theo cú pháp: `feature/<tên-tính-năng>` (VD: `feature/auth`, `feature/community`, `feature/admin-dashboard`).
+- **Quy trình gộp code:** Tạo Pull Request trên GitHub → Leader Nguyễn Ngô Tú Anh kiểm tra, chạy test xác minh độ tương thích → Bấm **Merge Pull Request** vào nhánh `main`.

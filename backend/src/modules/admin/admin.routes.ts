@@ -31,6 +31,11 @@ router.patch(
   validate({ params: idParamSchema, body: lockUserSchema }),
   adminController.lockUser.bind(adminController),
 );
+router.put(
+  '/users/:id/lock',
+  validate({ params: idParamSchema, body: lockUserSchema }),
+  adminController.lockUser.bind(adminController),
+);
 router.patch(
   '/users/:id/unlock',
   validate({ params: idParamSchema }),
@@ -46,6 +51,16 @@ router.patch(
 router.get('/reports', adminController.listReports.bind(adminController));
 router.patch(
   '/reports/:id/resolve',
+  validate({ params: idParamSchema, body: resolveReportSchema }),
+  adminController.resolveReport.bind(adminController),
+);
+router.put(
+  '/reports/:id',
+  validate({ params: idParamSchema, body: resolveReportSchema }),
+  adminController.resolveReport.bind(adminController),
+);
+router.patch(
+  '/reports/:id',
   validate({ params: idParamSchema, body: resolveReportSchema }),
   adminController.resolveReport.bind(adminController),
 );

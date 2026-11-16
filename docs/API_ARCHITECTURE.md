@@ -33,3 +33,4 @@ Mỗi module trong `backend/src/modules/<module>/` tuân thủ 4 lớp tách bi�
 - **Chuẩn Hóa Response API**:
   - Thành công: `{ "success": true, "message": "...", "data": ..., "meta": ... }`
   - Lỗi: `{ "success": false, "error": { "code": "...", "message": "...", "details": ... } }`
+

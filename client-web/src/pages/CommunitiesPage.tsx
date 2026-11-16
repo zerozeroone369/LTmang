@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { apiClient, getErrorMessage } from '../api/client';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/auth-context';
 import { CascadeSelect } from '../components/CascadeSelect';
 import { EmptyState } from '../components/EmptyState';
 import {
@@ -11,11 +11,9 @@ import {
   Calendar,
   Users,
   Search,
-  UserCheck,
   Sparkles,
   Layers,
   Inbox,
-  User,
 } from 'lucide-react';
 
 interface CommunityMeData {

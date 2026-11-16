@@ -21,3 +21,4 @@ Truy cập: `http://localhost:5173` (đảm bảo Backend đang chạy tại `ht
 - `/campus`: Đăng, chỉnh sửa, ghim, ẩn/hiện và xóa tin tức Campus.
 - `/academic`: Quản lý cấu trúc Trường → Khoa → Ngành → Khóa → Lớp.
 - `/settings`: Nhật ký Admin (`AdminLogs`) và Cấu hình hệ thống (`SystemSettings`).
+

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { Home, Users2, PlusCircle, LogOut, Bell, Wifi, Battery, Signal } from 'lucide-react';
+import { useAuth } from '../context/auth-context';
+import { Home, Users2, LogOut, Bell, Wifi, Battery, Signal } from 'lucide-react';
 
 export const MobileLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user, logout } = useAuth();
