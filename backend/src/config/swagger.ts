@@ -188,7 +188,153 @@ export const swaggerDocument = {
       get: {
         tags: ['Campus'],
         summary: 'Danh sách tin tức Campus đã xuất bản (dùng cho Client)',
+        parameters: [
+          { in: 'query', name: 'category', schema: { type: 'string' } },
+          { in: 'query', name: 'search', schema: { type: 'string' } },
+          { in: 'query', name: 'page', schema: { type: 'integer', default: 1 } },
+          { in: 'query', name: 'limit', schema: { type: 'integer', default: 12 } },
+        ],
         responses: { '200': { description: 'OK' } },
+      },
+    },
+    '/api/campus/{id}': {
+      get: {
+        tags: ['Campus'],
+        summary: 'Chi tiết tin Campus đã xuất bản',
+        parameters: [{ in: 'path', name: 'id', required: true, schema: { type: 'integer' } }],
+        responses: { '200': { description: 'OK' }, '404': { description: 'Không tìm thấy tin' } },
+      },
+    },
+    '/api/groups/subjects': {
+      get: {
+        tags: ['Study Groups'],
+        summary: 'Danh sách môn học để tạo và lọc nhóm học',
+        responses: { '200': { description: 'OK' } },
+      },
+    },
+    '/api/groups/search': {
+      get: {
+        tags: ['Study Groups'],
+        summary: 'Tìm nhóm học đang mở',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { in: 'query', name: 'q', schema: { type: 'string' } },
+          { in: 'query', name: 'subjectId', schema: { type: 'integer' } },
+          { in: 'query', name: 'location', schema: { type: 'string' } },
+          { in: 'query', name: 'page', schema: { type: 'integer', default: 1 } },
+          { in: 'query', name: 'limit', schema: { type: 'integer', default: 12 } },
+        ],
+        responses: { '200': { description: 'Danh sách nhóm và phân trang' } },
+      },
+    },
+    '/api/groups': {
+      get: {
+        tags: ['Study Groups'],
+        summary: 'Danh sách nhóm học đang mở',
+        security: [{ bearerAuth: [] }],
+        responses: { '200': { description: 'OK' } },
+      },
+      post: {
+        tags: ['Study Groups'],
+        summary: 'Tạo nhóm học (sinh viên đăng nhập; người tạo thành trưởng nhóm)',
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['name'],
+                properties: {
+                  name: { type: 'string', example: 'Ôn thi Lập trình mạng' },
+                  description: { type: 'string' },
+                  subjectId: { type: 'integer', nullable: true },
+                  goal: { type: 'string' },
+                  scheduleText: { type: 'string' },
+                  location: { type: 'string' },
+                  maxMembers: { type: 'integer', minimum: 2, maximum: 100, default: 10 },
+                },
+              },
+            },
+          },
+        },
+        responses: { '201': { description: 'Đã tạo nhóm' }, '401': { description: 'Chưa đăng nhập' } },
+      },
+    },
+    '/api/groups/{id}': {
+      get: {
+        tags: ['Study Groups'],
+        summary: 'Chi tiết nhóm, thành viên và trạng thái yêu cầu của người dùng hiện tại',
+        security: [{ bearerAuth: [] }],
+        parameters: [{ in: 'path', name: 'id', required: true, schema: { type: 'integer' } }],
+        responses: { '200': { description: 'OK' }, '404': { description: 'Không tìm thấy nhóm' } },
+      },
+    },
+    '/api/groups/{id}/join': {
+      post: {
+        tags: ['Study Groups'],
+        summary: 'Gửi yêu cầu tham gia nhóm (sinh viên đăng nhập)',
+        security: [{ bearerAuth: [] }],
+        parameters: [{ in: 'path', name: 'id', required: true, schema: { type: 'integer' } }],
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: { type: 'object', properties: { message: { type: 'string', maxLength: 500 } } },
+            },
+          },
+        },
+        responses: { '201': { description: 'Đã gửi yêu cầu' }, '409': { description: 'Đã là thành viên, đang chờ duyệt hoặc nhóm đã đủ người' } },
+      },
+    },
+    '/api/groups/{id}/join-requests': {
+      get: {
+        tags: ['Study Groups'],
+        summary: 'Danh sách yêu cầu đang chờ (chỉ trưởng nhóm)',
+        security: [{ bearerAuth: [] }],
+        parameters: [{ in: 'path', name: 'id', required: true, schema: { type: 'integer' } }],
+        responses: { '200': { description: 'Danh sách yêu cầu' }, '403': { description: 'Không phải trưởng nhóm' } },
+      },
+    },
+    '/api/groups/join-requests/{requestId}': {
+      put: {
+        tags: ['Study Groups'],
+        summary: 'Chấp nhận hoặc từ chối yêu cầu tham gia (chỉ trưởng nhóm)',
+        security: [{ bearerAuth: [] }],
+        parameters: [{ in: 'path', name: 'requestId', required: true, schema: { type: 'integer' } }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: { type: 'object', required: ['status'], properties: { status: { type: 'string', enum: ['APPROVED', 'REJECTED'] } } },
+            },
+          },
+        },
+        responses: { '200': { description: 'Yêu cầu đã được xử lý' }, '403': { description: 'Không phải trưởng nhóm' }, '409': { description: 'Yêu cầu đã xử lý hoặc nhóm đã đủ người' } },
+      },
+    },
+    '/api/groups/{id}/leave': {
+      delete: {
+        tags: ['Study Groups'],
+        summary: 'Rời nhóm học (trưởng nhóm sẽ chuyển quyền hoặc đóng nhóm nếu là thành viên cuối)',
+        security: [{ bearerAuth: [] }],
+        parameters: [{ in: 'path', name: 'id', required: true, schema: { type: 'integer' } }],
+        responses: { '200': { description: 'Đã rời nhóm' }, '400': { description: 'Người dùng chưa tham gia nhóm' } },
+      },
+    },
+    '/api/groups/{id}/members/{memberId}': {
+      delete: {
+        tags: ['Study Groups'],
+        summary: 'Trưởng nhóm xóa một thành viên khỏi nhóm',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          { in: 'path', name: 'id', required: true, schema: { type: 'integer' }, description: 'ID nhóm' },
+          { in: 'path', name: 'memberId', required: true, schema: { type: 'integer' }, description: 'ID tài khoản thành viên cần xóa' },
+        ],
+        responses: {
+          '200': { description: 'Đã xóa thành viên khỏi nhóm' },
+          '403': { description: 'Chỉ trưởng nhóm mới được xóa thành viên' },
+          '404': { description: 'Không tìm thấy nhóm hoặc thành viên trong nhóm' },
+        },
       },
     },
     '/api/admin/dashboard': {
@@ -251,6 +397,22 @@ export const swaggerDocument = {
         summary: 'Đăng tin Campus mới',
         security: [{ bearerAuth: [] }],
         responses: { '201': { description: 'Created' } },
+      },
+    },
+    '/api/admin/campus/{id}': {
+      put: {
+        tags: ['Admin'],
+        summary: 'Chỉnh sửa, ẩn hoặc lưu nháp tin Campus',
+        security: [{ bearerAuth: [] }],
+        parameters: [{ in: 'path', name: 'id', required: true, schema: { type: 'integer' } }],
+        responses: { '200': { description: 'Đã cập nhật' }, '403': { description: 'Không phải Admin' } },
+      },
+      delete: {
+        tags: ['Admin'],
+        summary: 'Xóa tin Campus',
+        security: [{ bearerAuth: [] }],
+        parameters: [{ in: 'path', name: 'id', required: true, schema: { type: 'integer' } }],
+        responses: { '200': { description: 'Đã xóa' }, '403': { description: 'Không phải Admin' } },
       },
     },
     '/api/admin/logs': {

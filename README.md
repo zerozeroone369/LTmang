@@ -4,7 +4,7 @@
 > **Repository:** `https://github.com/zerozeroone369/LTmang.git`  
 > **Mô hình vận hành:** Sở hữu trọn gói theo Module (**End-to-End: CSDL → API → UI → Demo & Vấn đáp**)  
 > **Quy mô:** 5 Thành viên — 10 Module — 40 Bước triển khai  
-> **Tiến độ tích hợp hiện tại:** **4/10 Module hoàn thành 100%** (Module 1, 2, 3, 10 — Vượt qua 28/28 Unit & Integration Tests)
+> **Tiến độ tích hợp hiện tại:** Module 1, 2, 3, 10 đã hoàn thành; Module 6 và 7 đã có API/UI trên nhánh phát triển, đang chờ tích hợp thông báo realtime của Module 9 và demo nhóm.
 
 ---
 
@@ -17,7 +17,7 @@ Mỗi thành viên làm chủ trọn vẹn 02 module từ thiết kế bảng CS
 | **1** | **Nguyễn Ngô Tú Anh**<br>*(Leader & Full-stack)* | • **Module 1:** Tài khoản & Core Auth<br>• **Module 10:** Quản trị hệ thống (Admin Dashboard) | • Base project, ERD toàn hệ thống 24 bảng, JWT Auth & Middleware, UI Đăng ký cascading / Đăng nhập / Profile thẻ SV ảo, Admin Web Portal, Duyệt PR.<br>• Bảng DB: `Users`, `Roles`, `AdminLogs`, `SystemSettings`. | **100%** | **Hoàn thành** (Đã sẵn sàng bảo vệ) |
 | **2** | **Nguyễn Lê Bảo Duy**<br>*(Full-stack Module)* | • **Module 2:** Cộng đồng (Cấu trúc trường)<br>• **Module 3:** Bài viết & Tương tác | • Cấu trúc Trường → Khoa → Ngành → Khóa → Lớp, CRUD bài viết theo phạm vi, Like/Comment/Report, Giao diện Desktop/Mobile.<br>• Bảng DB: `Schools`, `Faculties`, `Majors`, `Courses`, `Classes`, `Posts`, `Comments`, `Reactions`, `PostReports`. | **100%** | **Hoàn thành** (Đã duyệt PR #1) |
 | **3** | **Huy**<br>*(Full-stack Module)* | • **Module 4:** Tài liệu học tập<br>• **Module 5:** Hỏi đáp học thuật (Q&A) | • Kho tài liệu môn học (<20MB, PDF/DOCX), chấm điểm sao, Q&A theo môn học, upvote/downvote, chốt câu trả lời đúng.<br>• Bảng DB: `Subjects`, `Documents`, `DocumentRatings`, `Questions`, `Answers`, `Votes`. | 25% | Đang thực hiện |
-| **4** | **Bảo**<br>*(Full-stack Module)* | • **Module 6:** Nhóm học (Study Groups)<br>• **Module 7:** Campus (Tin tức, Sự kiện, Việc làm) | • Tạo & quản lý nhóm học, xin gia nhập, duyệt thành viên; đăng/lọc tin tức Campus, sự kiện, học bổng, việc làm IT.<br>• Bảng DB: `StudyGroups`, `GroupMembers`, `JoinRequests`, `CampusPosts`. | 25% | Đang thực hiện |
+| **4** | **Bảo**<br>*(Full-stack Module)* | • **Module 6:** Nhóm học (Study Groups)<br>• **Module 7:** Campus (Tin tức, Sự kiện, Việc làm) | • Tạo/tìm nhóm, xin gia nhập, duyệt/từ chối, rời nhóm; trưởng nhóm có thể xóa thành viên. Sinh viên xem/lọc Campus và Admin quản lý tin qua dashboard.<br>• Bảng DB: `StudyGroups`, `GroupMembers`, `JoinRequests`, `CampusPosts`. | API/UI đã triển khai trên nhánh phát triển | Chờ tích hợp notification của Thái và demo |
 | **5** | **Thái**<br>*(Full-stack & UI Lead)* | • **Module 8:** Bảng tin thông minh (News Feed)<br>• **Module 9:** Thông báo Realtime (Socket.io) | • Bảng tin thông minh ưu tiên Lớp → Trường, WebSocket Socket.io đẩy thông báo realtime (hàm dùng chung `sendNotification`).<br>• Bảng DB: `UserFeedPreferences`, `Notifications`. | 12.5% | Đang thực hiện |
 
 ---
@@ -95,6 +95,16 @@ Toàn bộ mã nguồn từ Pull Request #1 của Duy (`baonin0610`) đã đư�
 - **Khởi chạy ứng dụng máy tính với Electron:** Chạy ứng dụng desktop nguyên bản cho Windows/macOS qua cấu hình [`client-web/electron/main.cjs`](./client-web/electron/main.cjs).
 - **Thành phần UI nâng cao:** Thông báo toast nổi với `sonner`, hộp thoại xác nhận `ConfirmModal`, hiệu ứng tải trang `SkeletonPost`, trạng thái trống `EmptyState`.
 
+### 3.4. Module 6 & 7: Nhóm học và Campus (Bảo)
+
+- **Nhóm học API (`/api/groups`):** Lấy danh sách môn học, tìm/lọc nhóm có phân trang, xem chi tiết, tạo nhóm với người tạo làm trưởng nhóm, gửi yêu cầu tham gia, để trưởng nhóm chấp nhận/từ chối hoặc xóa thành viên, và rời nhóm. Backend kiểm tra quyền trưởng nhóm, ngăn yêu cầu trùng đang chờ, chặn nhóm quá sĩ số; khi trưởng nhóm rời nhóm, quyền chuyển sang thành viên lâu nhất hoặc nhóm đóng nếu không còn thành viên.
+- **Nhóm học UI ([`StudyGroupsPage.tsx`](./client-web/src/pages/StudyGroupsPage.tsx)):** Tìm theo từ khóa/môn học, tạo nhóm, xem thành viên, gửi/duyệt yêu cầu, trưởng nhóm xóa thành viên và thành viên tự rời nhóm.
+- **Campus API (`/api/campus`):** Danh sách tin đã xuất bản hỗ trợ tìm kiếm, lọc chuyên mục và phân trang; API chi tiết cho sinh viên. Phần quản trị dùng CRUD `/api/admin/campus` và phân quyền Admin đã có trong dashboard của Tú Anh.
+- **Campus UI ([`CampusPage.tsx`](./client-web/src/pages/CampusPage.tsx)):** Lọc thông báo, sự kiện, học bổng, câu lạc bộ, việc làm/thực tập; tìm kiếm, phân trang và xem chi tiết tin.
+- **Quản lý tin Admin ([`CampusPage.tsx`](./admin-web/src/pages/CampusPage.tsx)):** Bổ sung nhập ảnh bìa, thời gian sự kiện và hạn đăng ký vào màn hình quản trị hiện có.
+- **Tài liệu API:** Endpoint của hai module đã được thêm vào [`docs/postman_collection.json`](./docs/postman_collection.json) và Swagger UI.
+- **Tích hợp đang chờ:** Module 9/Thái chưa có trong nhánh `main`; khi hàm `sendNotification()` được tích hợp, cần gọi hàm này cho yêu cầu nhóm, kết quả duyệt và tin Campus mới. Chưa đánh dấu demo/kiểm thử tích hợp hoàn tất.
+
 ---
 
 ## 4. Cấu Trúc Mã Nguồn (Monorepo)
@@ -115,6 +125,7 @@ LTmang/
 │   │   │   ├── admin/        # [Module 10 - Tú Anh] Dashboard KPI, User Lock/Unlock, Moderation, Logs
 │   │   │   ├── campus/       # [Module 10 - Tú Anh] CRUD tin tức & sự kiện trường
 │   │   │   ├── communities/  # [Module 2 - Duy] Cấu trúc cộng đồng & danh sách thành viên
+│   │   │   ├── study-groups/ # [Module 6 - Bảo] Nhóm học và yêu cầu tham gia
 │   │   │   └── posts/        # [Module 3 - Duy] CRUD bài viết, Like, Comment, Report
 │   │   └── utils/            # apiResponse, jwt, password (Bcrypt), errors
 │   └── tests/                # 28 Tests Vitest (Auth, Security, Admin, Community, Post)
@@ -130,7 +141,9 @@ LTmang/
 │   │       ├── RegisterPage.tsx     # [Module 1] Đăng ký cascading dropdowns Trường → Lớp
 │   │       ├── ProfilePage.tsx      # [Module 1] Thẻ sinh viên ảo & Đổi mật khẩu
 │   │       ├── CommunitiesPage.tsx  # [Module 2] Xem cộng đồng Lớp/Khoa/Trường
-│   │       └── PostsPage.tsx        # [Module 3] Bảng tin bài viết, Like, Bình luận
+│   │       ├── PostsPage.tsx        # [Module 3] Bảng tin bài viết, Like, Bình luận
+│   │       ├── StudyGroupsPage.tsx  # [Module 6 - Bảo] Tạo/tìm nhóm và quản lý thành viên
+│   │       └── CampusPage.tsx       # [Module 7 - Bảo] Tin Campus dành cho sinh viên
 │
 ├── admin-web/                # Cổng Quản Trị Hệ Thống (React 19 + Vite + Tailwind CSS v4)
 │   └── src/pages/
