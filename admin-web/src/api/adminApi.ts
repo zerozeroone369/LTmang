@@ -131,10 +131,7 @@ export const adminApi = {
     title: string;
     content: string;
     category: CampusPostItem['category'];
-    thumbnailUrl?: string | null;
     location?: string | null;
-    eventDate?: string | null;
-    deadline?: string | null;
     isPinned?: boolean;
     status?: CampusPostItem['status'];
   }) {
@@ -148,10 +145,7 @@ export const adminApi = {
       title: string;
       content: string;
       category: CampusPostItem['category'];
-      thumbnailUrl: string | null;
       location: string | null;
-      eventDate: string | null;
-      deadline: string | null;
       isPinned: boolean;
       status: CampusPostItem['status'];
     }>,
