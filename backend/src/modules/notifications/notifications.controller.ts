@@ -33,6 +33,15 @@ export class NotificationsController {
       next(error);
     }
   }
+
+  async markAllRead(req: Request, res: Response, next: NextFunction) {
+    try {
+      const result = await notificationsService.markAllRead(req.auth!.userId);
+      return sendSuccess(res, result, 'Đã đánh dấu tất cả thông báo đã đọc');
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export const notificationsController = new NotificationsController();

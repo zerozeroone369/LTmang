@@ -10,7 +10,11 @@ export class FeedController {
       const result = await feedService.getFeed(req.auth!.userId, query);
       return sendSuccess(
         res,
-        { items: result.items, unavailableSources: result.unavailableSources },
+        {
+          items: result.items,
+          preferences: result.preferences,
+          unavailableSources: result.unavailableSources,
+        },
         'Danh sách Smart News Feed',
         200,
         buildPaginationMeta(result.page, result.limit, result.total),

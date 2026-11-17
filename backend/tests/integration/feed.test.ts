@@ -83,13 +83,14 @@ describe('Smart News Feed Module API', () => {
     scope: AcademicLevel | 'PUBLIC',
     ids: AcademicIds,
     createdAt = new Date(),
+    category: 'STUDY' | 'COMMUNITY' | 'ACTIVITY' | 'OPPORTUNITY' = 'COMMUNITY',
   ) {
     return prisma.post.create({
       data: {
         authorId: userId,
         title,
         content: `${fixtureKey} ${title} content`,
-        category: 'COMMUNITY',
+        category,
         scope,
         ...ids,
         createdAt,
@@ -220,6 +221,58 @@ describe('Smart News Feed Module API', () => {
 
     expect(response.status).toBe(400);
     expect(response.body.success).toBe(false);
+  });
+
+  it('GET /api/feed - giữ category gốc của Post và lọc đúng từng nhóm', async () => {
+    const categories = ['STUDY', 'COMMUNITY', 'ACTIVITY', 'OPPORTUNITY'] as const;
+    const createdAt = new Date();
+    for (const category of categories) {
+      await createPost(`${category} category`, 'CLASS', academicIds, createdAt, category);
+    }
+
+    const allResponse = await request(app)
+      .get(`/api/feed?search=${encodeURIComponent(fixtureKey)}`)
+      .set('Authorization', `Bearer ${token}`);
+    expect(allResponse.body.data.items).toHaveLength(categories.length);
+    expect(
+      allResponse.body.data.items.map((item: { title: string | null; category: string }) => [
+        item.title,
+        item.category,
+      ]),
+    ).toEqual(categories.map((category) => [`${category} category`, category]));
+
+    for (const category of categories) {
+      const filteredResponse = await request(app)
+        .get(`/api/feed?category=${category}&search=${encodeURIComponent(fixtureKey)}`)
+        .set('Authorization', `Bearer ${token}`);
+      expect(filteredResponse.body.data.items).toHaveLength(1);
+      expect(filteredResponse.body.data.items[0].category).toBe(category);
+    }
+  });
+
+  it('PUT /api/feed/preferences - lưu GLOBAL và dùng nó khi GET không có scope query', async () => {
+    await createPost('Global preference item', 'PUBLIC', academicIds);
+    await createPost('School preference item', 'SCHOOL', academicIds);
+    await createPost('Class preference item', 'CLASS', academicIds);
+
+    const preferenceResponse = await request(app)
+      .put('/api/feed/preferences')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ categories: 'ALL', scope: 'GLOBAL' });
+    expect(preferenceResponse.status).toBe(200);
+    expect(preferenceResponse.body.data.scope).toBe('GLOBAL');
+
+    const feedResponse = await request(app)
+      .get(`/api/feed?search=${encodeURIComponent(fixtureKey)}`)
+      .set('Authorization', `Bearer ${token}`);
+    expect(feedResponse.status).toBe(200);
+    expect(feedResponse.body.data.preferences).toEqual({
+      categories: ['STUDY', 'COMMUNITY', 'ACTIVITY', 'OPPORTUNITY'],
+      scope: 'GLOBAL',
+    });
+    expect(
+      feedResponse.body.data.items.map((item: { title: string | null }) => item.title),
+    ).toEqual(['Global preference item', 'School preference item', 'Class preference item']);
   });
 
   it('GET /api/feed - chỉ trả các scope học vụ khớp đúng ID của người xem', async () => {

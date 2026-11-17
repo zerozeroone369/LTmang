@@ -1,5 +1,5 @@
 import { Bell, Check } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { io } from 'socket.io-client';
 import { toast } from 'sonner';
 import { apiClient, getErrorMessage, TOKEN_STORAGE_KEY } from '../api/client';
@@ -24,27 +24,43 @@ export function NotificationBell() {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
+  const [isMarkingAllRead, setIsMarkingAllRead] = useState(false);
+  const requestSequence = useRef(0);
+  const seenNotificationIds = useRef(new Set<number>());
+  const activeUserId = user?.id;
+
+  const loadNotifications = useCallback(async () => {
+    if (!activeUserId) return;
+
+    const requestId = ++requestSequence.current;
+    try {
+      const response = await apiClient.get<{
+        success: boolean;
+        data: NotificationsResponse;
+      }>('/notifications?limit=10');
+      if (requestId !== requestSequence.current || activeUserId !== user?.id) return;
+
+      setNotifications(response.data.data.notifications);
+      seenNotificationIds.current = new Set(
+        response.data.data.notifications.map((item) => item.id),
+      );
+      setUnreadCount(response.data.data.unreadCount);
+    } catch (error) {
+      if (requestId === requestSequence.current && activeUserId === user?.id) {
+        toast.error('Không thể tải thông báo', { description: getErrorMessage(error) });
+      }
+    }
+  }, [activeUserId, user?.id]);
 
   useEffect(() => {
     const token = localStorage.getItem(TOKEN_STORAGE_KEY);
-    if (!user || !token) {
+    seenNotificationIds.current.clear();
+    if (!activeUserId || !token) {
+      requestSequence.current += 1;
       setNotifications([]);
       setUnreadCount(0);
       return;
     }
-
-    const loadNotifications = async () => {
-      try {
-        const response = await apiClient.get<{
-          success: boolean;
-          data: NotificationsResponse;
-        }>('/notifications?limit=10');
-        setNotifications(response.data.data.notifications);
-        setUnreadCount(response.data.data.unreadCount);
-      } catch (error) {
-        toast.error('Không thể tải thông báo', { description: getErrorMessage(error) });
-      }
-    };
 
     void loadNotifications();
 
@@ -53,21 +69,36 @@ export function NotificationBell() {
       apiClient.defaults.baseURL?.replace(/\/api\/?$/, '') ||
       window.location.origin;
     const socket = io(socketUrl, { auth: { token } });
-    socket.on('notification', (notification: NotificationItem) => {
+    const handleConnect = () => {
+      void loadNotifications();
+    };
+    const handleNotification = (notification: NotificationItem) => {
+      requestSequence.current += 1;
+      const isNewNotification = !seenNotificationIds.current.has(notification.id);
+      seenNotificationIds.current.add(notification.id);
       setNotifications((current) =>
         [notification, ...current.filter((item) => item.id !== notification.id)].slice(0, 10),
       );
-      setUnreadCount((count) => count + 1);
+      if (isNewNotification && !notification.isRead) {
+        setUnreadCount((count) => count + 1);
+      }
       toast(notification.title, { description: notification.message });
-    });
-    socket.on('connect_error', () => {
+    };
+    const handleConnectError = () => {
       toast.error('Không thể kết nối thông báo realtime');
-    });
+    };
+
+    socket.on('connect', handleConnect);
+    socket.on('notification', handleNotification);
+    socket.on('connect_error', handleConnectError);
 
     return () => {
+      socket.off('connect', handleConnect);
+      socket.off('notification', handleNotification);
+      socket.off('connect_error', handleConnectError);
       socket.disconnect();
     };
-  }, [user]);
+  }, [activeUserId, loadNotifications]);
 
   const markRead = async (notification: NotificationItem) => {
     if (notification.isRead) return;
@@ -80,6 +111,20 @@ export function NotificationBell() {
       setUnreadCount((count) => Math.max(0, count - 1));
     } catch (error) {
       toast.error('Không thể cập nhật thông báo', { description: getErrorMessage(error) });
+    }
+  };
+
+  const markAllRead = async () => {
+    if (unreadCount === 0 || isMarkingAllRead) return;
+
+    setIsMarkingAllRead(true);
+    try {
+      await apiClient.put('/notifications/read-all');
+      await loadNotifications();
+    } catch (error) {
+      toast.error('Không thể cập nhật thông báo', { description: getErrorMessage(error) });
+    } finally {
+      setIsMarkingAllRead(false);
     }
   };
 
@@ -107,6 +152,14 @@ export function NotificationBell() {
           <div className="border-b border-slate-100 px-4 py-3">
             <h2 className="text-sm font-bold text-slate-900">Thông báo</h2>
             <p className="text-xs text-slate-500">{unreadCount} chưa đọc</p>
+            <button
+              type="button"
+              onClick={() => void markAllRead()}
+              disabled={unreadCount === 0 || isMarkingAllRead}
+              className="mt-2 text-xs font-semibold text-blue-700 hover:underline disabled:cursor-not-allowed disabled:text-slate-400"
+            >
+              {isMarkingAllRead ? 'Đang cập nhật…' : 'Đánh dấu tất cả đã đọc'}
+            </button>
           </div>
           <div className="max-h-96 overflow-y-auto">
             {notifications.length === 0 ? (

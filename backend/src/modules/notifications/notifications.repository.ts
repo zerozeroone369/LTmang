@@ -43,6 +43,13 @@ export class NotificationsRepository {
     return { ...notification, isRead: true };
   }
 
+  markAllReadForUser(userId: number) {
+    return prisma.notification.updateMany({
+      where: { userId, isRead: false },
+      data: { isRead: true },
+    });
+  }
+
   async findActiveUserIds(excludedUserId: number) {
     const users = await prisma.user.findMany({
       where: { status: 'ACTIVE', id: { not: excludedUserId } },

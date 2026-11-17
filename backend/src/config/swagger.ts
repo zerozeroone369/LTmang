@@ -456,6 +456,21 @@ export const swaggerDocument = {
         },
       },
     },
+    '/api/notifications/read-all': {
+      put: {
+        tags: ['Notifications'],
+        summary: 'Đánh dấu tất cả thông báo của người dùng hiện tại đã đọc',
+        description: 'Chỉ cập nhật các thông báo thuộc userId từ JWT đang xác thực.',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          '200': {
+            description: 'Trả về số lượng thông báo chưa đọc đã được cập nhật.',
+          },
+          '401': { description: 'Thiếu JWT hoặc token không hợp lệ/hết hạn.' },
+          '403': { description: 'Tài khoản đã bị khóa.' },
+        },
+      },
+    },
     '/api/notifications/{id}/read': {
       put: {
         tags: ['Notifications'],

@@ -1,6 +1,7 @@
 import { AppError } from '../../utils/errors';
 import { feedRepository } from './feed.repository';
 import {
+  FeedCategory,
   FeedQueryInput,
   UpdateFeedPreferencesInput,
   feedCategorySchema,
@@ -22,7 +23,7 @@ interface FeedItem {
   id: string;
   sourceType: 'POST' | 'CAMPUS_POST';
   sourceId: number;
-  category: 'COMMUNITY' | 'ACTIVITY' | 'OPPORTUNITY';
+  category: FeedCategory;
   subtype: string;
   title: string | null;
   excerpt: string;
@@ -75,17 +76,24 @@ export class FeedService {
     ];
 
     const takePerStream = (query.page - 1) * query.limit + query.limit;
-    const postStreams = categories.includes('COMMUNITY')
-      ? await Promise.all(
-          applicablePostScopes.map(async (postScope) => {
-            const [items, total] = await Promise.all([
-              feedRepository.findPosts(postScope, academicProfile, query.search, takePerStream),
-              feedRepository.countPosts(postScope, academicProfile, query.search),
-            ]);
-            return { items, total };
-          }),
-        )
-      : [];
+    const postStreams =
+      categories.length > 0
+        ? await Promise.all(
+            applicablePostScopes.map(async (postScope) => {
+              const [items, total] = await Promise.all([
+                feedRepository.findPosts(
+                  postScope,
+                  categories,
+                  academicProfile,
+                  query.search,
+                  takePerStream,
+                ),
+                feedRepository.countPosts(postScope, categories, academicProfile, query.search),
+              ]);
+              return { items, total };
+            }),
+          )
+        : [];
     const campusStream =
       campusCategories.length > 0
         ? await Promise.all([
@@ -97,6 +105,11 @@ export class FeedService {
     const items: FeedItem[] = [
       ...postStreams.flatMap(({ items: streamItems }) =>
         streamItems.map((post): FeedItem => {
+          const parsedCategory = feedCategorySchema.safeParse(post.category);
+          if (!parsedCategory.success) {
+            throw new AppError(500, 'INVALID_POST_CATEGORY', 'Danh mục bài viết không hợp lệ.');
+          }
+
           let mediaUrls: string[] = [];
           if (post.mediaUrls) {
             try {
@@ -113,7 +126,7 @@ export class FeedService {
             id: `POST:${post.id}`,
             sourceType: 'POST',
             sourceId: post.id,
-            category: 'COMMUNITY',
+            category: parsedCategory.data,
             subtype: post.category,
             title: post.title,
             excerpt: post.content.slice(0, 240),
@@ -162,6 +175,10 @@ export class FeedService {
       total: postStreams.reduce((total, stream) => total + stream.total, 0) + campusStream[1],
       page: query.page,
       limit: query.limit,
+      preferences: {
+        categories: preferredCategories,
+        scope: preferredScope.data,
+      },
       unavailableSources: [
         { sourceType: 'DOCUMENT', reason: 'ACCESS_POLICY_UNCONFIRMED' },
         { sourceType: 'QUESTION', reason: 'ACCESS_POLICY_UNCONFIRMED' },

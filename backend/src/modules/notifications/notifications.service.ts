@@ -59,6 +59,11 @@ export class NotificationsService {
     return notification;
   }
 
+  async markAllRead(userId: number) {
+    const result = await notificationsRepository.markAllReadForUser(userId);
+    return { updatedCount: result.count };
+  }
+
   async notifyCampusPost(input: {
     id: number;
     authorId: number;

@@ -1,5 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { prisma } from '../../config/database';
+import { FeedCategory } from './feed.validator';
 
 export const feedPostScopes = ['CLASS', 'COURSE', 'MAJOR', 'FACULTY', 'SCHOOL', 'PUBLIC'] as const;
 export type FeedPostScope = (typeof feedPostScopes)[number];
@@ -47,11 +48,12 @@ export class FeedRepository {
 
   async findPosts(
     scope: FeedPostScope,
+    categories: FeedCategory[],
     academicProfile: FeedAcademicProfile,
     search: string | undefined,
     take: number,
   ) {
-    const where = this.buildPostWhere(scope, academicProfile, search);
+    const where = this.buildPostWhere(scope, categories, academicProfile, search);
     if (!where) return [];
 
     return prisma.post.findMany({
@@ -64,8 +66,13 @@ export class FeedRepository {
     });
   }
 
-  async countPosts(scope: FeedPostScope, academicProfile: FeedAcademicProfile, search?: string) {
-    const where = this.buildPostWhere(scope, academicProfile, search);
+  async countPosts(
+    scope: FeedPostScope,
+    categories: FeedCategory[],
+    academicProfile: FeedAcademicProfile,
+    search?: string,
+  ) {
+    const where = this.buildPostWhere(scope, categories, academicProfile, search);
     if (!where) return 0;
 
     return prisma.post.count({
@@ -92,6 +99,7 @@ export class FeedRepository {
 
   private buildPostWhere(
     scope: FeedPostScope,
+    categories: FeedCategory[],
     academicProfile: FeedAcademicProfile,
     search?: string,
   ): Prisma.PostWhereInput | null {
@@ -108,6 +116,7 @@ export class FeedRepository {
     return {
       status: 'ACTIVE',
       scope,
+      category: { in: categories },
       ...(scope === 'PUBLIC' ? {} : { [academicIdField[scope]]: targetId }),
       ...(search
         ? {

@@ -133,12 +133,52 @@ describe('Notification Module API and Socket.IO', () => {
 
   it('requires authentication for notification routes and validates IDs', async () => {
     const unauthenticated = await request(app).get('/api/notifications');
+    const unauthenticatedReadAll = await request(app).put('/api/notifications/read-all');
     const invalidId = await request(app)
       .put('/api/notifications/abc/read')
       .set('Authorization', `Bearer ${ownerToken}`);
 
     expect(unauthenticated.status).toBe(401);
+    expect(unauthenticatedReadAll.status).toBe(401);
     expect(invalidId.status).toBe(400);
+  });
+
+  it('marks all notifications read only for the authenticated user', async () => {
+    await prisma.notification.updateMany({
+      where: { userId: { in: [ownerId, otherUserId] } },
+      data: { isRead: true },
+    });
+    await sendNotification(ownerId, 'new_comment', {
+      title: 'First unread',
+      message: fixtureKey,
+    });
+    await sendNotification(ownerId, 'campus_post', {
+      title: 'Second unread',
+      message: fixtureKey,
+    });
+    await sendNotification(otherUserId, 'new_comment', {
+      title: 'Other user unread',
+      message: fixtureKey,
+    });
+
+    const response = await request(app)
+      .put('/api/notifications/read-all')
+      .set('Authorization', `Bearer ${ownerToken}`);
+    const ownerList = await request(app)
+      .get('/api/notifications')
+      .set('Authorization', `Bearer ${ownerToken}`);
+    const otherList = await request(app)
+      .get('/api/notifications')
+      .set('Authorization', `Bearer ${otherToken}`);
+
+    expect(response.status).toBe(200);
+    expect(response.body.data.updatedCount).toBe(2);
+    expect(ownerList.body.data.unreadCount).toBe(0);
+    expect(
+      ownerList.body.data.notifications.every((item: { isRead: boolean }) => item.isRead),
+    ).toBe(true);
+    expect(otherList.body.data.unreadCount).toBe(1);
+    expect(otherList.body.data.notifications[0].isRead).toBe(false);
   });
 
   it('notifies a post author when another user comments', async () => {

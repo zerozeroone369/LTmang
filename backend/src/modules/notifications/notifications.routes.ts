@@ -13,6 +13,11 @@ router.get(
   notificationsController.list.bind(notificationsController),
 );
 router.put(
+  '/read-all',
+  authenticate,
+  notificationsController.markAllRead.bind(notificationsController),
+);
+router.put(
   '/:id/read',
   authenticate,
   validate({ params: notificationParamsSchema }),
