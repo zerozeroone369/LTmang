@@ -107,11 +107,97 @@
       "name": "3. Campus Public (Tú Anh & Bảo)",
       "item": [
         { "name": "List Published Campus Posts", "request": { "method": "GET", "url": "{{baseUrl}}/api/campus?page=1&limit=10" } },
+        { "name": "Filter Campus Posts by Category", "request": { "method": "GET", "url": "{{baseUrl}}/api/campus?page=1&limit=10&category=EVENT" } },
+        { "name": "Search Campus Posts", "request": { "method": "GET", "url": "{{baseUrl}}/api/campus?page=1&limit=10&search=scholarship" } },
         { "name": "Get Campus Post Detail", "request": { "method": "GET", "url": "{{baseUrl}}/api/campus/1" } }
       ]
     },
     {
-      "name": "4. Admin Dashboard API (Tú Anh)",
+      "name": "4. Study Groups (Bảo - Module 6)",
+      "item": [
+        { "name": "List Subjects for Study Groups", "request": { "method": "GET", "url": "{{baseUrl}}/api/groups/subjects" } },
+        { "name": "Search Study Groups", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/api/groups/search?page=1&limit=10&q=ôn%20thi" } },
+        { "name": "Filter Study Groups by Subject", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/api/groups/search?page=1&limit=10&subjectId=1" } },
+        { "name": "Get Study Group Detail", "request": { "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }], "url": "{{baseUrl}}/api/groups/1" } },
+        {
+          "name": "Create Study Group (Student)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{baseUrl}}/api/groups",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Ôn thi Lập trình mạng\",\n  \"description\": \"Cùng ôn tập socket và giao thức TCP/IP.\",\n  \"subjectId\": 1,\n  \"goal\": \"Ôn thi cuối kỳ\",\n  \"scheduleText\": \"Tối thứ 7\",\n  \"location\": \"Thư viện trường\",\n  \"maxMembers\": 8\n}"
+            }
+          }
+        },
+        {
+          "name": "Request to Join a Group (Student)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{baseUrl}}/api/groups/1/join",
+            "body": { "mode": "raw", "raw": "{\n  \"message\": \"Mình muốn cùng ôn thi môn này.\"\n}" }
+          }
+        },
+        {
+          "name": "List Pending Join Requests (Leader)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/groups/1/join-requests"
+          }
+        },
+        {
+          "name": "Approve Join Request (Leader)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{baseUrl}}/api/groups/join-requests/1",
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"APPROVED\"\n}" }
+          }
+        },
+        {
+          "name": "Reject Join Request (Leader)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{baseUrl}}/api/groups/join-requests/1",
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"REJECTED\"\n}" }
+          }
+        },
+        {
+          "name": "Leave Study Group (Student)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/groups/1/leave"
+          }
+        },
+        {
+          "name": "Remove Group Member (Leader)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": "{{baseUrl}}/api/groups/1/members/2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Admin Dashboard API (Tú Anh)",
       "item": [
         {
           "name": "Dashboard Stats",
