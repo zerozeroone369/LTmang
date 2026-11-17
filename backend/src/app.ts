@@ -1,6 +1,7 @@
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
+import path from 'path';
 import swaggerUi from 'swagger-ui-express';
 import { env } from './config/env';
 import { swaggerDocument } from './config/swagger';
@@ -11,7 +12,9 @@ import { adminRoutes } from './modules/admin/admin.routes';
 import { authRoutes } from './modules/auth/auth.routes';
 import { campusRoutes } from './modules/campus/campus.routes';
 import { communityRoutes } from './modules/communities/communities.routes';
+import { documentRoutes } from './modules/documents/document.routes';
 import { postRoutes } from './modules/posts/post.routes';
+import { qaRoutes } from './modules/qa/qa.routes';
 import { userRoutes } from './modules/users/user.routes';
 import { sendSuccess } from './utils/apiResponse';
 
@@ -27,6 +30,7 @@ export function createApp() {
   );
   app.use(express.json({ limit: '2mb' }));
   app.use(express.urlencoded({ extended: true }));
+  app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
   app.use('/api', apiRateLimiter);
 
   app.get('/api/health', (_req, res) => {
@@ -49,6 +53,8 @@ export function createApp() {
   app.use('/api/academic', academicRoutes);
   app.use('/api/communities', communityRoutes);
   app.use('/api/posts', postRoutes);
+  app.use('/api/documents', documentRoutes);
+  app.use('/api/qa', qaRoutes);
   app.use('/api/campus', campusRoutes);
   app.use('/api/admin', adminRoutes);
 

@@ -4,8 +4,7 @@
 > **Repository:** `https://github.com/zerozeroone369/LTmang.git`  
 > **Mô hình vận hành:** Sở hữu trọn gói theo Module (**End-to-End: CSDL → API → UI → Demo & Vấn đáp**)  
 > **Quy mô:** 5 Thành viên — 10 Module — 40 Bước triển khai  
-> **Tiến độ tích hợp hiện tại:** **4/10 Module hoàn thành 100%** (Module 1, 2, 3, 10 — Vượt qua 28/28 Unit & Integration Tests)
-
+> **Tiến độ tích hợp hiện tại:** **6/10 Module hoàn thành 100%** (Module 1, 2, 3, 4, 5, 10 — Vượt qua 39/39 Unit & Integration Tests)
 ---
 
 ## 1. Bảng Phân Công Nhiệm Vụ 10 Module (5 Thành Viên)
@@ -16,7 +15,7 @@ Mỗi thành viên làm chủ trọn vẹn 02 module từ thiết kế bảng CS
 |:---:|---|---|---|:---:|:---:|
 | **1** | **Nguyễn Ngô Tú Anh**<br>*(Leader & Full-stack)* | • **Module 1:** Tài khoản & Core Auth<br>• **Module 10:** Quản trị hệ thống (Admin Dashboard) | • Base project, ERD toàn hệ thống 24 bảng, JWT Auth & Middleware, UI Đăng ký cascading / Đăng nhập / Profile thẻ SV ảo, Admin Web Portal, Duyệt PR.<br>• Bảng DB: `Users`, `Roles`, `AdminLogs`, `SystemSettings`. | **100%** | **Hoàn thành** (Đã sẵn sàng bảo vệ) |
 | **2** | **Nguyễn Lê Bảo Duy**<br>*(Full-stack Module)* | • **Module 2:** Cộng đồng (Cấu trúc trường)<br>• **Module 3:** Bài viết & Tương tác | • Cấu trúc Trường → Khoa → Ngành → Khóa → Lớp, CRUD bài viết theo phạm vi, Like/Comment/Report, Giao diện Desktop/Mobile.<br>• Bảng DB: `Schools`, `Faculties`, `Majors`, `Courses`, `Classes`, `Posts`, `Comments`, `Reactions`, `PostReports`. | **100%** | **Hoàn thành** (Đã duyệt PR #1) |
-| **3** | **Huy**<br>*(Full-stack Module)* | • **Module 4:** Tài liệu học tập<br>• **Module 5:** Hỏi đáp học thuật (Q&A) | • Kho tài liệu môn học (<20MB, PDF/DOCX), chấm điểm sao, Q&A theo môn học, upvote/downvote, chốt câu trả lời đúng.<br>• Bảng DB: `Subjects`, `Documents`, `DocumentRatings`, `Questions`, `Answers`, `Votes`. | 25% | Đang thực hiện |
+| **3** | **Huy**<br>*(Full-stack Module)* | • **Module 4:** Tài liệu học tập<br>• **Module 5:** Hỏi đáp học thuật (Q&A) | • Kho tài liệu môn học (&lt;20MB, PDF/DOCX), chấm điểm 1-5 sao, Q&A theo môn học, upvote/downvote (+1/-1), chốt câu trả lời đúng (Best Answer), giao diện DocumentsPage & QAPage.<br>• Bảng DB: `Subjects`, `Documents`, `DocumentRatings`, `Questions`, `Answers`, `Votes`. | **100%** | **Hoàn thành** (11/11 Tests Passed) |
 | **4** | **Bảo**<br>*(Full-stack Module)* | • **Module 6:** Nhóm học (Study Groups)<br>• **Module 7:** Campus (Tin tức, Sự kiện, Việc làm) | • Tạo & quản lý nhóm học, xin gia nhập, duyệt thành viên; đăng/lọc tin tức Campus, sự kiện, học bổng, việc làm IT.<br>• Bảng DB: `StudyGroups`, `GroupMembers`, `JoinRequests`, `CampusPosts`. | 25% | Đang thực hiện |
 | **5** | **Thái**<br>*(Full-stack & UI Lead)* | • **Module 8:** Bảng tin thông minh (News Feed)<br>• **Module 9:** Thông báo Realtime (Socket.io) | • Bảng tin thông minh ưu tiên Lớp → Trường, WebSocket Socket.io đẩy thông báo realtime (hàm dùng chung `sendNotification`).<br>• Bảng DB: `UserFeedPreferences`, `Notifications`. | 12.5% | Đang thực hiện |
 
@@ -238,19 +237,21 @@ Hệ thống đã nạp sẵn dữ liệu mẫu thực tế, có thể đăng nh
 ## 8. Kết Quả Kiểm Thử Tự Động (Quality Assurance)
 
 ```bash
-# Kiểm tra bộ 28 bài test tự động của Backend
+# Kiểm tra bộ 39 bài test tự động của Backend
 cd backend && npm test
 ```
 ```text
 ✓ tests/integration/auth.test.ts (9 tests) - Passed (Module 1 Auth, Bcrypt, Token Revocation)
+✓ tests/integration/document.test.ts (6 tests) - Passed (Module 4 Documents, Upload, Rating, Downloads)
 ✓ tests/integration/post.test.ts (7 tests) - Passed (Module 3 Posts, Toggle Like, Comments, Reports)
+✓ tests/integration/qa.test.ts (5 tests) - Passed (Module 5 Q&A, Best Answer, Upvote/Downvote)
 ✓ tests/integration/admin.test.ts (4 tests) - Passed (Module 10 Admin RBAC, Lock/Unlock Flow)
 ✓ tests/integration/community.test.ts (5 tests) - Passed (Module 2 Schools, Faculties, Classes)
 ✓ tests/unit/security.test.ts (3 tests) - Passed (Bcrypt salt rounds, JWT sign/verify)
 
-Test Files:  5 passed (5)
-Tests:       28 passed (28)
-Time:        ~25s
+Test Files:  7 passed (7)
+Tests:       39 passed (39)
+Time:        ~48s
 ```
 
 ```bash

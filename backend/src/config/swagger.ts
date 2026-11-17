@@ -275,5 +275,78 @@ export const swaggerDocument = {
         responses: { '200': { description: 'OK' } },
       },
     },
+    '/api/documents': {
+      get: {
+        tags: ['Documents'],
+        summary: 'Danh sách tài liệu học tập (lọc theo môn, loại tài liệu, tìm kiếm)',
+        responses: { '200': { description: 'OK' } },
+      },
+      post: {
+        tags: ['Documents'],
+        summary: 'Đăng tải tài liệu học tập mới',
+        security: [{ bearerAuth: [] }],
+        responses: { '201': { description: 'Created' } },
+      },
+    },
+    '/api/documents/upload': {
+      post: {
+        tags: ['Documents'],
+        summary: 'Tải tệp tài liệu lên server (<20MB, PDF/DOCX/PPTX)',
+        security: [{ bearerAuth: [] }],
+        responses: { '201': { description: 'File uploaded' } },
+      },
+    },
+    '/api/documents/subjects': {
+      get: {
+        tags: ['Documents'],
+        summary: 'Danh sách môn học',
+        responses: { '200': { description: 'OK' } },
+      },
+    },
+    '/api/documents/{id}/ratings': {
+      post: {
+        tags: ['Documents'],
+        summary: 'Đánh giá sao tài liệu (1-5 sao kèm nhận xét)',
+        security: [{ bearerAuth: [] }],
+        responses: { '200': { description: 'OK' } },
+      },
+    },
+    '/api/qa/questions': {
+      get: {
+        tags: ['Q&A'],
+        summary: 'Danh sách câu hỏi học thuật',
+        responses: { '200': { description: 'OK' } },
+      },
+      post: {
+        tags: ['Q&A'],
+        summary: 'Đặt câu hỏi học thuật mới',
+        security: [{ bearerAuth: [] }],
+        responses: { '201': { description: 'Created' } },
+      },
+    },
+    '/api/qa/questions/{id}/answers': {
+      post: {
+        tags: ['Q&A'],
+        summary: 'Trả lời câu hỏi',
+        security: [{ bearerAuth: [] }],
+        responses: { '201': { description: 'Created' } },
+      },
+    },
+    '/api/qa/answers/{id}/vote': {
+      post: {
+        tags: ['Q&A'],
+        summary: 'Vote điểm hữu ích cho câu trả lời (+1/-1)',
+        security: [{ bearerAuth: [] }],
+        responses: { '200': { description: 'OK' } },
+      },
+    },
+    '/api/qa/answers/{id}/accept': {
+      post: {
+        tags: ['Q&A'],
+        summary: 'Người hỏi chốt câu trả lời chính xác nhất',
+        security: [{ bearerAuth: [] }],
+        responses: { '200': { description: 'OK' } },
+      },
+    },
   },
 };
