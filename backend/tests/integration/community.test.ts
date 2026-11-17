@@ -24,6 +24,12 @@ describe('Community Module API', () => {
     await prisma.reaction.deleteMany();
     await prisma.postReport.deleteMany();
     await prisma.post.deleteMany();
+    await prisma.vote.deleteMany();
+    await prisma.answer.deleteMany();
+    await prisma.question.deleteMany();
+    await prisma.documentRating.deleteMany();
+    await prisma.document.deleteMany();
+    await prisma.subject.deleteMany();
     await prisma.user.deleteMany();
     await prisma.class.deleteMany();
     await prisma.course.deleteMany();

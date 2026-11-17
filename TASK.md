@@ -10,7 +10,7 @@
 |---|---|---|---|---|---|
 | **1** | **Nguyễn Ngô Tú Anh**<br>*(Leader & Full-stack)* | • **Module 1:** Tài khoản & Core Auth<br>• **Module 10:** Quản trị hệ thống (Admin) | • Base project, ERD toàn hệ thống, JWT Auth Middleware, Client Auth UI (Login/Register/Profile), Admin Portal UI, AdminLogs, SystemSettings.<br>• Phối hợp: Duyệt PR, tích hợp trang quản trị của Duy & Bảo vào Admin Dashboard. | **100%**<br>*(M1: 100%, M10: 100%)* | **Hoàn thành** (Sẵn sàng demo) |
 | **2** | **Duy**<br>*(Full-stack Module)* | • **Module 2:** Cộng đồng (Cấu trúc trường)<br>• **Module 3:** Bài viết & Tương tác | • Cấu trúc Trường → Khoa → Ngành → Khóa → Lớp, CRUD bài viết, like, comment, báo cáo vi phạm, giao diện Desktop/Mobile.<br>• Bảng DB: Schools, Faculties, Majors, Courses, Classes, Posts, Comments, Reactions, PostReports. | **100%**<br>*(M2: 100%, M3: 100%)* | **Hoàn thành** (Đã duyệt PR) |
-| **3** | **Huy**<br>*(Full-stack Module)* | • **Module 4:** Tài liệu học tập<br>• **Module 5:** Hỏi đáp học thuật (Q&A) | • Upload/download tài liệu &lt;20MB, đánh giá sao, Q&A theo môn học, upvote, chốt câu trả lời đúng.<br>• Bảng DB: Subjects, Documents, DocumentRatings, Questions, Answers, Votes. | M4: 25%<br>M5: 25% | Đang thực hiện |
+| **3** | **Huy**<br>*(Full-stack Module)* | • **Module 4:** Tài liệu học tập<br>• **Module 5:** Hỏi đáp học thuật (Q&A) | • Upload/download tài liệu &lt;20MB, đánh giá sao 1-5 sao, Q&A theo môn học, upvote/downvote (+1/-1), chốt câu trả lời đúng, giao diện DocumentsPage & QAPage.<br>• Bảng DB: Subjects, Documents, DocumentRatings, Questions, Answers, Votes. | **100%**<br>*(M4: 100%, M5: 100%)* | **Hoàn thành** (Sẵn sàng tạo PR) |
 | **4** | **Bảo**<br>*(Full-stack Module)* | • **Module 6:** Nhóm học (Study Groups)<br>• **Module 7:** Campus (Tin tức, Việc làm) | • Tạo nhóm học, xin gia nhập, duyệt thành viên; đăng/lọc tin tức Campus, sự kiện, học bổng.<br>• Bảng DB: StudyGroups, GroupMembers, JoinRequests, CampusPosts. | M6: 25%<br>M7: 25% | Đang thực hiện |
 | **5** | **Thái**<br>*(Full-stack & UI Lead)* | • **Module 8:** Bảng tin thông minh (News Feed)<br>• **Module 9:** Thông báo Realtime (Socket.io) | • Bảng tin thông minh lọc 4 nhóm & ưu tiên theo lớp, Socket.io Server & chuông thông báo realtime.<br>• Bảng DB: UserFeedPreferences, Notifications. Cung cấp hàm sendNotification(). | M8: 25%<br>M9: 0% | Đang thực hiện |
 
@@ -21,8 +21,8 @@
 ### ⏳ Chờ triển khai / Đang chạy của các thành viên khác
 - [x] **Duy - Module 2:** Cộng đồng (Cấu trúc trường học: Schools → Classes) — Branch: `feature/community` (Đã duyệt PR #1 & tích hợp)
 - [x] **Duy - Module 3:** Bài viết & Tương tác (CRUD Posts, Comments, Reactions, PostReports) — Branch: `feature/community` (Đã duyệt PR #1 & tích hợp)
-- [ ] **Huy - Module 4:** Tài liệu học tập (Upload &lt;20MB, Download, Rating sao, Filter môn học) — Branch: `feature/documents`
-- [ ] **Huy - Module 5:** Hỏi đáp học thuật Q&A (Questions, Answers, Upvote, Chốt câu đúng) — Branch: `feature/qa`
+- [x] **Huy - Module 4:** Tài liệu học tập (Upload &lt;20MB, Download, Rating sao 1-5, Filter môn học, DocumentsPage UI) — Branch: `feature/documents`
+- [x] **Huy - Module 5:** Hỏi đáp học thuật Q&A (Questions, Answers, Upvote/Downvote, Chốt câu trả lời đúng, QAPage UI) — Branch: `feature/documents`
 - [ ] **Bảo - Module 6:** Nhóm học Study Groups (StudyGroups, GroupMembers, JoinRequests) — Branch: `feature/study-groups`
 - [ ] **Bảo - Module 7:** Campus Tin tức, Sự kiện, Việc làm (CampusPosts API & Client UI) — Branch: `feature/campus`
 - [ ] **Thái - Module 8:** Bảng tin thông minh News Feed (Thuật toán ưu tiên Lớp → Trường, UserFeedPreferences) — Branch: `feature/news-feed`

@@ -21,6 +21,12 @@ async function resetAndSeedTestDb() {
   await prisma.comment.deleteMany();
   await prisma.reaction.deleteMany();
   await prisma.post.deleteMany();
+  await prisma.vote.deleteMany();
+  await prisma.answer.deleteMany();
+  await prisma.question.deleteMany();
+  await prisma.documentRating.deleteMany();
+  await prisma.document.deleteMany();
+  await prisma.subject.deleteMany();
   await prisma.campusPost.deleteMany();
   await prisma.notification.deleteMany();
   await prisma.systemSetting.deleteMany();
