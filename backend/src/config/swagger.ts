@@ -191,6 +191,293 @@ export const swaggerDocument = {
         responses: { '200': { description: 'OK' } },
       },
     },
+    '/api/feed': {
+      get: {
+        tags: ['Feed'],
+        summary: 'Lấy Smart News Feed tổng hợp và phân trang',
+        description:
+          'Yêu cầu Bearer JWT. Tổng hợp Posts đang hoạt động và CampusPosts đã xuất bản. Documents và Questions hiện chưa được tích hợp do chính sách truy cập chưa xác nhận.',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          {
+            name: 'page',
+            in: 'query',
+            description: 'Trang bắt đầu từ 1.',
+            schema: { type: 'integer', minimum: 1, default: 1 },
+          },
+          {
+            name: 'limit',
+            in: 'query',
+            description: 'Số item mỗi trang, tối đa 100.',
+            schema: { type: 'integer', minimum: 1, maximum: 100, default: 10 },
+          },
+          {
+            name: 'category',
+            in: 'query',
+            description: 'Nhóm nội dung cần lọc.',
+            schema: {
+              type: 'string',
+              enum: ['STUDY', 'COMMUNITY', 'ACTIVITY', 'OPPORTUNITY'],
+            },
+          },
+          {
+            name: 'scope',
+            in: 'query',
+            description:
+              'Phạm vi dùng để ưu tiên sắp xếp; nội dung ở scope khác vẫn hiển thị nếu người dùng có quyền.',
+            schema: {
+              type: 'string',
+              enum: ['CLASS', 'COURSE', 'MAJOR', 'FACULTY', 'SCHOOL', 'GLOBAL'],
+            },
+          },
+          {
+            name: 'search',
+            in: 'query',
+            description: 'Tìm trong tiêu đề và nội dung, tối đa 200 ký tự.',
+            schema: { type: 'string', maxLength: 200 },
+          },
+        ],
+        responses: {
+          '200': {
+            description: 'Danh sách feed đã sắp xếp và phân trang.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    success: { type: 'boolean', example: true },
+                    message: { type: 'string', example: 'Danh sách Smart News Feed' },
+                    data: {
+                      type: 'object',
+                      properties: {
+                        items: {
+                          type: 'array',
+                          items: {
+                            type: 'object',
+                            required: [
+                              'id',
+                              'sourceType',
+                              'sourceId',
+                              'category',
+                              'subtype',
+                              'title',
+                              'excerpt',
+                              'createdAt',
+                              'isPinned',
+                              'author',
+                              'scopeLevel',
+                              'payload',
+                            ],
+                            properties: {
+                              id: { type: 'string', example: 'POST:42' },
+                              sourceType: { type: 'string', enum: ['POST', 'CAMPUS_POST'] },
+                              sourceId: { type: 'integer' },
+                              category: {
+                                type: 'string',
+                                enum: ['COMMUNITY', 'ACTIVITY', 'OPPORTUNITY'],
+                              },
+                              subtype: { type: 'string' },
+                              title: { type: 'string', nullable: true },
+                              excerpt: { type: 'string' },
+                              createdAt: { type: 'string', format: 'date-time' },
+                              isPinned: { type: 'boolean' },
+                              author: {
+                                type: 'object',
+                                properties: {
+                                  id: { type: 'integer' },
+                                  fullName: { type: 'string' },
+                                  avatarUrl: { type: 'string', nullable: true },
+                                },
+                              },
+                              scopeLevel: {
+                                type: 'string',
+                                enum: ['CLASS', 'COURSE', 'MAJOR', 'FACULTY', 'SCHOOL', 'GLOBAL'],
+                              },
+                              payload: { type: 'object', additionalProperties: true },
+                            },
+                          },
+                        },
+                        unavailableSources: {
+                          type: 'array',
+                          items: {
+                            type: 'object',
+                            properties: {
+                              sourceType: { type: 'string', enum: ['DOCUMENT', 'QUESTION'] },
+                              reason: { type: 'string', enum: ['ACCESS_POLICY_UNCONFIRMED'] },
+                            },
+                          },
+                        },
+                      },
+                    },
+                    meta: {
+                      type: 'object',
+                      properties: {
+                        page: { type: 'integer' },
+                        limit: { type: 'integer' },
+                        total: { type: 'integer' },
+                        totalPages: { type: 'integer' },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': { description: 'Query parameter không hợp lệ.' },
+          '401': { description: 'Thiếu JWT hoặc token không hợp lệ/hết hạn.' },
+          '403': { description: 'Tài khoản đã bị khóa.' },
+          '404': { description: 'Không tìm thấy hồ sơ người dùng.' },
+          '500': { description: 'Preference đã lưu không hợp lệ hoặc lỗi máy chủ.' },
+        },
+      },
+    },
+    '/api/feed/preferences': {
+      put: {
+        tags: ['Feed'],
+        summary: 'Lưu tùy chọn danh mục và phạm vi Smart News Feed',
+        description:
+          'Yêu cầu Bearer JWT. userId được lấy từ token hiện tại; không truyền userId trong request body. Gửi categories là ALL hoặc mảng danh mục không trùng lặp.',
+        security: [{ bearerAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                oneOf: [
+                  {
+                    type: 'object',
+                    required: ['categories', 'scope'],
+                    properties: {
+                      categories: { type: 'string', enum: ['ALL'] },
+                      scope: {
+                        type: 'string',
+                        enum: ['CLASS', 'COURSE', 'MAJOR', 'FACULTY', 'SCHOOL'],
+                      },
+                    },
+                  },
+                  {
+                    type: 'object',
+                    required: ['categories', 'scope'],
+                    properties: {
+                      categories: {
+                        type: 'array',
+                        minItems: 1,
+                        maxItems: 4,
+                        uniqueItems: true,
+                        items: {
+                          type: 'string',
+                          enum: ['STUDY', 'COMMUNITY', 'ACTIVITY', 'OPPORTUNITY'],
+                        },
+                      },
+                      scope: {
+                        type: 'string',
+                        enum: ['CLASS', 'COURSE', 'MAJOR', 'FACULTY', 'SCHOOL'],
+                      },
+                    },
+                  },
+                ],
+                example: { categories: ['STUDY', 'COMMUNITY'], scope: 'CLASS' },
+              },
+            },
+          },
+        },
+        responses: {
+          '200': {
+            description: 'Preference đã được tạo hoặc cập nhật.',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    success: { type: 'boolean', example: true },
+                    message: { type: 'string' },
+                    data: {
+                      type: 'object',
+                      properties: {
+                        id: { type: 'integer' },
+                        userId: { type: 'integer' },
+                        categories: {
+                          oneOf: [
+                            { type: 'string', enum: ['ALL'] },
+                            {
+                              type: 'array',
+                              items: {
+                                type: 'string',
+                                enum: ['STUDY', 'COMMUNITY', 'ACTIVITY', 'OPPORTUNITY'],
+                              },
+                            },
+                          ],
+                        },
+                        scope: {
+                          type: 'string',
+                          enum: ['CLASS', 'COURSE', 'MAJOR', 'FACULTY', 'SCHOOL'],
+                        },
+                        updatedAt: { type: 'string', format: 'date-time' },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          '400': {
+            description: 'Body không hợp lệ, category trùng hoặc scope/category không được hỗ trợ.',
+          },
+          '401': { description: 'Thiếu JWT hoặc token không hợp lệ/hết hạn.' },
+          '403': { description: 'Tài khoản đã bị khóa.' },
+          '500': { description: 'Lỗi máy chủ khi lưu tùy chọn.' },
+        },
+      },
+    },
+    '/api/notifications': {
+      get: {
+        tags: ['Notifications'],
+        summary: 'Lấy danh sách thông báo của người dùng hiện tại',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          {
+            name: 'page',
+            in: 'query',
+            schema: { type: 'integer', minimum: 1, default: 1 },
+          },
+          {
+            name: 'limit',
+            in: 'query',
+            schema: { type: 'integer', minimum: 1, maximum: 100, default: 20 },
+          },
+        ],
+        responses: {
+          '200': {
+            description: 'Danh sách thông báo, số chưa đọc và metadata phân trang.',
+          },
+          '400': { description: 'Query không hợp lệ.' },
+          '401': { description: 'Thiếu JWT hoặc token không hợp lệ/hết hạn.' },
+          '403': { description: 'Tài khoản đã bị khóa.' },
+        },
+      },
+    },
+    '/api/notifications/{id}/read': {
+      put: {
+        tags: ['Notifications'],
+        summary: 'Đánh dấu một thông báo của người dùng hiện tại đã đọc',
+        security: [{ bearerAuth: [] }],
+        parameters: [
+          {
+            name: 'id',
+            in: 'path',
+            required: true,
+            schema: { type: 'integer', minimum: 1 },
+          },
+        ],
+        responses: {
+          '200': { description: 'Thông báo đã được đánh dấu đã đọc.' },
+          '400': { description: 'Notification ID không hợp lệ.' },
+          '401': { description: 'Thiếu JWT hoặc token không hợp lệ/hết hạn.' },
+          '403': { description: 'Tài khoản đã bị khóa.' },
+          '404': { description: 'Không tìm thấy thông báo thuộc người dùng hiện tại.' },
+        },
+      },
+    },
     '/api/admin/dashboard': {
       get: {
         tags: ['Admin'],

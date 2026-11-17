@@ -2,12 +2,14 @@ import http from 'http';
 import { createApp } from './app';
 import { prisma } from './config/database';
 import { env } from './config/env';
+import { initializeSocket } from './realtime/socket';
 
 async function bootstrap() {
   await prisma.$connect();
 
   const app = createApp();
   const server = http.createServer(app);
+  const io = initializeSocket(server);
 
   server.listen(env.PORT, () => {
     console.log(`UniConnect Backend API running at http://localhost:${env.PORT}`);
@@ -16,7 +18,7 @@ async function bootstrap() {
 
   const shutdown = async () => {
     console.log('Shutting down gracefully...');
-    server.close(async () => {
+    io.close(async () => {
       await prisma.$disconnect();
       process.exit(0);
     });

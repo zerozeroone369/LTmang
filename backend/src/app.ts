@@ -11,6 +11,8 @@ import { adminRoutes } from './modules/admin/admin.routes';
 import { authRoutes } from './modules/auth/auth.routes';
 import { campusRoutes } from './modules/campus/campus.routes';
 import { communityRoutes } from './modules/communities/communities.routes';
+import { feedRoutes } from './modules/feed/feed.routes';
+import { notificationsRoutes } from './modules/notifications/notifications.routes';
 import { postRoutes } from './modules/posts/post.routes';
 import { userRoutes } from './modules/users/user.routes';
 import { sendSuccess } from './utils/apiResponse';
@@ -50,6 +52,8 @@ export function createApp() {
   app.use('/api/communities', communityRoutes);
   app.use('/api/posts', postRoutes);
   app.use('/api/campus', campusRoutes);
+  app.use('/api/feed', feedRoutes);
+  app.use('/api/notifications', notificationsRoutes);
   app.use('/api/admin', adminRoutes);
 
   app.use(notFoundHandler);
