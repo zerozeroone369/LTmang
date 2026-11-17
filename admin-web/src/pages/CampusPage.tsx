@@ -13,18 +13,6 @@ const CATEGORY_LABELS: Record<CampusPostItem['category'], string> = {
   JOB_INTERNSHIP: 'Việc làm / Thực tập',
 };
 
-function toDateTimeInput(value: string | null | undefined) {
-  if (!value) return '';
-  const date = new Date(value);
-  if (Number.isNaN(date.valueOf())) return '';
-  const local = new Date(date.getTime() - date.getTimezoneOffset() * 60_000);
-  return local.toISOString().slice(0, 16);
-}
-
-function fromDateTimeInput(value: string) {
-  return value ? new Date(value).toISOString() : null;
-}
-
 export function CampusPage() {
   const [items, setItems] = useState<CampusPostItem[]>([]);
   const [categoryFilter, setCategoryFilter] = useState('');
@@ -40,9 +28,6 @@ export function CampusPage() {
   const [content, setContent] = useState('');
   const [category, setCategory] = useState<CampusPostItem['category']>('ANNOUNCEMENT');
   const [location, setLocation] = useState('');
-  const [thumbnailUrl, setThumbnailUrl] = useState('');
-  const [eventDate, setEventDate] = useState('');
-  const [deadline, setDeadline] = useState('');
   const [isPinned, setIsPinned] = useState(false);
   const [status, setStatus] = useState<CampusPostItem['status']>('PUBLISHED');
   const [submitting, setSubmitting] = useState(false);
@@ -73,9 +58,6 @@ export function CampusPage() {
     setContent('');
     setCategory('ANNOUNCEMENT');
     setLocation('');
-    setThumbnailUrl('');
-    setEventDate('');
-    setDeadline('');
     setIsPinned(false);
     setStatus('PUBLISHED');
     setModalOpen(true);
@@ -87,9 +69,6 @@ export function CampusPage() {
     setContent(item.content);
     setCategory(item.category);
     setLocation(item.location || '');
-    setThumbnailUrl(item.thumbnailUrl || '');
-    setEventDate(toDateTimeInput(item.eventDate));
-    setDeadline(toDateTimeInput(item.deadline));
     setIsPinned(item.isPinned);
     setStatus(item.status);
     setModalOpen(true);
@@ -103,10 +82,7 @@ export function CampusPage() {
         title: title.trim(),
         content: content.trim(),
         category,
-        thumbnailUrl: thumbnailUrl.trim() || null,
         location: location.trim() || null,
-        eventDate: fromDateTimeInput(eventDate),
-        deadline: fromDateTimeInput(deadline),
         isPinned,
         status,
       };
@@ -302,28 +278,6 @@ export function CampusPage() {
                   placeholder="Ví dụ: Hội trường Khu A"
                   className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm outline-none focus:border-indigo-500"
                 />
-              </div>
-
-              <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Ảnh bìa (URL)</label>
-                <input
-                  type="url"
-                  value={thumbnailUrl}
-                  onChange={(e) => setThumbnailUrl(e.target.value)}
-                  placeholder="https://..."
-                  className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm outline-none focus:border-indigo-500"
-                />
-              </div>
-
-              <div className="grid gap-3 sm:grid-cols-2">
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-slate-700">Thời gian diễn ra</label>
-                  <input type="datetime-local" value={eventDate} onChange={(e) => setEventDate(e.target.value)} className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm outline-none focus:border-indigo-500" />
-                </div>
-                <div>
-                  <label className="mb-1 block text-sm font-medium text-slate-700">Hạn đăng ký</label>
-                  <input type="datetime-local" value={deadline} onChange={(e) => setDeadline(e.target.value)} className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm outline-none focus:border-indigo-500" />
-                </div>
               </div>
 
               <div>

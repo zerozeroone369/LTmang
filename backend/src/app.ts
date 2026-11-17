@@ -12,7 +12,6 @@ import { authRoutes } from './modules/auth/auth.routes';
 import { campusRoutes } from './modules/campus/campus.routes';
 import { communityRoutes } from './modules/communities/communities.routes';
 import { postRoutes } from './modules/posts/post.routes';
-import { studyGroupRoutes } from './modules/study-groups/study-group.routes';
 import { userRoutes } from './modules/users/user.routes';
 import { sendSuccess } from './utils/apiResponse';
 
@@ -51,7 +50,6 @@ export function createApp() {
   app.use('/api/communities', communityRoutes);
   app.use('/api/posts', postRoutes);
   app.use('/api/campus', campusRoutes);
-  app.use('/api/groups', studyGroupRoutes);
   app.use('/api/admin', adminRoutes);
 
   app.use(notFoundHandler);
