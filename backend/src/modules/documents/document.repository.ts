@@ -168,10 +168,7 @@ export class DocumentRepository {
     const where: Prisma.SubjectWhereInput = {};
     if (facultyId) where.facultyId = facultyId;
     if (search) {
-      where.OR = [
-        { code: { contains: search } },
-        { name: { contains: search } },
-      ];
+      where.OR = [{ code: { contains: search } }, { name: { contains: search } }];
     }
 
     return prisma.subject.findMany({

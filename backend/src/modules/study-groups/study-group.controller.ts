@@ -1,10 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { sendCreated, sendSuccess } from '../../utils/apiResponse';
 import { studyGroupService } from './study-group.service';
-import {
-  CreateStudyGroupInput,
-  StudyGroupSearchInput,
-} from './study-group.validator';
+import { CreateStudyGroupInput, StudyGroupSearchInput } from './study-group.validator';
 
 export class StudyGroupController {
   async listSubjects(_req: Request, res: Response, next: NextFunction) {
@@ -37,7 +34,10 @@ export class StudyGroupController {
 
   async create(req: Request, res: Response, next: NextFunction) {
     try {
-      const group = await studyGroupService.create(req.auth!.userId, req.body as CreateStudyGroupInput);
+      const group = await studyGroupService.create(
+        req.auth!.userId,
+        req.body as CreateStudyGroupInput,
+      );
       return sendCreated(res, group, 'Tạo nhóm học thành công');
     } catch (error) {
       next(error);
@@ -76,7 +76,8 @@ export class StudyGroupController {
         req.auth!.userId,
         req.body.status,
       );
-      const message = req.body.status === 'APPROVED' ? 'Đã chấp nhận thành viên' : 'Đã từ chối yêu cầu';
+      const message =
+        req.body.status === 'APPROVED' ? 'Đã chấp nhận thành viên' : 'Đã từ chối yêu cầu';
       return sendSuccess(res, result, message);
     } catch (error) {
       next(error);

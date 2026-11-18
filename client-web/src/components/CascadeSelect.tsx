@@ -233,7 +233,8 @@ export const CascadeSelect: React.FC<CascadeSelectProps> = ({ onClassSelected })
         {/* 5. Lớp (Mục tiêu cuối) */}
         <div className="md:col-span-2">
           <label className="block text-xs font-semibold text-indigo-700 mb-1 flex items-center gap-1.5">
-            <Users className="w-3.5 h-3.5 text-indigo-600" /> 5. Lớp sinh hoạt (Quyết định phân luồng)
+            <Users className="w-3.5 h-3.5 text-indigo-600" /> 5. Lớp sinh hoạt (Quyết định phân
+            luồng)
           </label>
           <select
             value={selectedClass}

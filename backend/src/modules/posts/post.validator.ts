@@ -3,12 +3,8 @@ import { z } from 'zod';
 export const createPostSchema = z.object({
   title: z.string().trim().max(255).optional(),
   content: z.string().trim().min(1, 'Nội dung bài viết không được để trống').max(5000),
-  category: z
-    .enum(['STUDY', 'COMMUNITY', 'ACTIVITY', 'OPPORTUNITY'])
-    .default('COMMUNITY'),
-  scope: z
-    .enum(['CLASS', 'COURSE', 'MAJOR', 'FACULTY', 'SCHOOL', 'PUBLIC'])
-    .default('SCHOOL'),
+  category: z.enum(['STUDY', 'COMMUNITY', 'ACTIVITY', 'OPPORTUNITY']).default('COMMUNITY'),
+  scope: z.enum(['CLASS', 'COURSE', 'MAJOR', 'FACULTY', 'SCHOOL', 'PUBLIC']).default('SCHOOL'),
   mediaUrls: z.array(z.string().url()).optional(),
   classId: z.number().int().positive().optional(),
   courseId: z.number().int().positive().optional(),

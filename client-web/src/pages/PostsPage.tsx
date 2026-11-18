@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { apiClient, getErrorMessage } from '../api/client';
 import { useAuth } from '../context/auth-context';
@@ -84,7 +84,7 @@ export const PostsPage: React.FC = () => {
   const [deletingPostId, setDeletingPostId] = useState<number | null>(null);
   const [deletingPostLoading, setDeletingPostLoading] = useState(false);
 
-  const loadPosts = async () => {
+  const loadPosts = useCallback(async () => {
     try {
       setLoading(true);
       const url = filterScope !== 'ALL' ? `/posts?scope=${filterScope}` : '/posts';
@@ -97,11 +97,11 @@ export const PostsPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filterScope]);
 
   useEffect(() => {
     loadPosts();
-  }, [filterScope]);
+  }, [loadPosts]);
 
   const handleCreatePost = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -292,8 +292,10 @@ export const PostsPage: React.FC = () => {
             Quản Lý Bài Viết & Phân Quyền Bảo Mật
           </h1>
           <p className="text-indigo-100 text-sm leading-relaxed">
-            Đăng bài theo phạm vi (<span className="text-white font-semibold">Lớp / Khóa / Khoa / Trường</span>).
-            Bảo mật chặt chẽ tại Backend: chỉ chủ bài mới được sửa/xóa; cơ chế Toggle Like chống trùng lặp; báo cáo vi phạm trực tiếp tới Admin.
+            Đăng bài theo phạm vi (
+            <span className="text-white font-semibold">Lớp / Khóa / Khoa / Trường</span>). Bảo mật
+            chặt chẽ tại Backend: chỉ chủ bài mới được sửa/xóa; cơ chế Toggle Like chống trùng lặp;
+            báo cáo vi phạm trực tiếp tới Admin.
           </p>
         </div>
       </div>
@@ -573,7 +575,9 @@ export const PostsPage: React.FC = () => {
                                   {formatRelativeTime(cm.createdAt)}
                                 </span>
                               </div>
-                              <div className="text-slate-700 mt-1 leading-relaxed">{cm.content}</div>
+                              <div className="text-slate-700 mt-1 leading-relaxed">
+                                {cm.content}
+                              </div>
                             </div>
                           </div>
                         ))

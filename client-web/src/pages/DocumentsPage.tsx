@@ -16,7 +16,7 @@ import {
   UploadCloud,
   X,
 } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { documentApi } from '../api/documentApi';
 import { useAuth } from '../context/auth-context';
@@ -57,30 +57,24 @@ export function DocumentsPage() {
   const [ratingComment, setRatingComment] = useState('');
   const [submittingRating, setSubmittingRating] = useState(false);
 
-  useEffect(() => {
-    loadSubjects();
-  }, []);
+  const [appliedSearch, setAppliedSearch] = useState('');
 
-  useEffect(() => {
-    loadDocuments();
-  }, [selectedSubject, selectedDocType, sortBy]);
-
-  const loadSubjects = async () => {
+  const loadSubjects = useCallback(async () => {
     try {
       const data = await documentApi.getSubjects();
       setSubjects(data);
     } catch {
       // ignore
     }
-  };
+  }, []);
 
-  const loadDocuments = async () => {
+  const loadDocuments = useCallback(async () => {
     setLoading(true);
     try {
       const res = await documentApi.getDocuments({
         subjectId: selectedSubject ? Number(selectedSubject) : undefined,
         docType: selectedDocType !== 'ALL' ? selectedDocType : undefined,
-        search: search.trim() || undefined,
+        search: appliedSearch.trim() || undefined,
         sortBy,
       });
       setDocuments(res.documents);
@@ -89,11 +83,23 @@ export function DocumentsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedSubject, selectedDocType, appliedSearch, sortBy]);
+
+  useEffect(() => {
+    loadSubjects();
+  }, [loadSubjects]);
+
+  useEffect(() => {
+    loadDocuments();
+  }, [loadDocuments]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    loadDocuments();
+    if (appliedSearch === search) {
+      loadDocuments();
+    } else {
+      setAppliedSearch(search);
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -204,7 +210,12 @@ export function DocumentsPage() {
       setDocuments((prev) =>
         prev.map((d) =>
           d.id === ratingModalDoc.id
-            ? { ...d, avgRating: res.avgRating, ratingsCount: res.ratingsCount, myRating: ratingScore }
+            ? {
+                ...d,
+                avgRating: res.avgRating,
+                ratingsCount: res.ratingsCount,
+                myRating: ratingScore,
+              }
             : d,
         ),
       );
@@ -238,7 +249,8 @@ export function DocumentsPage() {
     if (ext === 'pdf') return <FileText className="h-6 w-6 text-rose-500" />;
     if (ext === 'docx' || ext === 'doc') return <FileText className="h-6 w-6 text-blue-500" />;
     if (ext === 'pptx' || ext === 'ppt') return <BookOpen className="h-6 w-6 text-amber-500" />;
-    if (ext === 'xlsx' || ext === 'xls') return <FileSpreadsheet className="h-6 w-6 text-emerald-500" />;
+    if (ext === 'xlsx' || ext === 'xls')
+      return <FileSpreadsheet className="h-6 w-6 text-emerald-500" />;
     if (ext === 'zip' || ext === 'rar') return <FileCode className="h-6 w-6 text-purple-500" />;
     return <FileQuestion className="h-6 w-6 text-slate-500" />;
   };
@@ -261,7 +273,8 @@ export function DocumentsPage() {
               Kho Tài Liệu Học Tập
             </h1>
             <p className="mt-1 text-sm text-blue-100">
-              Tra cứu và chia sẻ slide bài giảng, đề thi, đề cương môn học cùng cộng đồng sinh viên UniConnect.
+              Tra cứu và chia sẻ slide bài giảng, đề thi, đề cương môn học cùng cộng đồng sinh viên
+              UniConnect.
             </p>
           </div>
 
@@ -353,7 +366,10 @@ export function DocumentsPage() {
       {loading ? (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="h-48 animate-pulse rounded-2xl border border-slate-200 bg-white p-5" />
+            <div
+              key={i}
+              className="h-48 animate-pulse rounded-2xl border border-slate-200 bg-white p-5"
+            />
           ))}
         </div>
       ) : documents.length === 0 ? (
@@ -363,7 +379,8 @@ export function DocumentsPage() {
           </div>
           <h3 className="mt-4 text-base font-bold text-slate-800">Chưa có tài liệu nào</h3>
           <p className="mt-1 max-w-sm text-xs text-slate-500">
-            Không tìm thấy tài liệu phù hợp với bộ lọc. Hãy là người đầu tiên chia sẻ tài liệu môn học!
+            Không tìm thấy tài liệu phù hợp với bộ lọc. Hãy là người đầu tiên chia sẻ tài liệu môn
+            học!
           </p>
           <button
             type="button"
@@ -420,7 +437,9 @@ export function DocumentsPage() {
                       <Clock className="h-3 w-3" /> {formatRelativeTime(doc.createdAt)}
                     </span>
                   </div>
-                  <span className="font-semibold text-slate-600">{formatFileSize(doc.fileSize)}</span>
+                  <span className="font-semibold text-slate-600">
+                    {formatFileSize(doc.fileSize)}
+                  </span>
                 </div>
 
                 {/* Rating and Download Buttons */}
@@ -481,7 +500,9 @@ export function DocumentsPage() {
             <form onSubmit={handleUploadSubmit} className="mt-4 space-y-4">
               {/* File Dropzone */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700">Tệp tài liệu (&lt;20MB)</label>
+                <label className="block text-xs font-semibold text-slate-700">
+                  Tệp tài liệu (&lt;20MB)
+                </label>
                 <label className="mt-1 flex cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 p-6 transition hover:border-blue-500 hover:bg-blue-50/50">
                   <UploadCloud className="h-8 w-8 text-blue-500" />
                   <p className="mt-2 text-xs font-medium text-slate-700">
@@ -491,7 +512,9 @@ export function DocumentsPage() {
                       'Kéo thả hoặc bấm để chọn file (PDF, DOCX, PPTX, XLSX...)'
                     )}
                   </p>
-                  <p className="mt-0.5 text-[10px] text-slate-400">Tối đa 20MB theo quy định hệ thống</p>
+                  <p className="mt-0.5 text-[10px] text-slate-400">
+                    Tối đa 20MB theo quy định hệ thống
+                  </p>
                   <input
                     type="file"
                     onChange={handleFileChange}
@@ -503,7 +526,9 @@ export function DocumentsPage() {
 
               {/* Title */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700">Tiêu đề tài liệu *</label>
+                <label className="block text-xs font-semibold text-slate-700">
+                  Tiêu đề tài liệu *
+                </label>
                 <input
                   type="text"
                   value={uploadTitle}
@@ -520,7 +545,9 @@ export function DocumentsPage() {
                   <label className="block text-xs font-semibold text-slate-700">Môn học *</label>
                   <select
                     value={uploadSubjectId}
-                    onChange={(e) => setUploadSubjectId(e.target.value ? Number(e.target.value) : '')}
+                    onChange={(e) =>
+                      setUploadSubjectId(e.target.value ? Number(e.target.value) : '')
+                    }
                     required
                     className="mt-1 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-800 outline-none focus:border-blue-500"
                   >
@@ -534,7 +561,9 @@ export function DocumentsPage() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700">Loại tài liệu</label>
+                  <label className="block text-xs font-semibold text-slate-700">
+                    Loại tài liệu
+                  </label>
                   <select
                     value={uploadDocType}
                     onChange={(e) => setUploadDocType(e.target.value as DocType)}
@@ -551,7 +580,9 @@ export function DocumentsPage() {
 
               {/* Description */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700">Mô tả / Ghi chú</label>
+                <label className="block text-xs font-semibold text-slate-700">
+                  Mô tả / Ghi chú
+                </label>
                 <textarea
                   rows={2}
                   value={uploadDescription}
@@ -636,7 +667,9 @@ export function DocumentsPage() {
 
               {/* Comment */}
               <div>
-                <label className="block text-xs font-semibold text-slate-700">Nhận xét (Tùy chọn)</label>
+                <label className="block text-xs font-semibold text-slate-700">
+                  Nhận xét (Tùy chọn)
+                </label>
                 <textarea
                   rows={3}
                   value={ratingComment}

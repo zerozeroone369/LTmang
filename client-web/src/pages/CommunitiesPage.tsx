@@ -268,9 +268,7 @@ export const CommunitiesPage: React.FC = () => {
               </h2>
               <p className="text-xs text-slate-500">
                 Các bạn sinh viên cùng sinh hoạt trong{' '}
-                <span className="font-semibold text-slate-700">
-                  {data?.hierarchy?.class?.name}
-                </span>
+                <span className="font-semibold text-slate-700">{data?.hierarchy?.class?.name}</span>
               </p>
             </div>
 
@@ -320,9 +318,7 @@ export const CommunitiesPage: React.FC = () => {
                       MSSV: {mate.studentCode || 'N/A'}
                     </div>
                     {mate.bio && (
-                      <div className="text-[11px] text-slate-400 truncate mt-0.5">
-                        {mate.bio}
-                      </div>
+                      <div className="text-[11px] text-slate-400 truncate mt-0.5">{mate.bio}</div>
                     )}
                   </div>
                   <div className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" title="Online" />

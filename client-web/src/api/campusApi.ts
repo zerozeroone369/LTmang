@@ -1,12 +1,7 @@
 import { apiClient } from './client';
 import { ApiPage } from './studyGroupsApi';
 
-export type CampusCategory =
-  | 'ANNOUNCEMENT'
-  | 'EVENT'
-  | 'SCHOLARSHIP'
-  | 'CLUB'
-  | 'JOB_INTERNSHIP';
+export type CampusCategory = 'ANNOUNCEMENT' | 'EVENT' | 'SCHOLARSHIP' | 'CLUB' | 'JOB_INTERNSHIP';
 
 export interface CampusPostItem {
   id: number;

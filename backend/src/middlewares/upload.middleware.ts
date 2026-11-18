@@ -41,7 +41,18 @@ const ALLOWED_MIME_TYPES = [
   'application/octet-stream',
 ];
 
-const ALLOWED_EXTENSIONS = ['.pdf', '.doc', '.docx', '.ppt', '.pptx', '.xls', '.xlsx', '.txt', '.zip', '.rar'];
+const ALLOWED_EXTENSIONS = [
+  '.pdf',
+  '.doc',
+  '.docx',
+  '.ppt',
+  '.pptx',
+  '.xls',
+  '.xlsx',
+  '.txt',
+  '.zip',
+  '.rar',
+];
 
 export const documentUpload = multer({
   storage,

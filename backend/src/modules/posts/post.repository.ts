@@ -140,7 +140,12 @@ export class PostRepository {
   }
 
   // Comments
-  async createComment(data: { postId: number; authorId: number; content: string; parentId?: number }) {
+  async createComment(data: {
+    postId: number;
+    authorId: number;
+    content: string;
+    parentId?: number;
+  }) {
     return prisma.$transaction(async (tx) => {
       const comment = await tx.comment.create({
         data,
@@ -195,7 +200,12 @@ export class PostRepository {
   }
 
   // Reports
-  async createReport(data: { postId: number; reporterId: number; reason: string; description?: string }) {
+  async createReport(data: {
+    postId: number;
+    reporterId: number;
+    reason: string;
+    description?: string;
+  }) {
     return prisma.postReport.create({
       data: {
         postId: data.postId,

@@ -110,15 +110,18 @@ export class StudyGroupRepository {
     });
   }
 
-  async create(creatorId: number, input: {
-    name: string;
-    description?: string | null;
-    subjectId?: number | null;
-    goal?: string | null;
-    scheduleText?: string | null;
-    location?: string | null;
-    maxMembers?: number;
-  }) {
+  async create(
+    creatorId: number,
+    input: {
+      name: string;
+      description?: string | null;
+      subjectId?: number | null;
+      goal?: string | null;
+      scheduleText?: string | null;
+      location?: string | null;
+      maxMembers?: number;
+    },
+  ) {
     return prisma.$transaction(async (tx) => {
       const group = await tx.studyGroup.create({
         data: {
@@ -146,7 +149,9 @@ export class StudyGroupRepository {
     return prisma.joinRequest.findMany({
       where: { groupId, status: 'PENDING' },
       include: {
-        user: { select: { id: true, fullName: true, avatarUrl: true, class: { select: { name: true } } } },
+        user: {
+          select: { id: true, fullName: true, avatarUrl: true, class: { select: { name: true } } },
+        },
       },
       orderBy: { createdAt: 'asc' },
     });
@@ -169,7 +174,9 @@ export class StudyGroupRepository {
 
       if (status === 'APPROVED') {
         if (request.group.status !== 'OPEN') return { groupClosed: true as const };
-        const existingMember = request.group.members.some((member) => member.userId === request.userId);
+        const existingMember = request.group.members.some(
+          (member) => member.userId === request.userId,
+        );
         if (!existingMember && request.group.members.length >= request.group.maxMembers) {
           return { groupFull: true as const };
         }
@@ -183,7 +190,10 @@ export class StudyGroupRepository {
       return tx.joinRequest.update({
         where: { id: requestId },
         data: { status, reviewedById: leaderId, reviewedAt: new Date() },
-        include: { user: { select: { id: true, fullName: true } }, group: { select: { id: true, name: true } } },
+        include: {
+          user: { select: { id: true, fullName: true } },
+          group: { select: { id: true, name: true } },
+        },
       });
     });
   }
@@ -202,7 +212,10 @@ export class StudyGroupRepository {
         });
         if (successor) {
           await tx.groupMember.update({ where: { id: successor.id }, data: { role: 'LEADER' } });
-          await tx.studyGroup.update({ where: { id: groupId }, data: { creatorId: successor.userId } });
+          await tx.studyGroup.update({
+            where: { id: groupId },
+            data: { creatorId: successor.userId },
+          });
         } else {
           await tx.studyGroup.update({ where: { id: groupId }, data: { status: 'CLOSED' } });
         }

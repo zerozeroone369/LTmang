@@ -62,10 +62,7 @@ export class PostService {
     if (query.facultyId) where.facultyId = query.facultyId;
     if (query.authorId) where.authorId = query.authorId;
     if (query.search) {
-      where.OR = [
-        { title: { contains: query.search } },
-        { content: { contains: query.search } },
-      ];
+      where.OR = [{ title: { contains: query.search } }, { content: { contains: query.search } }];
     }
 
     const [total, rawPosts] = await Promise.all([

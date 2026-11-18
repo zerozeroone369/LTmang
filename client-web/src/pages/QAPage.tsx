@@ -15,7 +15,7 @@ import {
   Trash2,
   X,
 } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { documentApi } from '../api/documentApi';
 import { qaApi } from '../api/qaApi';
@@ -47,30 +47,24 @@ export function QAPage() {
   const [createTags, setCreateTags] = useState('');
   const [creating, setCreating] = useState(false);
 
-  useEffect(() => {
-    loadSubjects();
-  }, []);
+  const [appliedSearch, setAppliedSearch] = useState('');
 
-  useEffect(() => {
-    loadQuestions();
-  }, [selectedSubject, filterSolved, sortBy]);
-
-  const loadSubjects = async () => {
+  const loadSubjects = useCallback(async () => {
     try {
       const data = await documentApi.getSubjects();
       setSubjects(data);
     } catch {
       // ignore
     }
-  };
+  }, []);
 
-  const loadQuestions = async () => {
+  const loadQuestions = useCallback(async () => {
     setLoading(true);
     try {
       const res = await qaApi.getQuestions({
         subjectId: selectedSubject ? Number(selectedSubject) : undefined,
         isSolved: filterSolved === 'ALL' ? undefined : filterSolved === 'SOLVED',
-        search: search.trim() || undefined,
+        search: appliedSearch.trim() || undefined,
         sortBy,
       });
       setQuestions(res.questions);
@@ -79,11 +73,23 @@ export function QAPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedSubject, filterSolved, appliedSearch, sortBy]);
+
+  useEffect(() => {
+    loadSubjects();
+  }, [loadSubjects]);
+
+  useEffect(() => {
+    loadQuestions();
+  }, [loadQuestions]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    loadQuestions();
+    if (appliedSearch === search) {
+      loadQuestions();
+    } else {
+      setAppliedSearch(search);
+    }
   };
 
   const handleOpenDetail = async (questionId: number) => {
@@ -227,7 +233,8 @@ export function QAPage() {
               Hỏi Đáp Học Thuật (Q&A)
             </h1>
             <p className="mt-1 text-sm text-emerald-100">
-              Cộng đồng giải đáp thắc mắc bài tập, chia sẻ phương pháp học tập và hỗ trợ bạn bè cùng tiến bộ.
+              Cộng đồng giải đáp thắc mắc bài tập, chia sẻ phương pháp học tập và hỗ trợ bạn bè cùng
+              tiến bộ.
             </p>
           </div>
 
@@ -330,10 +337,11 @@ export function QAPage() {
             </h3>
 
             {/* Submit answer form */}
-            <form onSubmit={handleAddAnswer} className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-              <label className="block text-xs font-bold text-slate-700">
-                Câu trả lời của bạn
-              </label>
+            <form
+              onSubmit={handleAddAnswer}
+              className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
+            >
+              <label className="block text-xs font-bold text-slate-700">Câu trả lời của bạn</label>
               <textarea
                 rows={3}
                 value={answerContent}
@@ -400,7 +408,8 @@ export function QAPage() {
                     {/* Best Answer Banner */}
                     {answer.isCorrect && (
                       <div className="mb-2 flex items-center gap-1.5 rounded-lg bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800">
-                        <CheckCircle className="h-4 w-4" /> Câu trả lời chính xác nhất được người hỏi chấp nhận
+                        <CheckCircle className="h-4 w-4" /> Câu trả lời chính xác nhất được người
+                        hỏi chấp nhận
                       </div>
                     )}
 
@@ -541,7 +550,10 @@ export function QAPage() {
           {loading ? (
             <div className="space-y-3">
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-32 animate-pulse rounded-2xl border border-slate-200 bg-white p-5" />
+                <div
+                  key={i}
+                  className="h-32 animate-pulse rounded-2xl border border-slate-200 bg-white p-5"
+                />
               ))}
             </div>
           ) : questions.length === 0 ? (
@@ -669,7 +681,9 @@ export function QAPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700">Tiêu đề câu hỏi *</label>
+                <label className="block text-xs font-semibold text-slate-700">
+                  Tiêu đề câu hỏi *
+                </label>
                 <input
                   type="text"
                   value={createTitle}
@@ -681,7 +695,9 @@ export function QAPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700">Chi tiết câu hỏi *</label>
+                <label className="block text-xs font-semibold text-slate-700">
+                  Chi tiết câu hỏi *
+                </label>
                 <textarea
                   rows={4}
                   value={createContent}
@@ -693,7 +709,9 @@ export function QAPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700">Thẻ / Hashtag (ngăn cách bằng dấu phẩy)</label>
+                <label className="block text-xs font-semibold text-slate-700">
+                  Thẻ / Hashtag (ngăn cách bằng dấu phẩy)
+                </label>
                 <input
                   type="text"
                   value={createTags}
