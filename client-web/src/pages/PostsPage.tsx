@@ -281,12 +281,12 @@ export const PostsPage: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
-      {/* Banner Header Module 3 của Duy */}
+      {/* Banner Header Bài viết & Tương tác */}
       <div className="bg-gradient-to-r from-indigo-700 via-indigo-600 to-violet-600 rounded-3xl p-6 sm:p-8 text-white shadow-xl shadow-indigo-100 relative overflow-hidden">
         <div className="relative z-10 max-w-2xl space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-semibold backdrop-blur">
             <Sparkles className="w-3.5 h-3.5" />
-            Module 3: Bài viết & Tương tác — Phụ trách: Duy
+            Bài viết & Tương tác
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
             Quản Lý Bài Viết & Phân Quyền Bảo Mật

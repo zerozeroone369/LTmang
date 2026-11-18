@@ -251,7 +251,7 @@ export function DocumentsPage() {
           <div>
             <div className="flex items-center gap-2">
               <span className="rounded-md bg-white/20 px-2.5 py-0.5 text-xs font-bold tracking-wide uppercase backdrop-blur-sm">
-                Module 4 — Huy (Full-stack)
+                Kho tài liệu số
               </span>
               <span className="flex items-center gap-1 text-xs text-blue-100">
                 <CheckCircle className="h-3.5 w-3.5 text-emerald-300" /> Dung lượng &lt; 20MB

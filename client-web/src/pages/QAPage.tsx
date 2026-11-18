@@ -217,7 +217,7 @@ export function QAPage() {
           <div>
             <div className="flex items-center gap-2">
               <span className="rounded-md bg-white/20 px-2.5 py-0.5 text-xs font-bold tracking-wide uppercase backdrop-blur-sm">
-                Module 5 — Huy (Full-stack)
+                Diễn đàn học thuật
               </span>
               <span className="flex items-center gap-1 text-xs text-emerald-100">
                 <CheckCircle className="h-3.5 w-3.5 text-white" /> Upvote & Chốt đáp án
