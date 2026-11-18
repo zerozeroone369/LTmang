@@ -1,5 +1,4 @@
 import {
-  Bell,
   BookOpen,
   Calendar,
   GraduationCap,
@@ -16,6 +15,7 @@ import {
 import { useState } from 'react';
 import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/auth-context';
+import { NotificationBell } from './NotificationBell';
 
 const CLIENT_NAV_ITEMS = [
   { to: '/', label: 'Bảng tin', icon: Home, moduleOwner: 'Thái (M8)' },
@@ -79,18 +79,7 @@ export function ClientLayout() {
 
         {/* User / Notification */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Notification bell placeholder (Thái M9) */}
-          <button
-            type="button"
-            title="Thông báo Realtime (Thái - Module 9)"
-            className="relative rounded-xl p-2 text-slate-500 hover:bg-slate-100 hover:text-blue-600"
-          >
-            <Bell className="h-5 w-5" />
-            <span className="absolute top-1.5 right-1.5 flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-600" />
-            </span>
-          </button>
+          <NotificationBell />
 
           {user ? (
             <div className="flex items-center gap-2.5">

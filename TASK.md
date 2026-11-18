@@ -8,30 +8,26 @@
 
 | STT | Thành viên & Vai trò | Module sở hữu | Trách nhiệm cốt lõi, Bảng DB & Phối hợp | Tiến độ | Trạng thái |
 |---|---|---|---|---|---|
-| **1** | **Nguyễn Ngô Tú Anh**<br>*(Leader & Full-stack)* | • **Module 1:** Tài khoản & Core Auth<br>• **Module 10:** Quản trị hệ thống (Admin) | • Base project, ERD toàn hệ thống, JWT Auth Middleware, Client Auth UI (Login/Register/Profile), Admin Portal UI, AdminLogs, SystemSettings.<br>• Phối hợp: Duyệt PR, tích hợp trang quản trị của Duy & Bảo vào Admin Dashboard. | **100%**<br>*(M1: 100%, M10: 100%)* | **Hoàn thành** (Sẵn sàng demo) |
-| **2** | **Duy**<br>*(Full-stack Module)* | • **Module 2:** Cộng đồng (Cấu trúc trường)<br>• **Module 3:** Bài viết & Tương tác | • Cấu trúc Trường → Khoa → Ngành → Khóa → Lớp, CRUD bài viết, like, comment, báo cáo vi phạm, giao diện Desktop/Mobile.<br>• Bảng DB: Schools, Faculties, Majors, Courses, Classes, Posts, Comments, Reactions, PostReports. | **100%**<br>*(M2: 100%, M3: 100%)* | **Hoàn thành** (Đã duyệt PR) |
-| **3** | **Huy**<br>*(Full-stack Module)* | • **Module 4:** Tài liệu học tập<br>• **Module 5:** Hỏi đáp học thuật (Q&A) | • Upload/download tài liệu &lt;20MB, đánh giá sao, Q&A theo môn học, upvote, chốt câu trả lời đúng.<br>• Bảng DB: Subjects, Documents, DocumentRatings, Questions, Answers, Votes. | M4: 25%<br>M5: 25% | Đang thực hiện |
-| **4** | **Bảo**<br>*(Full-stack Module)* | • **Module 6:** Nhóm học (Study Groups)<br>• **Module 7:** Campus (Tin tức, Việc làm) | • Tạo nhóm học, xin gia nhập, duyệt thành viên; đăng/lọc tin tức Campus, sự kiện, học bổng.<br>• Bảng DB: StudyGroups, GroupMembers, JoinRequests, CampusPosts. | M6: 25%<br>M7: 25% | Đang thực hiện |
-| **5** | **Thái**<br>*(Full-stack & UI Lead)* | • **Module 8:** Bảng tin thông minh (News Feed)<br>• **Module 9:** Thông báo Realtime (Socket.io) | • Bảng tin thông minh lọc 4 nhóm & ưu tiên theo lớp, Socket.io Server & chuông thông báo realtime.<br>• Bảng DB: UserFeedPreferences, Notifications. Cung cấp hàm sendNotification(). | M8: 25%<br>M9: 0% | Đang thực hiện |
+| **1** | **Nguyễn Ngô Tú Anh**<br>*(Leader & Full-stack)* | • **Module 1:** Tài khoản & Core Auth<br>• **Module 10:** Quản trị hệ thống (Admin) | • Base project, ERD toàn hệ thống, JWT Auth Middleware, Client Auth UI (Login/Register/Profile), Admin Portal UI, AdminLogs, SystemSettings.<br>• Phối hợp: Duyệt PR, tích hợp toàn bộ 10 module & kiểm thử 71/71 tests. | **100%**<br>*(M1: 100%, M10: 100%)* | **Hoàn thành** (Sẵn sàng demo) |
+| **2** | **Duy**<br>*(Full-stack Module)* | • **Module 2:** Cộng đồng (Cấu trúc trường)<br>• **Module 3:** Bài viết & Tương tác | • Cấu trúc Trường → Khoa → Ngành → Khóa → Lớp, CRUD bài viết, like, comment, báo cáo vi phạm, giao diện Desktop/Mobile.<br>• Bảng DB: Schools, Faculties, Majors, Courses, Classes, Posts, Comments, Reactions, PostReports. | **100%**<br>*(M2: 100%, M3: 100%)* | **Hoàn thành** (Đã tích hợp) |
+| **3** | **Huy**<br>*(Full-stack Module)* | • **Module 4:** Tài liệu học tập<br>• **Module 5:** Hỏi đáp học thuật (Q&A) | • Upload/download tài liệu &lt;20MB (Multer), đánh giá sao, Q&A theo môn học, upvote/downvote, chốt câu trả lời đúng, gắn realtime `new_answer`.<br>• Bảng DB: Subjects, Documents, DocumentRatings, Questions, Answers, Votes. | **100%**<br>*(M4: 100%, M5: 100%)* | **Hoàn thành** (Đã tích hợp) |
+| **4** | **Bảo**<br>*(Full-stack Module)* | • **Module 6:** Nhóm học (Study Groups)<br>• **Module 7:** Campus (Tin tức, Việc làm) | • Tạo nhóm học, tìm kiếm, xin gia nhập, duyệt thành viên (gắn realtime `join_request`); đăng/lọc tin tức Campus & quản trị Campus nâng cao trong Admin.<br>• Bảng DB: StudyGroups, GroupMembers, JoinRequests, CampusPosts. | **100%**<br>*(M6: 100%, M7: 100%)* | **Hoàn thành** (Đã tích hợp) |
+| **5** | **Thái**<br>*(Full-stack & UI Lead)* | • **Module 8:** Bảng tin thông minh (News Feed)<br>• **Module 9:** Thông báo Realtime (Socket.io) | • Bảng tin thông minh lọc 4 nhóm & ưu tiên theo lớp, Socket.io Server xác thực JWT, chuông thông báo `NotificationBell` & hàm `sendNotification()`.<br>• Bảng DB: UserFeedPreferences, Notifications. | **100%**<br>*(M8: 100%, M9: 100%)* | **Hoàn thành** (Đã tích hợp) |
 
 ---
 
 ## 📋 CHI TIẾT THEO DÕI TASK (KANBAN)
 
-### ⏳ Chờ triển khai / Đang chạy của các thành viên khác
-- [x] **Duy - Module 2:** Cộng đồng (Cấu trúc trường học: Schools → Classes) — Branch: `feature/community` (Đã duyệt PR #1 & tích hợp)
-- [x] **Duy - Module 3:** Bài viết & Tương tác (CRUD Posts, Comments, Reactions, PostReports) — Branch: `feature/community` (Đã duyệt PR #1 & tích hợp)
-- [ ] **Huy - Module 4:** Tài liệu học tập (Upload &lt;20MB, Download, Rating sao, Filter môn học) — Branch: `feature/documents`
-- [ ] **Huy - Module 5:** Hỏi đáp học thuật Q&A (Questions, Answers, Upvote, Chốt câu đúng) — Branch: `feature/qa`
-- [ ] **Bảo - Module 6:** Nhóm học Study Groups (StudyGroups, GroupMembers, JoinRequests) — Branch: `feature/study-groups`
-- [ ] **Bảo - Module 7:** Campus Tin tức, Sự kiện, Việc làm (CampusPosts API & Client UI) — Branch: `feature/campus`
-- [ ] **Thái - Module 8:** Bảng tin thông minh News Feed (Thuật toán ưu tiên Lớp → Trường, UserFeedPreferences) — Branch: `feature/news-feed`
-- [ ] **Thái - Module 9:** Thông báo Realtime Socket.io (Socket Handshake JWT, new_comment, new_answer, popup Toast) — Branch: `feature/notifications`
+### ✅ Toàn bộ 10 Module đã tích hợp & kiểm thử (71/71 Vitest Tests Passed)
+- [x] **Tú Anh - Module 1 & 10:** Tài khoản, Core Auth, JWT Middleware, Admin Dashboard — Branch: `feature/auth`, `feature/admin-dashboard`
+- [x] **Duy - Module 2 & 3:** Cộng đồng (Schools → Classes) & Bài viết/Tương tác (Posts, Comments, Reactions, Reports) — Branch: `feature/community`
+- [x] **Huy - Module 4 & 5:** Tài liệu học tập (Multer &lt;20MB, Rating sao) & Q&A học thuật (Questions, Answers, Votes, Accept + `new_answer`) — Branch: `feature/documents`
+- [x] **Bảo - Module 6 & 7:** Nhóm học Study Groups (Leader duyệt đơn, giới hạn sĩ số + `join_request`) & Campus (Client + Admin fields) — Commit: `043918f`
+- [x] **Thái - Module 8 & 9:** Bảng tin thông minh News Feed (4 nhóm + ưu tiên Lớp → Trường) & Thông báo Realtime Socket.io (`NotificationBell` + `sendNotification`) — Branch: `feed-notifications`
 
-### 🔍 In Review / Pull Requests của Tú Anh (Leader)
-- [x] **PR #1 (Duy - Module 2 & 3):** `feature/community` → `main` (Cấu trúc trường, Cộng đồng, Đăng bài, Like/Comment/Report, Desktop/Mobile UI) — **Đã kiểm tra & gộp thành công**
-- [x] **PR #2 (Tú Anh - Module 1 Core & Client UI):** `feature/auth` → `main` (ERD 24 bảng, Base Backend, JWT/Bcrypt, Academic cascading, Đăng ký/Đăng nhập/Profile)
-- [x] **PR #3 (Tú Anh - Module 10 Admin):** `feature/admin-dashboard` → `main` (Admin Dashboard API & UI, Quản lý User, Khóa/Mở khóa SV, Kiểm duyệt vi phạm)
+### 🔍 Pull Requests & Gộp Nhánh (Leader Tú Anh)
+- [x] **PR #2 & #3 (Tú Anh + Duy):** Đã gộp vào `main` (Modules 1, 2, 3, 10 + README).
+- [x] **PR tích hợp tổng hợp (`feature/integrate-all-modules` → `main`):** Hợp nhất chuẩn chỉnh cả 10 Module của Tú Anh, Duy, Huy, Bảo, Thái, nối đầy đủ 4 sự kiện thông báo realtime (`new_comment`, `new_answer`, `join_request`, `campus_post`), 71/71 Vitest tests pass, 3 app build 0 errors.
 
 ### ✅ Hoàn thành trọn gói của Tú Anh (Leader & Full-stack)
 - [x] **B1 (ERD & Base):**
