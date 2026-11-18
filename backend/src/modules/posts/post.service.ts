@@ -1,5 +1,6 @@
 import { prisma } from '../../config/database';
 import { AppError } from '../../utils/errors';
+import { sendNotification } from '../notifications/notifications.service';
 import { postRepository } from './post.repository';
 import {
   CreateCommentInput,
@@ -226,6 +227,15 @@ export class PostService {
       content: input.content,
       parentId: input.parentId,
     });
+
+    if (post.authorId !== userId) {
+      await sendNotification(post.authorId, 'new_comment', {
+        title: 'Bài viết có bình luận mới',
+        message: comment.content,
+        referenceType: 'POST',
+        referenceId: postId,
+      });
+    }
 
     return comment;
   }

@@ -1,6 +1,7 @@
 import { prisma } from '../../config/database';
 import { PostStatus, ReportStatus, UserStatus } from '../../constants/enums';
 import { AppError } from '../../utils/errors';
+import { notificationsService } from '../notifications/notifications.service';
 import { toUserDTO } from '../users/user.dto';
 import { userRepository } from '../users/user.repository';
 import { adminRepository } from './admin.repository';
@@ -315,7 +316,7 @@ export class AdminService {
     },
     ipAddress?: string,
   ) {
-    return prisma.$transaction(async (tx) => {
+    const created = await prisma.$transaction(async (tx) => {
       const created = await tx.campusPost.create({
         data: {
           authorId: adminId,
@@ -347,6 +348,9 @@ export class AdminService {
 
       return created;
     });
+
+    await notificationsService.notifyCampusPost(created);
+    return created;
   }
 
   async updateCampusPost(

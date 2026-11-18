@@ -4,7 +4,7 @@
 > **Repository:** `https://github.com/zerozeroone369/LTmang.git`  
 > **Mô hình vận hành:** Sở hữu trọn gói theo Module (**End-to-End: CSDL → API → UI → Demo & Vấn đáp**)  
 > **Quy mô:** 5 Thành viên — 10 Module — 40 Bước triển khai  
-> **Tiến độ tích hợp hiện tại:** **4/10 Module hoàn thành 100%** (Module 1, 2, 3, 10 — Vượt qua 28/28 Unit & Integration Tests)
+> **Tiến độ tích hợp hiện tại:** **10/10 Module hoàn thành 100%** (Đầy đủ Tú Anh, Duy, Huy, Bảo, Thái — Vượt qua **71/71 Unit & Integration Tests**)
 
 ---
 
@@ -15,10 +15,10 @@ Mỗi thành viên làm chủ trọn vẹn 02 module từ thiết kế bảng CS
 | STT | Thành viên & Vai trò | Module sở hữu (2 Module/người) | Trách nhiệm cốt lõi & Bảng CSDL | Tiến độ | Trạng thái |
 |:---:|---|---|---|:---:|:---:|
 | **1** | **Nguyễn Ngô Tú Anh**<br>*(Leader & Full-stack)* | • **Module 1:** Tài khoản & Core Auth<br>• **Module 10:** Quản trị hệ thống (Admin Dashboard) | • Base project, ERD toàn hệ thống 24 bảng, JWT Auth & Middleware, UI Đăng ký cascading / Đăng nhập / Profile thẻ SV ảo, Admin Web Portal, Duyệt PR.<br>• Bảng DB: `Users`, `Roles`, `AdminLogs`, `SystemSettings`. | **100%** | **Hoàn thành** (Đã sẵn sàng bảo vệ) |
-| **2** | **Nguyễn Lê Bảo Duy**<br>*(Full-stack Module)* | • **Module 2:** Cộng đồng (Cấu trúc trường)<br>• **Module 3:** Bài viết & Tương tác | • Cấu trúc Trường → Khoa → Ngành → Khóa → Lớp, CRUD bài viết theo phạm vi, Like/Comment/Report, Giao diện Desktop/Mobile.<br>• Bảng DB: `Schools`, `Faculties`, `Majors`, `Courses`, `Classes`, `Posts`, `Comments`, `Reactions`, `PostReports`. | **100%** | **Hoàn thành** (Đã duyệt PR #1) |
-| **3** | **Huy**<br>*(Full-stack Module)* | • **Module 4:** Tài liệu học tập<br>• **Module 5:** Hỏi đáp học thuật (Q&A) | • Kho tài liệu môn học (<20MB, PDF/DOCX), chấm điểm sao, Q&A theo môn học, upvote/downvote, chốt câu trả lời đúng.<br>• Bảng DB: `Subjects`, `Documents`, `DocumentRatings`, `Questions`, `Answers`, `Votes`. | 25% | Đang thực hiện |
-| **4** | **Bảo**<br>*(Full-stack Module)* | • **Module 6:** Nhóm học (Study Groups)<br>• **Module 7:** Campus (Tin tức, Sự kiện, Việc làm) | • Tạo & quản lý nhóm học, xin gia nhập, duyệt thành viên; đăng/lọc tin tức Campus, sự kiện, học bổng, việc làm IT.<br>• Bảng DB: `StudyGroups`, `GroupMembers`, `JoinRequests`, `CampusPosts`. | 25% | Đang thực hiện |
-| **5** | **Thái**<br>*(Full-stack & UI Lead)* | • **Module 8:** Bảng tin thông minh (News Feed)<br>• **Module 9:** Thông báo Realtime (Socket.io) | • Bảng tin thông minh ưu tiên Lớp → Trường, WebSocket Socket.io đẩy thông báo realtime (hàm dùng chung `sendNotification`).<br>• Bảng DB: `UserFeedPreferences`, `Notifications`. | 12.5% | Đang thực hiện |
+| **2** | **Nguyễn Lê Bảo Duy**<br>*(Full-stack Module)* | • **Module 2:** Cộng đồng (Cấu trúc trường)<br>• **Module 3:** Bài viết & Tương tác | • Cấu trúc Trường → Khoa → Ngành → Khóa → Lớp, CRUD bài viết theo phạm vi, Like/Comment/Report, Giao diện Desktop/Mobile.<br>• Bảng DB: `Schools`, `Faculties`, `Majors`, `Courses`, `Classes`, `Posts`, `Comments`, `Reactions`, `PostReports`. | **100%** | **Hoàn thành** (Đã tích hợp) |
+| **3** | **Huy**<br>*(Full-stack Module)* | • **Module 4:** Tài liệu học tập<br>• **Module 5:** Hỏi đáp học thuật (Q&A) | • Kho tài liệu môn học (<20MB, PDF/DOCX), chấm điểm sao, Q&A theo môn học, upvote/downvote, chốt câu trả lời đúng, gắn realtime `new_answer`.<br>• Bảng DB: `Subjects`, `Documents`, `DocumentRatings`, `Questions`, `Answers`, `Votes`. | **100%** | **Hoàn thành** (Đã tích hợp) |
+| **4** | **Bảo**<br>*(Full-stack Module)* | • **Module 6:** Nhóm học (Study Groups)<br>• **Module 7:** Campus (Tin tức, Sự kiện, Việc làm) | • Tạo & quản lý nhóm học, xin gia nhập, duyệt thành viên (gắn realtime `join_request`); đăng/lọc tin tức Campus & quản trị Campus nâng cao trong Admin.<br>• Bảng DB: `StudyGroups`, `GroupMembers`, `JoinRequests`, `CampusPosts`. | **100%** | **Hoàn thành** (Đã tích hợp) |
+| **5** | **Thái**<br>*(Full-stack & UI Lead)* | • **Module 8:** Bảng tin thông minh (News Feed)<br>• **Module 9:** Thông báo Realtime (Socket.io) | • Bảng tin thông minh ưu tiên Lớp → Trường, WebSocket Socket.io đẩy thông báo realtime (`NotificationBell` + hàm dùng chung `sendNotification`).<br>• Bảng DB: `UserFeedPreferences`, `Notifications`. | **100%** | **Hoàn thành** (Đã tích hợp) |
 
 ---
 
@@ -235,28 +235,33 @@ Hệ thống đã nạp sẵn dữ liệu mẫu thực tế, có thể đăng nh
 
 ---
 
-## 8. Kết Quả Kiểm Thử Tự Động (Quality Assurance)
+## 8. Kết Quả Kiểm Thử Tự Động (Quality Assurance — 10/10 Modules)
 
 ```bash
-# Kiểm tra bộ 28 bài test tự động của Backend
+# Kiểm tra bộ 71 bài test tự động của Backend (10 file test)
 cd backend && npm test
 ```
 ```text
 ✓ tests/integration/auth.test.ts (9 tests) - Passed (Module 1 Auth, Bcrypt, Token Revocation)
-✓ tests/integration/post.test.ts (7 tests) - Passed (Module 3 Posts, Toggle Like, Comments, Reports)
-✓ tests/integration/admin.test.ts (4 tests) - Passed (Module 10 Admin RBAC, Lock/Unlock Flow)
 ✓ tests/integration/community.test.ts (5 tests) - Passed (Module 2 Schools, Faculties, Classes)
+✓ tests/integration/post.test.ts (7 tests) - Passed (Module 3 Posts, Toggle Like, Comments, Reports)
+✓ tests/integration/document.test.ts (6 tests) - Passed (Module 4 Documents Upload <20MB, Rating, Download)
+✓ tests/integration/qa.test.ts (5 tests) - Passed (Module 5 Q&A, Votes, Accept Best Answer)
+✓ tests/integration/study-group.test.ts (5 tests) - Passed (Module 6 & 7 Study Groups, Campus, Realtime Join Request)
+✓ tests/integration/feed.test.ts (21 tests) - Passed (Module 8 Smart News Feed & Scope Priority)
+✓ tests/integration/notifications.test.ts (6 tests) - Passed (Module 9 Socket.io JWT & Realtime Notifications)
+✓ tests/integration/admin.test.ts (4 tests) - Passed (Module 10 Admin RBAC, Lock/Unlock Flow)
 ✓ tests/unit/security.test.ts (3 tests) - Passed (Bcrypt salt rounds, JWT sign/verify)
 
-Test Files:  5 passed (5)
-Tests:       28 passed (28)
-Time:        ~25s
+Test Files:  10 passed (10)
+Tests:       71 passed (71)
 ```
 
 ```bash
-# Kiểm tra build production
-cd ../client-web && npm run build    # Vite build dist thành công trong ~4s (0 errors)
-cd ../admin-web && npm run build     # Vite build dist thành công trong ~4s (0 errors)
+# Kiểm tra build production & lint
+cd backend && npm run lint && npx tsc --noEmit   # 0 errors
+cd ../client-web && npm run lint && npm run build # 0 errors (Vite dist ~5.7s)
+cd ../admin-web && npm run lint && npm run build  # 0 errors (Vite dist ~7.0s)
 ```
 
 ---
