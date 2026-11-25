@@ -126,6 +126,28 @@ export class PostController {
       next(error);
     }
   }
+
+  async uploadMedia(req: Request, res: Response, next: NextFunction) {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ success: false, message: 'Vui lòng chọn tệp tải lên' });
+      }
+      const fileUrl = `/uploads/posts/${req.file.filename}`;
+      return sendCreated(
+        res,
+        {
+          url: fileUrl,
+          filename: req.file.filename,
+          originalName: req.file.originalname,
+          mimetype: req.file.mimetype,
+          size: req.file.size,
+        },
+        'Tải tệp lên thành công',
+      );
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export const postController = new PostController();

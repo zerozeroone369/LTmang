@@ -5,7 +5,7 @@ export const createPostSchema = z.object({
   content: z.string().trim().min(1, 'Nội dung bài viết không được để trống').max(5000),
   category: z.enum(['STUDY', 'COMMUNITY', 'ACTIVITY', 'OPPORTUNITY']).default('COMMUNITY'),
   scope: z.enum(['CLASS', 'COURSE', 'MAJOR', 'FACULTY', 'SCHOOL', 'PUBLIC']).default('SCHOOL'),
-  mediaUrls: z.array(z.string().url()).optional(),
+  mediaUrls: z.array(z.string().min(1)).optional(),
   classId: z.number().int().positive().optional(),
   courseId: z.number().int().positive().optional(),
   majorId: z.number().int().positive().optional(),
@@ -18,7 +18,7 @@ export const updatePostSchema = z.object({
   content: z.string().trim().min(1, 'Nội dung không được để trống').max(5000).optional(),
   category: z.enum(['STUDY', 'COMMUNITY', 'ACTIVITY', 'OPPORTUNITY']).optional(),
   scope: z.enum(['CLASS', 'COURSE', 'MAJOR', 'FACULTY', 'SCHOOL', 'PUBLIC']).optional(),
-  mediaUrls: z.array(z.string().url()).optional(),
+  mediaUrls: z.array(z.string().min(1)).optional(),
 });
 
 export const createCommentSchema = z.object({

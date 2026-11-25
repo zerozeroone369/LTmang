@@ -286,4 +286,29 @@ describe('Post Module API (Module 3 - Duy)', () => {
     expect(validReportRes.body.success).toBe(true);
     expect(validReportRes.body.data.reason).toBe('Nội dung spam');
   });
+
+  it('POST /api/posts/upload - Tải lên tệp ảnh/tài liệu đính kèm bài viết và tạo bài viết với mediaUrls', async () => {
+    const uploadRes = await request(app)
+      .post('/api/posts/upload')
+      .set('Authorization', `Bearer ${authorToken}`)
+      .attach('file', Buffer.from('fake image content'), 'test-note.png');
+
+    expect(uploadRes.status).toBe(201);
+    expect(uploadRes.body.success).toBe(true);
+    expect(uploadRes.body.data.url).toMatch(/^\/uploads\/posts\//);
+    expect(uploadRes.body.data.originalName).toBe('test-note.png');
+
+    // Tạo bài viết chứa mediaUrls vừa upload
+    const createRes = await request(app)
+      .post('/api/posts')
+      .set('Authorization', `Bearer ${authorToken}`)
+      .send({
+        content: 'Bài viết có hình ảnh đính kèm nhận dạng',
+        mediaUrls: [uploadRes.body.data.url],
+      });
+
+    expect(createRes.status).toBe(201);
+    expect(createRes.body.data.mediaUrls).toHaveLength(1);
+    expect(createRes.body.data.mediaUrls[0]).toBe(uploadRes.body.data.url);
+  });
 });

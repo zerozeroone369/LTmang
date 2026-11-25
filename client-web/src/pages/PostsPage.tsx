@@ -5,6 +5,7 @@ import { useAuth } from '../context/auth-context';
 import { ConfirmModal } from '../components/ConfirmModal';
 import { SkeletonPost } from '../components/SkeletonPost';
 import { EmptyState } from '../components/EmptyState';
+import { ContentFileDropzone } from '../components/ContentFileDropzone';
 import { formatRelativeTime } from '../utils/formatTime';
 import {
   Heart,
@@ -42,6 +43,7 @@ interface PostItem {
   commentsCount: number;
   isLikedByMe: boolean;
   createdAt: string;
+  mediaUrls?: string[];
   author: {
     id: number;
     fullName: string;
@@ -63,7 +65,24 @@ export const PostsPage: React.FC = () => {
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('COMMUNITY');
   const [scope, setScope] = useState('CLASS');
+  const [mediaUrls, setMediaUrls] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
+
+  const handleInsertRecognizedContent = (text: string, mode: 'append' | 'replace') => {
+    if (mode === 'replace' || !content.trim()) {
+      setContent(text);
+    } else {
+      setContent((prev) => `${prev.trim()}\n\n${text}`);
+    }
+  };
+
+  const handleAddMediaUrl = (url: string) => {
+    setMediaUrls((prev) => (prev.includes(url) ? prev : [...prev, url]));
+  };
+
+  const handleRemoveMediaUrl = (url: string) => {
+    setMediaUrls((prev) => prev.filter((u) => u !== url));
+  };
 
   // Bộ lọc
   const [filterScope, setFilterScope] = useState<string>('ALL');
@@ -114,6 +133,7 @@ export const PostsPage: React.FC = () => {
         content: content.trim(),
         category,
         scope,
+        mediaUrls: mediaUrls.length > 0 ? mediaUrls : undefined,
       });
 
       toast.success('Đã đăng bài viết thành công!', {
@@ -121,6 +141,7 @@ export const PostsPage: React.FC = () => {
       });
       setTitle('');
       setContent('');
+      setMediaUrls([]);
       await loadPosts();
     } catch (err) {
       toast.error(getErrorMessage(err));
@@ -337,6 +358,14 @@ export const PostsPage: React.FC = () => {
             className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all resize-none placeholder:text-slate-400"
           />
 
+          {/* Nhận dạng tệp & ảnh thông minh (AI / OCR) */}
+          <ContentFileDropzone
+            onInsertContent={handleInsertRecognizedContent}
+            mediaUrls={mediaUrls}
+            onAddMediaUrl={handleAddMediaUrl}
+            onRemoveMediaUrl={handleRemoveMediaUrl}
+          />
+
           <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100">
             <div className="flex flex-wrap items-center gap-2 text-xs">
               {/* Chọn Scope */}
@@ -497,7 +526,7 @@ export const PostsPage: React.FC = () => {
                 </div>
 
                 {/* Nội dung bài viết */}
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   {post.title && (
                     <h3 className="font-bold text-slate-900 text-base leading-snug">
                       {post.title}
@@ -506,6 +535,33 @@ export const PostsPage: React.FC = () => {
                   <p className="text-slate-800 text-sm whitespace-pre-wrap leading-relaxed">
                     {post.content}
                   </p>
+
+                  {/* Ảnh / Tệp đính kèm bài viết */}
+                  {post.mediaUrls && post.mediaUrls.length > 0 && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+                      {post.mediaUrls.map((url, idx) => {
+                        const fullUrl = url.startsWith('http')
+                          ? url
+                          : `http://localhost:4000${url}`;
+                        return (
+                          <a
+                            key={idx}
+                            href={fullUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 hover:border-indigo-300 transition-all shadow-xs group max-h-72"
+                          >
+                            <img
+                              src={fullUrl}
+                              alt="Đính kèm bài viết"
+                              className="w-full h-full object-cover max-h-72 group-hover:scale-[1.01] transition-transform duration-200"
+                              loading="lazy"
+                            />
+                          </a>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
 
                 {/* Tương tác Like, Comment, Share */}
