@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>M4 - Tài liệu Học tập & Upload Tệp</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f8fafc; color: #0f172a; padding: 32px; max-width: 860px; margin: auto; }
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; box-shadow: 0 2px 6px rgba(15,23,42,.04); }
+    code { background: #f1f5f9; padding: 2px 6px; border-radius: 5px; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <p><a href="/">← Quay lại Trang chủ MVC</a> | <a href="/docs">Xem Sơ đồ &amp; CSDL 39 Bảng</a></p>
+    <h1>M4: Tài liệu Học tập & Upload Tệp</h1>
+    <p><b>Phụ trách:</b> Huy (Full-stack Module)</p>
+    <p><b>Chức năng:</b> Danh mục MonHoc; Upload file multipart/form-data (<20MB, check Magic Bytes PDF/DOCX + băm SHA-256) lưu TepTin; Download ghi nhật ký LuotTai & tăng SoLuotTai; Tìm/lọc & Đánh giá 1–5★.</p>
+    <p><b>Bảng PostgreSQL:</b> <code>MonHoc</code>, <code>TepTin</code>, <code>TaiLieu</code>, <code>DanhGiaTaiLieu</code>, <code>LuotTai</code></p>
+    <p><b>API Routes:</b> <code>GET /api/m04/subjects</code>, <code>POST /api/m04/documents/upload</code>, <code>GET /api/m04/documents/search</code>, <code>GET /api/m04/documents/:id/download</code>, <code>POST /api/m04/documents/:id/rate</code></p>
+  </div>
+</body>
+</html>

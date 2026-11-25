@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>M1 - Tài khoản, Phiên JWT & Quên MK (OTP)</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f8fafc; color: #0f172a; padding: 32px; max-width: 860px; margin: auto; }
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; box-shadow: 0 2px 6px rgba(15,23,42,.04); }
+    code { background: #f1f5f9; padding: 2px 6px; border-radius: 5px; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <p><a href="/">← Quay lại Trang chủ MVC</a> | <a href="/docs">Xem Sơ đồ &amp; CSDL 39 Bảng</a></p>
+    <h1>M1: Tài khoản, Phiên JWT & Quên MK (OTP)</h1>
+    <p><b>Phụ trách:</b> Nguyễn Ngô Tú Anh (Leader)</p>
+    <p><b>Chức năng:</b> Đăng ký (kiểm tra email SV/MSSV, gọi đồng bộ 5 cấp), Đăng nhập cấp JWT + lưu PhienDangNhap, Đăng xuất thu hồi phiên, Đổi mật khẩu (Force Logout phiên khác), Quên MK OTP Email (5 phút), Sửa hồ sơ.</p>
+    <p><b>Bảng PostgreSQL:</b> <code>VaiTro</code>, <code>NguoiDung</code>, <code>PhienDangNhap</code>, <code>MaXacThuc</code></p>
+    <p><b>API Routes:</b> <code>POST /api/m01/auth/register</code>, <code>POST /api/m01/auth/login</code>, <code>POST /api/m01/auth/logout</code>, <code>PUT /api/m01/users/password</code>, <code>POST /api/m01/auth/forgot-otp</code>, <code>POST /api/m01/auth/reset-pw</code>, <code>PUT /api/m01/users/profile</code></p>
+  </div>
+</body>
+</html>

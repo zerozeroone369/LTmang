@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>M2 - Cấu trúc Trường 5 Cấp & Cộng đồng</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f8fafc; color: #0f172a; padding: 32px; max-width: 860px; margin: auto; }
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; box-shadow: 0 2px 6px rgba(15,23,42,.04); }
+    code { background: #f1f5f9; padding: 2px 6px; border-radius: 5px; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <p><a href="/">← Quay lại Trang chủ MVC</a> | <a href="/docs">Xem Sơ đồ &amp; CSDL 39 Bảng</a></p>
+    <h1>M2: Cấu trúc Trường 5 Cấp & Cộng đồng</h1>
+    <p><b>Phụ trách:</b> Duy (Full-stack Module)</p>
+    <p><b>Chức năng:</b> Quản lý danh mục 5 cấp (Truong → Khoa → Nganh → KhoaHoc → Lop); tự động ánh xạ sinh viên vào đủ 5 cấp ThanhVienCongDong khi đăng ký/chuyển lớp; màn Admin quản lý danh mục.</p>
+    <p><b>Bảng PostgreSQL:</b> <code>Truong</code>, <code>Khoa</code>, <code>Nganh</code>, <code>KhoaHoc</code>, <code>Lop</code>, <code>CongDong</code>, <code>ThanhVienCongDong</code></p>
+    <p><b>API Routes:</b> <code>GET /api/m02/edu/schools</code>, <code>GET /api/m02/edu/children</code>, <code>GET /api/m02/communities/me</code>, <code>POST /api/m02/communities/sync</code>, <code>CRUD /api/m02/admin/edu</code></p>
+  </div>
+</body>
+</html>
