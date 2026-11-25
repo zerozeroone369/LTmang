@@ -18,14 +18,14 @@ import { useAuth } from '../context/auth-context';
 import { NotificationBell } from './NotificationBell';
 
 const CLIENT_NAV_ITEMS = [
-  { to: '/', label: 'Bảng tin', icon: Home, moduleOwner: 'Thái (M8)' },
-  { to: '/communities', label: 'Cộng đồng', icon: Users, moduleOwner: 'Duy (M2)' },
-  { to: '/posts', label: 'Bài viết', icon: MessageSquare, moduleOwner: 'Duy (M3)' },
-  { to: '/documents', label: 'Tài liệu', icon: BookOpen, moduleOwner: 'Huy (M4)' },
-  { to: '/qa', label: 'Hỏi đáp Q&A', icon: HelpCircle, moduleOwner: 'Huy (M5)' },
-  { to: '/study-groups', label: 'Nhóm học', icon: GraduationCap, moduleOwner: 'Bảo (M6)' },
-  { to: '/campus', label: 'Campus & Sự kiện', icon: Calendar, moduleOwner: 'Bảo (M7)' },
-  { to: '/profile', label: 'Hồ sơ cá nhân', icon: User, moduleOwner: 'Tú Anh (M1)' },
+  { to: '/', label: 'Bảng tin', icon: Home },
+  { to: '/communities', label: 'Cộng đồng', icon: Users },
+  { to: '/posts', label: 'Bài viết', icon: MessageSquare },
+  { to: '/documents', label: 'Tài liệu', icon: BookOpen },
+  { to: '/qa', label: 'Hỏi đáp Q&A', icon: HelpCircle },
+  { to: '/study-groups', label: 'Nhóm học', icon: GraduationCap },
+  { to: '/campus', label: 'Campus & Sự kiện', icon: Calendar },
+  { to: '/profile', label: 'Hồ sơ cá nhân', icon: User },
 ];
 
 export function ClientLayout() {
@@ -143,7 +143,6 @@ export function ClientLayout() {
                   <Icon className="h-4.5 w-4.5 shrink-0" />
                   <span>{item.label}</span>
                 </div>
-                <span className="text-[10px] text-slate-400">{item.moduleOwner.split(' ')[0]}</span>
               </NavLink>
             );
           })}
@@ -188,7 +187,6 @@ export function ClientLayout() {
                         <Icon className="h-4.5 w-4.5" />
                         <span>{item.label}</span>
                       </div>
-                      <span className="text-[10px] text-slate-400">{item.moduleOwner}</span>
                     </NavLink>
                   );
                 })}

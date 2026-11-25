@@ -329,11 +329,9 @@ export function HomePage() {
         )}
       </section>
 
-      {/* Module Navigation Grid */}
+      {/* Quick Feature Navigation Grid */}
       <div>
-        <h2 className="mb-3 text-sm font-bold text-slate-800">
-          Không gian chức năng (10 Module sở hữu trọn gói):
-        </h2>
+        <h2 className="mb-3 text-sm font-bold text-slate-800">Không gian chức năng</h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <Link
             to="/profile"
@@ -343,10 +341,9 @@ export function HomePage() {
               <CheckCircle2 className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-xs font-bold text-blue-700">Module 1 (Đã hoàn thành)</p>
               <h3 className="text-sm font-bold text-slate-900">Tài khoản & Hồ sơ cá nhân</h3>
               <p className="mt-0.5 text-xs text-slate-500">
-                Đăng ký, đăng nhập, đổi mật khẩu, phân cấp cộng đồng. (Phụ trách: Tú Anh)
+                Đăng ký, đăng nhập, đổi mật khẩu, thẻ sinh viên ảo và phân cấp cộng đồng.
               </p>
             </div>
           </Link>
@@ -359,7 +356,6 @@ export function HomePage() {
               <Users className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-[11px] font-bold text-indigo-600">Module 2 (Duy)</p>
               <h3 className="text-sm font-bold text-slate-900">Không gian Cộng đồng</h3>
               <p className="mt-0.5 text-xs text-slate-500">
                 Phân luồng Trường → Khoa → Ngành → Khóa → Lớp.
@@ -375,7 +371,6 @@ export function HomePage() {
               <MessageSquare className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-[11px] font-bold text-sky-600">Module 3 (Duy)</p>
               <h3 className="text-sm font-bold text-slate-900">Bài viết & Tương tác</h3>
               <p className="mt-0.5 text-xs text-slate-500">
                 Đăng bài theo phạm vi, like, comment, báo cáo vi phạm.
@@ -391,7 +386,6 @@ export function HomePage() {
               <BookOpen className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-[11px] font-bold text-teal-600">Module 4 (Huy)</p>
               <h3 className="text-sm font-bold text-slate-900">Tài liệu học tập</h3>
               <p className="mt-0.5 text-xs text-slate-500">
                 Upload/download file &lt;20MB, đánh giá sao, lọc môn học.
@@ -407,7 +401,6 @@ export function HomePage() {
               <HelpCircle className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-[11px] font-bold text-amber-600">Module 5 (Huy)</p>
               <h3 className="text-sm font-bold text-slate-900">Hỏi đáp học thuật (Q&A)</h3>
               <p className="mt-0.5 text-xs text-slate-500">
                 Đặt câu hỏi theo môn, upvote, chốt câu trả lời đúng.
@@ -423,7 +416,6 @@ export function HomePage() {
               <GraduationCap className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-[11px] font-bold text-violet-600">Module 6 (Bảo)</p>
               <h3 className="text-sm font-bold text-slate-900">Nhóm học (Study Groups)</h3>
               <p className="mt-0.5 text-xs text-slate-500">
                 Tạo nhóm học, tìm bạn cùng mục tiêu, duyệt thành viên.
@@ -439,7 +431,6 @@ export function HomePage() {
               <Calendar className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-[11px] font-bold text-rose-600">Module 7 (Bảo)</p>
               <h3 className="text-sm font-bold text-slate-900">Campus & Việc làm</h3>
               <p className="mt-0.5 text-xs text-slate-500">
                 Thông báo, lịch thi, học bổng, câu lạc bộ, thực tập.

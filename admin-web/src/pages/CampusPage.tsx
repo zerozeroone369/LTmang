@@ -305,7 +305,9 @@ export function CampusPage() {
               </div>
 
               <div>
-                <label className="mb-1 block text-sm font-medium text-slate-700">Ảnh bìa (URL)</label>
+                <label className="mb-1 block text-sm font-medium text-slate-700">
+                  Ảnh bìa (URL)
+                </label>
                 <input
                   type="url"
                   value={thumbnailUrl}
@@ -317,12 +319,26 @@ export function CampusPage() {
 
               <div className="grid gap-3 sm:grid-cols-2">
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-slate-700">Thời gian diễn ra</label>
-                  <input type="datetime-local" value={eventDate} onChange={(e) => setEventDate(e.target.value)} className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm outline-none focus:border-indigo-500" />
+                  <label className="mb-1 block text-sm font-medium text-slate-700">
+                    Thời gian diễn ra
+                  </label>
+                  <input
+                    type="datetime-local"
+                    value={eventDate}
+                    onChange={(e) => setEventDate(e.target.value)}
+                    className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm outline-none focus:border-indigo-500"
+                  />
                 </div>
                 <div>
-                  <label className="mb-1 block text-sm font-medium text-slate-700">Hạn đăng ký</label>
-                  <input type="datetime-local" value={deadline} onChange={(e) => setDeadline(e.target.value)} className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm outline-none focus:border-indigo-500" />
+                  <label className="mb-1 block text-sm font-medium text-slate-700">
+                    Hạn đăng ký
+                  </label>
+                  <input
+                    type="datetime-local"
+                    value={deadline}
+                    onChange={(e) => setDeadline(e.target.value)}
+                    className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-sm outline-none focus:border-indigo-500"
+                  />
                 </div>
               </div>
 

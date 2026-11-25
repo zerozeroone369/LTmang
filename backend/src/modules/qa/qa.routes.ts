@@ -57,7 +57,11 @@ router.put(
 router.delete('/answers/:answerId', authenticate, qaController.deleteAnswer.bind(qaController));
 
 // Accept best answer
-router.post('/answers/:answerId/accept', authenticate, qaController.toggleAcceptAnswer.bind(qaController));
+router.post(
+  '/answers/:answerId/accept',
+  authenticate,
+  qaController.toggleAcceptAnswer.bind(qaController),
+);
 
 // Vote on answer (upvote/downvote)
 router.post(

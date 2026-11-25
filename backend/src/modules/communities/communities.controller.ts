@@ -19,7 +19,11 @@ export class CommunitiesController {
       const classId = Number(req.params.id);
       const currentUserId = req.auth!.userId;
       const query = (req.query || {}) as unknown as CommunityMembersQuery;
-      const { members, meta } = await communitiesService.getClassMembers(classId, currentUserId, query);
+      const { members, meta } = await communitiesService.getClassMembers(
+        classId,
+        currentUserId,
+        query,
+      );
       return sendSuccess(res, members, 'Danh sách thành viên lớp học', 200, meta);
     } catch (error) {
       next(error);

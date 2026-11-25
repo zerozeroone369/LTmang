@@ -21,7 +21,11 @@ router.post(
 );
 
 // List subjects
-router.get('/subjects', optionalAuthenticate, documentController.getSubjects.bind(documentController));
+router.get(
+  '/subjects',
+  optionalAuthenticate,
+  documentController.getSubjects.bind(documentController),
+);
 
 // List documents with filter & search
 router.get(
@@ -40,10 +44,18 @@ router.post(
 );
 
 // Get document detail
-router.get('/:id', optionalAuthenticate, documentController.getDocumentById.bind(documentController));
+router.get(
+  '/:id',
+  optionalAuthenticate,
+  documentController.getDocumentById.bind(documentController),
+);
 
 // Download document (increments download count)
-router.get('/:id/download', optionalAuthenticate, documentController.downloadDocument.bind(documentController));
+router.get(
+  '/:id/download',
+  optionalAuthenticate,
+  documentController.downloadDocument.bind(documentController),
+);
 
 // Update document
 router.put(

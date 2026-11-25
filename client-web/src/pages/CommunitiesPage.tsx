@@ -90,12 +90,12 @@ export const CommunitiesPage: React.FC = () => {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 space-y-8">
-      {/* Banner Giới thiệu Module 2 của Duy */}
+      {/* Banner Giới thiệu Cộng đồng */}
       <div className="bg-gradient-to-r from-indigo-700 via-indigo-600 to-violet-600 rounded-3xl p-6 sm:p-8 text-white shadow-xl shadow-indigo-100 relative overflow-hidden">
         <div className="relative z-10 max-w-2xl space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-semibold backdrop-blur">
             <Sparkles className="w-3.5 h-3.5" />
-            Module 2: Cộng đồng sinh viên — Phụ trách: Duy
+            Cộng đồng sinh viên
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
             Cấu Trúc Phân Luồng Sinh Viên
@@ -268,9 +268,7 @@ export const CommunitiesPage: React.FC = () => {
               </h2>
               <p className="text-xs text-slate-500">
                 Các bạn sinh viên cùng sinh hoạt trong{' '}
-                <span className="font-semibold text-slate-700">
-                  {data?.hierarchy?.class?.name}
-                </span>
+                <span className="font-semibold text-slate-700">{data?.hierarchy?.class?.name}</span>
               </p>
             </div>
 
@@ -320,9 +318,7 @@ export const CommunitiesPage: React.FC = () => {
                       MSSV: {mate.studentCode || 'N/A'}
                     </div>
                     {mate.bio && (
-                      <div className="text-[11px] text-slate-400 truncate mt-0.5">
-                        {mate.bio}
-                      </div>
+                      <div className="text-[11px] text-slate-400 truncate mt-0.5">{mate.bio}</div>
                     )}
                   </div>
                   <div className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" title="Online" />

@@ -108,7 +108,7 @@ export function LoginPage() {
               }}
               className="p-2 bg-indigo-50 text-indigo-700 font-semibold rounded-xl hover:bg-indigo-100 text-left transition-colors"
             >
-              Duy (23CT1)
+              Sinh viên 1 (23CT1)
             </button>
             <button
               type="button"
@@ -118,7 +118,7 @@ export function LoginPage() {
               }}
               className="p-2 bg-violet-50 text-violet-700 font-semibold rounded-xl hover:bg-violet-100 text-left transition-colors"
             >
-              Tú Anh (23CT1)
+              Sinh viên 2 (23CT1)
             </button>
             <button
               type="button"
@@ -128,7 +128,7 @@ export function LoginPage() {
               }}
               className="p-2 bg-slate-100 text-slate-700 font-semibold rounded-xl hover:bg-slate-200 text-left transition-colors"
             >
-              Bảo (23CT2)
+              Sinh viên 3 (23CT2)
             </button>
             <button
               type="button"
@@ -138,7 +138,7 @@ export function LoginPage() {
               }}
               className="p-2 bg-rose-50 text-rose-700 font-semibold rounded-xl hover:bg-rose-100 text-left transition-colors"
             >
-              Admin (Quản trị)
+              Quản trị viên (Admin)
             </button>
           </div>
         </div>

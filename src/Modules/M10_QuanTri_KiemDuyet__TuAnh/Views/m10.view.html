@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>M10 - Quản trị Hệ thống & Kiểm duyệt (Admin)</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f8fafc; color: #0f172a; padding: 32px; max-width: 860px; margin: auto; }
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; box-shadow: 0 2px 6px rgba(15,23,42,.04); }
+    code { background: #f1f5f9; padding: 2px 6px; border-radius: 5px; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <p><a href="/">← Quay lại Trang chủ MVC</a> | <a href="/docs">Xem Sơ đồ &amp; CSDL 39 Bảng</a></p>
+    <h1>M10: Quản trị Hệ thống & Kiểm duyệt (Admin)</h1>
+    <p><b>Phụ trách:</b> Nguyễn Ngô Tú Anh (Leader)</p>
+    <p><b>Chức năng:</b> Quản lý tài khoản (đổi vai trò, khóa/mở khóa chống khóa Admin cuối cùng & thu hồi phiên ngay); Kiểm duyệt BaoCaoViPham (giữ, ẩn, xóa mềm, cảnh cáo); Lưu NhatKyKiemDuyet & NhatKyHeThong; tích hợp View của Duy (M2) & Bảo (M7).</p>
+    <p><b>Bảng PostgreSQL:</b> <code>BaoCaoViPham</code>, <code>NhatKyKiemDuyet</code>, <code>NhatKyHeThong</code></p>
+    <p><b>API Routes:</b> <code>GET /api/m10/admin/users</code>, <code>PUT /api/m10/admin/users/:id/lock</code>, <code>PUT /api/m10/admin/users/:id/role</code>, <code>GET /api/m10/admin/reports</code>, <code>PUT /api/m10/admin/reports/:id</code>, <code>GET /api/m10/admin/logs</code></p>
+  </div>
+</body>
+</html>

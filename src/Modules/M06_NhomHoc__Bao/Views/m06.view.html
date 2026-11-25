@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>M6 - Nhóm học Tập (Study Groups)</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f8fafc; color: #0f172a; padding: 32px; max-width: 860px; margin: auto; }
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; box-shadow: 0 2px 6px rgba(15,23,42,.04); }
+    code { background: #f1f5f9; padding: 2px 6px; border-radius: 5px; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <p><a href="/">← Quay lại Trang chủ MVC</a> | <a href="/docs">Xem Sơ đồ &amp; CSDL 39 Bảng</a></p>
+    <h1>M6: Nhóm học Tập (Study Groups)</h1>
+    <p><b>Phụ trách:</b> Bảo (Full-stack Module)</p>
+    <p><b>Chức năng:</b> Tạo nhóm học (người tạo tự làm Trưởng nhóm); Tìm nhóm theo môn/khu vực; Gửi YeuCauThamGia; Trưởng nhóm duyệt/từ chối (khóa FOR UPDATE chống vượt sĩ số); Cập nhật sức chứa, Rời nhóm & Bàn giao trưởng nhóm.</p>
+    <p><b>Bảng PostgreSQL:</b> <code>NhomHoc</code>, <code>ThanhVienNhom</code>, <code>YeuCauThamGia</code>, <code>LichSuNhomHoc</code></p>
+    <p><b>API Routes:</b> <code>POST /api/m06/groups</code>, <code>GET /api/m06/groups/search</code>, <code>POST /api/m06/groups/:id/join</code>, <code>PUT /api/m06/join-requests/:id</code>, <code>PUT /api/m06/groups/:id/capacity</code>, <code>POST /api/m06/groups/:id/transfer-leave</code></p>
+  </div>
+</body>
+</html>

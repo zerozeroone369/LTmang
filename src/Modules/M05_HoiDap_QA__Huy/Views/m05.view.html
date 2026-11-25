@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>M5 - Hỏi đáp Học thuật (Q&A & Upvote)</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f8fafc; color: #0f172a; padding: 32px; max-width: 860px; margin: auto; }
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; box-shadow: 0 2px 6px rgba(15,23,42,.04); }
+    code { background: #f1f5f9; padding: 2px 6px; border-radius: 5px; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <p><a href="/">← Quay lại Trang chủ MVC</a> | <a href="/docs">Xem Sơ đồ &amp; CSDL 39 Bảng</a></p>
+    <h1>M5: Hỏi đáp Học thuật (Q&A & Upvote)</h1>
+    <p><b>Phụ trách:</b> Huy (Full-stack Module)</p>
+    <p><b>Chức năng:</b> Đặt câu hỏi gắn MonHoc, CongDong và thẻ TheCauHoi (#Socket, #SQL...); Gửi câu trả lời; Upvote câu trả lời (1 lần/người); Chủ câu hỏi đánh dấu 'Câu trả lời đúng'; Tìm kiếm câu hỏi cũ.</p>
+    <p><b>Bảng PostgreSQL:</b> <code>CauHoi</code>, <code>CauTraLoi</code>, <code>BinhChonCauTraLoi</code>, <code>TheCauHoi</code></p>
+    <p><b>API Routes:</b> <code>CRUD /api/m05/questions</code>, <code>POST /api/m05/questions/:id/answers</code>, <code>POST /api/m05/answers/:id/upvote</code>, <code>PUT /api/m05/answers/:id/correct</code></p>
+  </div>
+</body>
+</html>

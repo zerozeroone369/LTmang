@@ -1,10 +1,7 @@
 import { AppError } from '../../utils/errors';
 import { sendNotification } from '../notifications/notifications.service';
 import { studyGroupRepository } from './study-group.repository';
-import {
-  CreateStudyGroupInput,
-  StudyGroupSearchInput,
-} from './study-group.validator';
+import { CreateStudyGroupInput, StudyGroupSearchInput } from './study-group.validator';
 
 export class StudyGroupService {
   listSubjects() {
@@ -49,7 +46,8 @@ export class StudyGroupService {
   async listJoinRequests(groupId: number, leaderId: number) {
     const group = await studyGroupRepository.findBasicById(groupId);
     if (!group) throw AppError.notFound('Không tìm thấy nhóm học');
-    if (group.creatorId !== leaderId) throw AppError.forbidden('Chỉ trưởng nhóm mới xem được yêu cầu');
+    if (group.creatorId !== leaderId)
+      throw AppError.forbidden('Chỉ trưởng nhóm mới xem được yêu cầu');
     return studyGroupRepository.listJoinRequests(groupId);
   }
 
@@ -83,7 +81,8 @@ export class StudyGroupService {
     if (!result) throw AppError.notFound('Không tìm thấy yêu cầu tham gia');
     if ('forbidden' in result) throw AppError.forbidden('Chỉ trưởng nhóm mới duyệt được yêu cầu');
     if ('alreadyReviewed' in result) throw AppError.conflict('Yêu cầu này đã được xử lý');
-    if ('groupClosed' in result) throw AppError.conflict('Nhóm đã đóng và không thể nhận thành viên');
+    if ('groupClosed' in result)
+      throw AppError.conflict('Nhóm đã đóng và không thể nhận thành viên');
     if ('groupFull' in result) throw AppError.conflict('Nhóm đã đủ số lượng thành viên');
 
     if (result.userId !== leaderId) {

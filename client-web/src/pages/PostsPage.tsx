@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { apiClient, getErrorMessage } from '../api/client';
 import { useAuth } from '../context/auth-context';
 import { ConfirmModal } from '../components/ConfirmModal';
 import { SkeletonPost } from '../components/SkeletonPost';
 import { EmptyState } from '../components/EmptyState';
+import { ContentFileDropzone } from '../components/ContentFileDropzone';
 import { formatRelativeTime } from '../utils/formatTime';
 import {
   Heart,
@@ -42,6 +43,7 @@ interface PostItem {
   commentsCount: number;
   isLikedByMe: boolean;
   createdAt: string;
+  mediaUrls?: string[];
   author: {
     id: number;
     fullName: string;
@@ -63,7 +65,24 @@ export const PostsPage: React.FC = () => {
   const [content, setContent] = useState('');
   const [category, setCategory] = useState('COMMUNITY');
   const [scope, setScope] = useState('CLASS');
+  const [mediaUrls, setMediaUrls] = useState<string[]>([]);
   const [submitting, setSubmitting] = useState(false);
+
+  const handleInsertRecognizedContent = (text: string, mode: 'append' | 'replace') => {
+    if (mode === 'replace' || !content.trim()) {
+      setContent(text);
+    } else {
+      setContent((prev) => `${prev.trim()}\n\n${text}`);
+    }
+  };
+
+  const handleAddMediaUrl = (url: string) => {
+    setMediaUrls((prev) => (prev.includes(url) ? prev : [...prev, url]));
+  };
+
+  const handleRemoveMediaUrl = (url: string) => {
+    setMediaUrls((prev) => prev.filter((u) => u !== url));
+  };
 
   // Bộ lọc
   const [filterScope, setFilterScope] = useState<string>('ALL');
@@ -84,7 +103,7 @@ export const PostsPage: React.FC = () => {
   const [deletingPostId, setDeletingPostId] = useState<number | null>(null);
   const [deletingPostLoading, setDeletingPostLoading] = useState(false);
 
-  const loadPosts = async () => {
+  const loadPosts = useCallback(async () => {
     try {
       setLoading(true);
       const url = filterScope !== 'ALL' ? `/posts?scope=${filterScope}` : '/posts';
@@ -97,11 +116,11 @@ export const PostsPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filterScope]);
 
   useEffect(() => {
     loadPosts();
-  }, [filterScope]);
+  }, [loadPosts]);
 
   const handleCreatePost = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -114,6 +133,7 @@ export const PostsPage: React.FC = () => {
         content: content.trim(),
         category,
         scope,
+        mediaUrls: mediaUrls.length > 0 ? mediaUrls : undefined,
       });
 
       toast.success('Đã đăng bài viết thành công!', {
@@ -121,6 +141,7 @@ export const PostsPage: React.FC = () => {
       });
       setTitle('');
       setContent('');
+      setMediaUrls([]);
       await loadPosts();
     } catch (err) {
       toast.error(getErrorMessage(err));
@@ -281,19 +302,21 @@ export const PostsPage: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-6">
-      {/* Banner Header Module 3 của Duy */}
+      {/* Banner Header Bài viết & Tương tác */}
       <div className="bg-gradient-to-r from-indigo-700 via-indigo-600 to-violet-600 rounded-3xl p-6 sm:p-8 text-white shadow-xl shadow-indigo-100 relative overflow-hidden">
         <div className="relative z-10 max-w-2xl space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white text-xs font-semibold backdrop-blur">
             <Sparkles className="w-3.5 h-3.5" />
-            Module 3: Bài viết & Tương tác — Phụ trách: Duy
+            Bài viết & Tương tác
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
             Quản Lý Bài Viết & Phân Quyền Bảo Mật
           </h1>
           <p className="text-indigo-100 text-sm leading-relaxed">
-            Đăng bài theo phạm vi (<span className="text-white font-semibold">Lớp / Khóa / Khoa / Trường</span>).
-            Bảo mật chặt chẽ tại Backend: chỉ chủ bài mới được sửa/xóa; cơ chế Toggle Like chống trùng lặp; báo cáo vi phạm trực tiếp tới Admin.
+            Đăng bài theo phạm vi (
+            <span className="text-white font-semibold">Lớp / Khóa / Khoa / Trường</span>). Bảo mật
+            chặt chẽ tại Backend: chỉ chủ bài mới được sửa/xóa; cơ chế Toggle Like chống trùng lặp;
+            báo cáo vi phạm trực tiếp tới Admin.
           </p>
         </div>
       </div>
@@ -333,6 +356,14 @@ export const PostsPage: React.FC = () => {
             onChange={(e) => setContent(e.target.value)}
             required
             className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition-all resize-none placeholder:text-slate-400"
+          />
+
+          {/* Nhận dạng tệp & ảnh thông minh (AI / OCR) */}
+          <ContentFileDropzone
+            onInsertContent={handleInsertRecognizedContent}
+            mediaUrls={mediaUrls}
+            onAddMediaUrl={handleAddMediaUrl}
+            onRemoveMediaUrl={handleRemoveMediaUrl}
           />
 
           <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100">
@@ -495,7 +526,7 @@ export const PostsPage: React.FC = () => {
                 </div>
 
                 {/* Nội dung bài viết */}
-                <div className="space-y-1.5">
+                <div className="space-y-2">
                   {post.title && (
                     <h3 className="font-bold text-slate-900 text-base leading-snug">
                       {post.title}
@@ -504,6 +535,33 @@ export const PostsPage: React.FC = () => {
                   <p className="text-slate-800 text-sm whitespace-pre-wrap leading-relaxed">
                     {post.content}
                   </p>
+
+                  {/* Ảnh / Tệp đính kèm bài viết */}
+                  {post.mediaUrls && post.mediaUrls.length > 0 && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2">
+                      {post.mediaUrls.map((url, idx) => {
+                        const fullUrl = url.startsWith('http')
+                          ? url
+                          : `http://localhost:4000${url}`;
+                        return (
+                          <a
+                            key={idx}
+                            href={fullUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block overflow-hidden rounded-2xl border border-slate-200 bg-slate-50 hover:border-indigo-300 transition-all shadow-xs group max-h-72"
+                          >
+                            <img
+                              src={fullUrl}
+                              alt="Đính kèm bài viết"
+                              className="w-full h-full object-cover max-h-72 group-hover:scale-[1.01] transition-transform duration-200"
+                              loading="lazy"
+                            />
+                          </a>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
 
                 {/* Tương tác Like, Comment, Share */}
@@ -573,7 +631,9 @@ export const PostsPage: React.FC = () => {
                                   {formatRelativeTime(cm.createdAt)}
                                 </span>
                               </div>
-                              <div className="text-slate-700 mt-1 leading-relaxed">{cm.content}</div>
+                              <div className="text-slate-700 mt-1 leading-relaxed">
+                                {cm.content}
+                              </div>
                             </div>
                           </div>
                         ))

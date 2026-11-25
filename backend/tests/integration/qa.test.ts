@@ -137,7 +137,8 @@ describe('Q&A Module API (Module 5 - Huy)', () => {
       .set('Authorization', `Bearer ${authorToken}`)
       .send({
         title: 'Sự khác biệt giữa TCP Socket và UDP Socket là gì?',
-        content: 'Các bạn cho mình hỏi khi nào nên dùng TCP và khi nào nên dùng UDP trong ứng dụng game realtime?',
+        content:
+          'Các bạn cho mình hỏi khi nào nên dùng TCP và khi nào nên dùng UDP trong ứng dụng game realtime?',
         subjectId: testSubject.id,
         tags: 'Socket,TCP,UDP,Network',
       });
@@ -181,7 +182,8 @@ describe('Q&A Module API (Module 5 - Huy)', () => {
       .post(`/api/qa/questions/${q.id}/answers`)
       .set('Authorization', `Bearer ${answererToken}`)
       .send({
-        content: 'WebSocket duy trì kết nối song công hai chiều (full-duplex) liên tục qua 1 TCP socket duy nhất, giảm tải overhead so với HTTP polling phải gửi request liên tục.',
+        content:
+          'WebSocket duy trì kết nối song công hai chiều (full-duplex) liên tục qua 1 TCP socket duy nhất, giảm tải overhead so với HTTP polling phải gửi request liên tục.',
       });
 
     expect(res.status).toBe(201);
@@ -204,7 +206,8 @@ describe('Q&A Module API (Module 5 - Huy)', () => {
       data: {
         questionId: q.id,
         authorId: answererUser.id,
-        content: 'CORS (Cross-Origin Resource Sharing) là cơ chế bảo mật của trình duyệt chặn truy cập tài nguyên khác Origin nếu server không cấp phép qua header Access-Control-Allow-Origin.',
+        content:
+          'CORS (Cross-Origin Resource Sharing) là cơ chế bảo mật của trình duyệt chặn truy cập tài nguyên khác Origin nếu server không cấp phép qua header Access-Control-Allow-Origin.',
       },
     });
 
@@ -242,7 +245,8 @@ describe('Q&A Module API (Module 5 - Huy)', () => {
       data: {
         questionId: q.id,
         authorId: answererUser.id,
-        content: '401 Unauthorized nghĩa là bạn chưa đăng nhập (chưa có token hoặc token sai/hết hạn). 403 Forbidden nghĩa là bạn đã đăng nhập nhưng không có quyền hạn (ví dụ sinh viên gọi API của admin).',
+        content:
+          '401 Unauthorized nghĩa là bạn chưa đăng nhập (chưa có token hoặc token sai/hết hạn). 403 Forbidden nghĩa là bạn đã đăng nhập nhưng không có quyền hạn (ví dụ sinh viên gọi API của admin).',
         isCorrect: false,
       },
     });

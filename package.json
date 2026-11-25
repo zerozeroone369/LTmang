@@ -1,0 +1,29 @@
+{
+  "name": "mxh-sinh-vien-ltm",
+  "version": "1.0.0",
+  "description": "Mạng xã hội phục vụ đời sống sinh viên — Kiến trúc Modular MVC (Node.js Express + Socket.io + PostgreSQL 39 bảng)",
+  "main": "server.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "backend:dev": "npm run --prefix backend dev",
+    "backend:test": "npm run --prefix backend test",
+    "client:dev": "npm run --prefix client-web dev",
+    "client:build": "npm run --prefix client-web build",
+    "admin:dev": "npm run --prefix admin-web dev",
+    "admin:build": "npm run --prefix admin-web build"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "pg": "^8.13.1",
+    "socket.io": "^4.8.1"
+  }
+}

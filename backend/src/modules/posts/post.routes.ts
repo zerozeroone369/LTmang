@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { authenticate, optionalAuthenticate } from '../../middlewares/auth.middleware';
+import { postMediaUpload } from '../../middlewares/upload.middleware';
 import { validate } from '../../middlewares/validate.middleware';
 import { postController } from './post.controller';
 import {
@@ -24,6 +25,13 @@ router.post(
   authenticate,
   validate({ body: createPostSchema }),
   postController.createPost.bind(postController),
+);
+
+router.post(
+  '/upload',
+  authenticate,
+  postMediaUpload.single('file'),
+  postController.uploadMedia.bind(postController),
 );
 
 router.get('/:id', optionalAuthenticate, postController.getPostById.bind(postController));

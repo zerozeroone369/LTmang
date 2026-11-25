@@ -90,10 +90,7 @@ export class CommunitiesRepository {
         status: 'ACTIVE',
         ...(search
           ? {
-              OR: [
-                { fullName: { contains: search } },
-                { studentCode: { contains: search } },
-              ],
+              OR: [{ fullName: { contains: search } }, { studentCode: { contains: search } }],
             }
           : {}),
       },
@@ -118,10 +115,7 @@ export class CommunitiesRepository {
         status: 'ACTIVE',
         ...(search
           ? {
-              OR: [
-                { fullName: { contains: search } },
-                { studentCode: { contains: search } },
-              ],
+              OR: [{ fullName: { contains: search } }, { studentCode: { contains: search } }],
             }
           : {}),
       },
@@ -134,13 +128,25 @@ export class CommunitiesRepository {
     majorId?: number;
     classId?: number;
   }) {
-    const [totalStudentsInClass, totalStudentsInMajor, totalStudentsInFaculty, totalStudentsInSchool] =
-      await Promise.all([
-        input.classId ? prisma.user.count({ where: { classId: input.classId, status: 'ACTIVE' } }) : 0,
-        input.majorId ? prisma.user.count({ where: { majorId: input.majorId, status: 'ACTIVE' } }) : 0,
-        input.facultyId ? prisma.user.count({ where: { facultyId: input.facultyId, status: 'ACTIVE' } }) : 0,
-        input.schoolId ? prisma.user.count({ where: { schoolId: input.schoolId, status: 'ACTIVE' } }) : 0,
-      ]);
+    const [
+      totalStudentsInClass,
+      totalStudentsInMajor,
+      totalStudentsInFaculty,
+      totalStudentsInSchool,
+    ] = await Promise.all([
+      input.classId
+        ? prisma.user.count({ where: { classId: input.classId, status: 'ACTIVE' } })
+        : 0,
+      input.majorId
+        ? prisma.user.count({ where: { majorId: input.majorId, status: 'ACTIVE' } })
+        : 0,
+      input.facultyId
+        ? prisma.user.count({ where: { facultyId: input.facultyId, status: 'ACTIVE' } })
+        : 0,
+      input.schoolId
+        ? prisma.user.count({ where: { schoolId: input.schoolId, status: 'ACTIVE' } })
+        : 0,
+    ]);
 
     return {
       totalStudentsInClass,

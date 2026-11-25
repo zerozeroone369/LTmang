@@ -120,4 +120,3 @@ export async function optionalAuthenticate(req: Request, _res: Response, next: N
     return next();
   }
 }
-

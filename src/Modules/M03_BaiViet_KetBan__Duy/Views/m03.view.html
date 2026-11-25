@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>M3 - Bài viết, Tương tác & Kết bạn</title>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #f8fafc; color: #0f172a; padding: 32px; max-width: 860px; margin: auto; }
+    .card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; box-shadow: 0 2px 6px rgba(15,23,42,.04); }
+    code { background: #f1f5f9; padding: 2px 6px; border-radius: 5px; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <p><a href="/">← Quay lại Trang chủ MVC</a> | <a href="/docs">Xem Sơ đồ &amp; CSDL 39 Bảng</a></p>
+    <h1>M3: Bài viết, Tương tác & Kết bạn</h1>
+    <p><b>Phụ trách:</b> Duy (Full-stack Module)</p>
+    <p><b>Chức năng:</b> Đăng, sửa (lưu vết LichSuSuaBaiViet), xóa mềm bài viết theo phạm vi CongDong; đính kèm tệp qua TepTin; Bình luận, Thích (chống trùng), Báo cáo vi phạm; Tìm bạn & Kết bạn 2 chiều (KetBan).</p>
+    <p><b>Bảng PostgreSQL:</b> <code>BaiViet</code>, <code>LichSuSuaBaiViet</code>, <code>TepDinhKemBaiViet</code>, <code>BinhLuan</code>, <code>TuongTac</code>, <code>KetBan</code></p>
+    <p><b>API Routes:</b> <code>CRUD /api/m03/posts</code>, <code>POST /api/m03/posts/:id/comments</code>, <code>POST /api/m03/posts/:id/like</code>, <code>POST /api/m03/posts/:id/report</code>, <code>POST /api/m03/friends/request</code>, <code>PUT /api/m03/friends/:id/respond</code></p>
+  </div>
+</body>
+</html>

@@ -4,7 +4,29 @@
 > **Repository:** `https://github.com/zerozeroone369/LTmang.git`  
 > **Mô hình vận hành:** Sở hữu trọn gói theo Module (**End-to-End: CSDL → API → UI → Demo & Vấn đáp**)  
 > **Quy mô:** 5 Thành viên — 10 Module — 40 Bước triển khai  
-> **Tiến độ tích hợp hiện tại:** **10/10 Module hoàn thành 100%** (Đầy đủ Tú Anh, Duy, Huy, Bảo, Thái — Vượt qua **71/71 Unit & Integration Tests**)
+> **Tiến độ tích hợp hiện tại:** **10/10 Module hoàn thành 100%** (Đầy đủ Tú Anh, Duy, Huy, Bảo, Thái — Vượt qua **72/72 Unit & Integration Tests**)
+
+---
+
+## 🌟 Cập Nhật Kiến Trúc Modular MVC & 39 Bảng PostgreSQL (Theo Bản Chuẩn Gửi Trưởng Nhóm)
+
+Dự án hiện được tích hợp và cấu hình đồng bộ 100% theo bản đặc tả và mã nguồn chuẩn Modular MVC:
+1. **Cơ sở dữ liệu 39 Bảng PostgreSQL chuẩn 3NF:**
+   - DDL khởi tạo đầy đủ 39 bảng (68 FK, UNIQUE, CHECK, Index) tại: [`database/01_schema_39_tables_postgres.sql`](./database/01_schema_39_tables_postgres.sql)
+   - Dữ liệu mẫu 5 cấp trường học (Trường → Khoa → Ngành → Khóa → Lớp) tại: [`database/02_seed_5_cap_truong.sql`](./database/02_seed_5_cap_truong.sql)
+2. **Kiến trúc Modular MVC (`src/Modules/`):**
+   - Đầy đủ 10 thư mục theo 5 thành viên: `M01_Auth_TaiKhoan__TuAnh` đến `M10_QuanTri_KiemDuyet__TuAnh`
+   - Mỗi module gồm đầy đủ: `Controllers/`, `Models/`, `Views/`, `README.md`
+   - Cung cấp sẵn các router endpoints chuẩn: `/api/m01` đến `/api/m10`
+3. **Sơ đồ quy trình nghiệp vụ (Workflow) & ERD 39 Bảng trực quan:**
+   - Xem trực tiếp trên web tại: `http://localhost:3000/docs` hoặc mở file [`index.html`](./index.html)
+4. **Triển khai Cloud Render (1-click):**
+   - File cấu hình Blueprint tự động triển khai Web + PostgreSQL tại: [`render.yaml`](./render.yaml)
+5. **Cổng khởi chạy ứng dụng:**
+   - `npm start`: Chạy máy chủ Modular MVC tại cổng 3000 (`/`, `/docs`, `/health`, `/api/m01`..`/api/m10`)
+   - `npm run backend:dev`: Chạy TypeScript Backend API tại cổng 4000
+   - `npm run client:dev`: Chạy Client Web UI (React + Tailwind v4 + AI/OCR) tại cổng 5174
+   - `npm run admin:dev`: Chạy Admin Web UI (React + Tailwind v4) tại cổng 5173
 
 ---
 

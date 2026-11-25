@@ -46,10 +46,9 @@ export const qaApi = {
   },
 
   async addAnswer(questionId: number, content: string) {
-    const res = await apiClient.post<ApiResponse<unknown>>(
-      `/qa/questions/${questionId}/answers`,
-      { content },
-    );
+    const res = await apiClient.post<ApiResponse<unknown>>(`/qa/questions/${questionId}/answers`, {
+      content,
+    });
     return res.data.data;
   },
 

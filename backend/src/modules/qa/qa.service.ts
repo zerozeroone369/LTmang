@@ -221,11 +221,7 @@ export class QAService {
     }
 
     const newAcceptedStatus = !answer.isCorrect;
-    const updated = await qaRepository.setAnswerAccepted(
-      question.id,
-      answerId,
-      newAcceptedStatus,
-    );
+    const updated = await qaRepository.setAnswerAccepted(question.id, answerId, newAcceptedStatus);
 
     return {
       answer: updated,
